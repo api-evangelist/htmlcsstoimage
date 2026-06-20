@@ -1,0 +1,401 @@
+{
+  "item": [
+    {
+      "name": "Image Generation",
+      "description": {
+        "content": "Render HTML/CSS or a URL into hosted images.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "name": "Create an image from HTML/CSS or a URL.",
+          "request": {
+            "name": "Create an image from HTML/CSS or a URL.",
+            "url": {
+              "path": ["v1", "image"],
+              "host": ["{{baseUrl}}"],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"html\": \"<div class='box'>Hello, world!</div>\",\n  \"css\": \".box { background: #4f46e5; color: #fff; padding: 40px; font-family: sans-serif; }\",\n  \"google_fonts\": \"Roboto\",\n  \"device_scale\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create multiple images in a single request.",
+          "request": {
+            "name": "Create multiple images in a single request.",
+            "url": {
+              "path": ["v1", "image", "batch"],
+              "host": ["{{baseUrl}}"],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"default_options\": {\n    \"css\": \".box { padding: 40px; }\"\n  },\n  \"variations\": [\n    { \"html\": \"<div class='box'>One</div>\" },\n    { \"html\": \"<div class='box'>Two</div>\" }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Retrieve a rendered image.",
+          "request": {
+            "name": "Retrieve a rendered image.",
+            "url": {
+              "path": ["v1", "image", ":image_id"],
+              "host": ["{{baseUrl}}"],
+              "query": [
+                { "key": "width", "value": "800", "disabled": true },
+                { "key": "height", "value": "600", "disabled": true }
+              ],
+              "variable": [
+                { "key": "image_id", "value": "<string>" }
+              ]
+            },
+            "header": [],
+            "method": "GET",
+            "auth": null
+          },
+          "response": []
+        },
+        {
+          "name": "Delete an image.",
+          "request": {
+            "name": "Delete an image.",
+            "url": {
+              "path": ["v1", "image", ":image_id"],
+              "host": ["{{baseUrl}}"],
+              "query": [],
+              "variable": [
+                { "key": "image_id", "value": "<string>" }
+              ]
+            },
+            "header": [],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": []
+        },
+        {
+          "name": "Delete multiple images in a single request.",
+          "request": {
+            "name": "Delete multiple images in a single request.",
+            "url": {
+              "path": ["v1", "image", "batch"],
+              "host": ["{{baseUrl}}"],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ids\": [\"<string>\", \"<string>\"]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List images.",
+          "request": {
+            "name": "List images.",
+            "url": {
+              "path": ["v1", "images"],
+              "host": ["{{baseUrl}}"],
+              "query": [
+                { "key": "count", "value": "50", "disabled": true },
+                { "key": "page_token", "value": "<string>", "disabled": true }
+              ],
+              "variable": []
+            },
+            "header": [],
+            "method": "GET",
+            "auth": null
+          },
+          "response": []
+        },
+        {
+          "name": "Check account usage.",
+          "request": {
+            "name": "Check account usage.",
+            "url": {
+              "path": ["v1", "usage"],
+              "host": ["{{baseUrl}}"],
+              "query": [],
+              "variable": []
+            },
+            "header": [],
+            "method": "GET",
+            "auth": null
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Templates",
+      "description": {
+        "content": "Reusable HTML/CSS templates with variable substitution.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "name": "Create a template.",
+          "request": {
+            "name": "Create a template.",
+            "url": {
+              "path": ["v1", "template"],
+              "host": ["{{baseUrl}}"],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"html\": \"<div class='card'>{{title}}</div>\",\n  \"css\": \".card { padding: 40px; font-family: sans-serif; }\",\n  \"name\": \"Card Template\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List all templates.",
+          "request": {
+            "name": "List all templates.",
+            "url": {
+              "path": ["v1", "template"],
+              "host": ["{{baseUrl}}"],
+              "query": [],
+              "variable": []
+            },
+            "header": [],
+            "method": "GET",
+            "auth": null
+          },
+          "response": []
+        },
+        {
+          "name": "Edit a template.",
+          "request": {
+            "name": "Edit a template.",
+            "url": {
+              "path": ["v1", "template", ":template_id"],
+              "host": ["{{baseUrl}}"],
+              "query": [],
+              "variable": [
+                { "key": "template_id", "value": "<string>" }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"html\": \"<div class='card'>{{title}}</div>\",\n  \"css\": \".card { padding: 60px; }\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List versions of a template.",
+          "request": {
+            "name": "List versions of a template.",
+            "url": {
+              "path": ["v1", "template", ":template_id"],
+              "host": ["{{baseUrl}}"],
+              "query": [],
+              "variable": [
+                { "key": "template_id", "value": "<string>" }
+              ]
+            },
+            "header": [],
+            "method": "GET",
+            "auth": null
+          },
+          "response": []
+        },
+        {
+          "name": "Generate an image from a template.",
+          "request": {
+            "name": "Generate an image from a template.",
+            "url": {
+              "path": ["v1", "image", ":template_id"],
+              "host": ["{{baseUrl}}"],
+              "query": [],
+              "variable": [
+                { "key": "template_id", "value": "<string>" }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"template_values\": {\n    \"title\": \"Hello, world!\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Generate an image from a specific template version.",
+          "request": {
+            "name": "Generate an image from a specific template version.",
+            "url": {
+              "path": ["v1", "image", ":template_id", ":template_version"],
+              "host": ["{{baseUrl}}"],
+              "query": [],
+              "variable": [
+                { "key": "template_id", "value": "<string>" },
+                { "key": "template_version", "value": "<string>" }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"template_values\": {\n    \"title\": \"Hello, world!\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Signed URLs",
+      "description": {
+        "content": "Generate templated images from an HMAC-signed GET URL.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "name": "Generate a templated image from an HMAC-signed URL.",
+          "request": {
+            "name": "Generate a templated image from an HMAC-signed URL.",
+            "url": {
+              "path": ["v1", "image", ":template_id", ":signed_token.png"],
+              "host": ["{{baseUrl}}"],
+              "query": [],
+              "variable": [
+                { "key": "template_id", "value": "<string>" },
+                { "key": "signed_token.png", "value": "<signed_token>.png" }
+              ]
+            },
+            "header": [],
+            "method": "GET",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://hcti.io",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "basic",
+    "basic": [
+      { "key": "username", "value": "{{userId}}" },
+      { "key": "password", "value": "{{apiKey}}" }
+    ]
+  },
+  "info": {
+    "_postman_id": "8a2f1c3d-7b94-4e62-9f10-3c5d6a1e9b40",
+    "name": "HTML/CSS to Image API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "REST API for rendering HTML, CSS, and JavaScript into images. Authentication is HTTP Basic using your User ID as the username and your API Key as the password.\n\nContact Support:\n Name: HTML/CSS to Image Support\n Email: support@htmlcsstoimage.com",
+      "type": "text/plain"
+    }
+  }
+}

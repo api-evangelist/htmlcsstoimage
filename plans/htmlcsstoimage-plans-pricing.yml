@@ -1,0 +1,370 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
+provider: HTML/CSS to Image
+providerId: htmlcsstoimage
+created: '2026-06-20'
+modified: '2026-06-20'
+reconciled: true
+tags:
+- Image Generation
+- HTML to Image
+- Rendering
+- Templates
+- Plans
+description: >-
+  HTML/CSS to Image uses tiered monthly subscription plans priced by the number
+  of images rendered per month. A Free tier covers 50 images per month. Paid
+  tiers from Starter up through Unlimited raise the monthly image allowance. When
+  an account exceeds its monthly limit, additional images are billed as overages
+  at $10 per 1,000 images. Volume above 500,000 images per month can be handled
+  via a custom plan.
+notes: >-
+  Plan prices and image allowances as published on the HTML/CSS to Image pricing
+  page; verify the current page for the latest tiers and overage rates.
+sources:
+- https://htmlcsstoimage.com/pricing
+- https://docs.htmlcsstoimage.com
+plans:
+- id: htmlcsstoimage-free
+  name: Free
+  type: free
+  description: >-
+    Free tier with 50 images per month for evaluation and low-volume use.
+  entries:
+  - label: Images
+    name: images
+    type: included
+    metric: images
+    limit: 50
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: $0
+    userMultiplied: false
+  elements:
+  - name: Image Generation
+  - name: Templates
+  - name: Signed URLs
+- id: htmlcsstoimage-starter
+  name: Starter
+  type: paid
+  description: >-
+    1,000 images per month; overages billed at $10 per 1,000 images.
+  entries:
+  - label: Images
+    name: images
+    type: included
+    metric: images
+    limit: 1000
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: $14 per month
+    userMultiplied: false
+  - label: Overage
+    name: overage
+    type: usage
+    metric: images
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1000
+    price: $10 per 1,000 images
+    userMultiplied: false
+  elements:
+  - name: Image Generation
+  - name: Templates
+  - name: Signed URLs
+- id: htmlcsstoimage-professional
+  name: Professional
+  type: paid
+  description: >-
+    3,000 images per month; overages billed at $10 per 1,000 images.
+  entries:
+  - label: Images
+    name: images
+    type: included
+    metric: images
+    limit: 3000
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: $29 per month
+    userMultiplied: false
+  - label: Overage
+    name: overage
+    type: usage
+    metric: images
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1000
+    price: $10 per 1,000 images
+    userMultiplied: false
+  elements:
+  - name: Image Generation
+  - name: Templates
+  - name: Signed URLs
+- id: htmlcsstoimage-business
+  name: Business
+  type: paid
+  description: >-
+    10,000 images per month; overages billed at $10 per 1,000 images.
+  entries:
+  - label: Images
+    name: images
+    type: included
+    metric: images
+    limit: 10000
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: $69 per month
+    userMultiplied: false
+  - label: Overage
+    name: overage
+    type: usage
+    metric: images
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1000
+    price: $10 per 1,000 images
+    userMultiplied: false
+  elements:
+  - name: Image Generation
+  - name: Templates
+  - name: Signed URLs
+- id: htmlcsstoimage-premium
+  name: Premium
+  type: paid
+  description: >-
+    30,000 images per month; overages billed at $10 per 1,000 images.
+  entries:
+  - label: Images
+    name: images
+    type: included
+    metric: images
+    limit: 30000
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: $149 per month
+    userMultiplied: false
+  - label: Overage
+    name: overage
+    type: usage
+    metric: images
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1000
+    price: $10 per 1,000 images
+    userMultiplied: false
+  elements:
+  - name: Image Generation
+  - name: Templates
+  - name: Signed URLs
+- id: htmlcsstoimage-advanced
+  name: Advanced
+  type: paid
+  description: >-
+    65,000 images per month; overages billed at $10 per 1,000 images.
+  entries:
+  - label: Images
+    name: images
+    type: included
+    metric: images
+    limit: 65000
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: $249 per month
+    userMultiplied: false
+  - label: Overage
+    name: overage
+    type: usage
+    metric: images
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1000
+    price: $10 per 1,000 images
+    userMultiplied: false
+  elements:
+  - name: Image Generation
+  - name: Templates
+  - name: Signed URLs
+- id: htmlcsstoimage-pro-plus
+  name: Pro+
+  type: paid
+  description: >-
+    100,000 images per month; overages billed at $10 per 1,000 images.
+  entries:
+  - label: Images
+    name: images
+    type: included
+    metric: images
+    limit: 100000
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: $375 per month
+    userMultiplied: false
+  - label: Overage
+    name: overage
+    type: usage
+    metric: images
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1000
+    price: $10 per 1,000 images
+    userMultiplied: false
+  elements:
+  - name: Image Generation
+  - name: Templates
+  - name: Signed URLs
+- id: htmlcsstoimage-enterprise-plus
+  name: Enterprise+
+  type: paid
+  description: >-
+    200,000 images per month; overages billed at $10 per 1,000 images.
+  entries:
+  - label: Images
+    name: images
+    type: included
+    metric: images
+    limit: 200000
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: $749 per month
+    userMultiplied: false
+  - label: Overage
+    name: overage
+    type: usage
+    metric: images
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1000
+    price: $10 per 1,000 images
+    userMultiplied: false
+  elements:
+  - name: Image Generation
+  - name: Templates
+  - name: Signed URLs
+- id: htmlcsstoimage-mega
+  name: Mega
+  type: paid
+  description: >-
+    350,000 images per month; overages billed at $10 per 1,000 images.
+  entries:
+  - label: Images
+    name: images
+    type: included
+    metric: images
+    limit: 350000
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: $1,225 per month
+    userMultiplied: false
+  - label: Overage
+    name: overage
+    type: usage
+    metric: images
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1000
+    price: $10 per 1,000 images
+    userMultiplied: false
+  elements:
+  - name: Image Generation
+  - name: Templates
+  - name: Signed URLs
+- id: htmlcsstoimage-ultra
+  name: Ultra
+  type: paid
+  description: >-
+    500,000 images per month; overages billed at $10 per 1,000 images.
+  entries:
+  - label: Images
+    name: images
+    type: included
+    metric: images
+    limit: 500000
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: $1,650 per month
+    userMultiplied: false
+  - label: Overage
+    name: overage
+    type: usage
+    metric: images
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1000
+    price: $10 per 1,000 images
+    userMultiplied: false
+  elements:
+  - name: Image Generation
+  - name: Templates
+  - name: Signed URLs
+- id: htmlcsstoimage-unlimited
+  name: Unlimited
+  type: paid
+  description: >-
+    1,000,000 images per month; overages billed at $10 per 1,000 images.
+  entries:
+  - label: Images
+    name: images
+    type: included
+    metric: images
+    limit: 1000000
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: $3,000 per month
+    userMultiplied: false
+  - label: Overage
+    name: overage
+    type: usage
+    metric: images
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1000
+    price: $10 per 1,000 images
+    userMultiplied: false
+  elements:
+  - name: Image Generation
+  - name: Templates
+  - name: Signed URLs
+- id: htmlcsstoimage-custom
+  name: Custom
+  type: enterprise
+  description: >-
+    Custom plan for volumes exceeding 500,000 images per month with negotiated
+    terms. Contact HTML/CSS to Image.
+  entries:
+  - label: Custom Agreement
+    name: custom
+    type: flat
+    metric: contract
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: contact sales
+    userMultiplied: false
+  elements:
+  - name: Custom Volume Pricing
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

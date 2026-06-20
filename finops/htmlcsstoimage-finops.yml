@@ -1,0 +1,97 @@
+specification: FinOps Framework
+specificationVersion: '1.0'
+schema: https://www.finops.org/framework/
+provider: HTML/CSS to Image
+providerId: htmlcsstoimage
+created: '2026-06-20'
+modified: '2026-06-20'
+reconciled: true
+tags:
+- Image Generation
+- HTML to Image
+- Rendering
+- Templates
+- FinOps
+- Cost Management
+- FOCUS
+description: >-
+  FinOps view of HTML/CSS to Image spend. HCTI bills a fixed monthly
+  subscription per plan that includes a set number of rendered images per month;
+  the primary cost driver is images rendered. Once the monthly image allowance
+  is exceeded, additional images are billed as overages at $10 per 1,000 images.
+  Cost optimization centers on right-sizing the monthly plan to expected image
+  volume and reducing wasted renders through caching and templates.
+notes: >-
+  Plan prices and image allowances are subject to change; verify against the
+  HTML/CSS to Image pricing page during reconciliation.
+sources:
+- https://htmlcsstoimage.com/pricing
+- https://docs.htmlcsstoimage.com
+- https://focus.finops.org/focus-specification/v1-3/
+alignedWith:
+  framework: FinOps Foundation Framework
+  frameworkUrl: https://www.finops.org/framework/
+  dataSpec: FOCUS
+  dataSpecVersion: '1.3'
+  dataSpecUrl: https://focus.finops.org/focus-specification/v1-3/
+publisherName: HTML/CSS to Image
+serviceCategory: Media and Content
+billingModel:
+  pricingCategory: Subscription-Based
+  billingFrequency: Monthly
+  billingCurrency: USD
+  chargeCategories:
+  - Usage
+  - Purchase
+  - Adjustment
+focusColumns:
+  ServiceName: HTML/CSS to Image
+  ServiceCategory: Media and Content
+  ProviderName: HTML/CSS to Image
+  PublisherName: HTML/CSS to Image
+  InvoiceIssuerName: HTML/CSS to Image
+  BillingCurrency: USD
+  ChargeCategory: Usage
+  PricingCategory: Subscription-Based
+meters:
+- name: plan_subscription
+  description: Fixed monthly subscription fee for the selected plan tier.
+  unit: months
+  aggregation: sum
+  dimensions:
+  - account
+  - plan
+- name: included_images
+  description: Images rendered within the plan's included monthly allowance.
+  unit: images
+  aggregation: sum
+  dimensions:
+  - account
+  - plan
+- name: overage_images
+  description: Images rendered beyond the monthly allowance, billed at $10 per 1,000 images.
+  unit: images
+  aggregation: sum
+  dimensions:
+  - account
+  - plan
+principles:
+- name: Visibility
+  description: >-
+    Pull image counts from the GET /v1/usage endpoint (hourly, daily, monthly)
+    and reconcile against the plan allowance and invoices.
+- name: Allocation
+  description: >-
+    Tag rendering workloads by template or project and map image counts to
+    internal cost centers.
+- name: Optimization
+  description: >-
+    Right-size the monthly plan to expected volume; cache and reuse permanent
+    image URLs and templates to avoid re-rendering; delete unused images.
+- name: Accountability
+  description: >-
+    Assign owners per workload, monitor monthly image burn against the plan
+    allowance, and watch for overage charges.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

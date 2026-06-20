@@ -1,0 +1,225 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "HTML/CSS to Image API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{userId}}",
+      "password": "{{apiKey}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Image Generation",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create an image from HTML/CSS or a URL.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://hcti.io/v1/image",
+            "body": {
+              "type": "json",
+              "data": "{\"html\":\"<div class='box'>Hello, world!</div>\",\"css\":\".box { background: #4f46e5; color: #fff; padding: 40px; }\"}"
+            }
+          },
+          "docs": "Render HTML, CSS, and JavaScript (or a URL) into a hosted image and return its permanent URL."
+        },
+        {
+          "info": {
+            "name": "Create multiple images in a single request.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://hcti.io/v1/image/batch",
+            "body": {
+              "type": "json",
+              "data": "{\"default_options\":{},\"variations\":[{\"html\":\"<div>One</div>\"},{\"html\":\"<div>Two</div>\"}]}"
+            }
+          },
+          "docs": "Render up to 25 image variations in one request."
+        },
+        {
+          "info": {
+            "name": "Retrieve a rendered image.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://hcti.io/v1/image/:image_id"
+          },
+          "docs": "Fetch a previously created image; append .png/.jpg/.webp/.pdf and resize/crop query params."
+        },
+        {
+          "info": {
+            "name": "Delete an image.",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://hcti.io/v1/image/:image_id"
+          },
+          "docs": "Delete an image by ID."
+        },
+        {
+          "info": {
+            "name": "Delete multiple images in a single request.",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://hcti.io/v1/image/batch",
+            "body": {
+              "type": "json",
+              "data": "{\"ids\":[\"<string>\"]}"
+            }
+          },
+          "docs": "Delete multiple images by ID."
+        },
+        {
+          "info": {
+            "name": "List images.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://hcti.io/v1/images"
+          },
+          "docs": "Return a paginated list of images created on the account (count up to 50, page_token)."
+        },
+        {
+          "info": {
+            "name": "Check account usage.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://hcti.io/v1/usage"
+          },
+          "docs": "Return hourly, daily, and monthly usage statistics plus billing period totals."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Templates",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create a template.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://hcti.io/v1/template",
+            "body": {
+              "type": "json",
+              "data": "{\"html\":\"<div class='card'>{{title}}</div>\",\"css\":\".card { padding: 40px; }\",\"name\":\"Card Template\"}"
+            }
+          },
+          "docs": "Create a reusable HTML/CSS template with named variables."
+        },
+        {
+          "info": {
+            "name": "List all templates.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://hcti.io/v1/template"
+          },
+          "docs": "List all of the account's templates."
+        },
+        {
+          "info": {
+            "name": "Edit a template.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://hcti.io/v1/template/:template_id",
+            "body": {
+              "type": "json",
+              "data": "{\"html\":\"<div class='card'>{{title}}</div>\",\"css\":\".card { padding: 60px; }\"}"
+            }
+          },
+          "docs": "Create a new version of an existing template."
+        },
+        {
+          "info": {
+            "name": "List versions of a template.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://hcti.io/v1/template/:template_id"
+          },
+          "docs": "List the versions of a template."
+        },
+        {
+          "info": {
+            "name": "Generate an image from a template.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://hcti.io/v1/image/:template_id",
+            "body": {
+              "type": "json",
+              "data": "{\"template_values\":{\"title\":\"Hello, world!\"}}"
+            }
+          },
+          "docs": "Render a template into an image by supplying template_values."
+        },
+        {
+          "info": {
+            "name": "Generate an image from a specific template version.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://hcti.io/v1/image/:template_id/:template_version",
+            "body": {
+              "type": "json",
+              "data": "{\"template_values\":{\"title\":\"Hello, world!\"}}"
+            }
+          },
+          "docs": "Render a specific template version into an image."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Signed URLs",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Generate a templated image from an HMAC-signed URL.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://hcti.io/v1/image/:template_id/:signed_token.png",
+            "auth": {
+              "type": "none"
+            }
+          },
+          "docs": "Render a templated image from a GET request using an HMAC-signed token that encodes the template_values."
+        }
+      ]
+    }
+  ]
+}

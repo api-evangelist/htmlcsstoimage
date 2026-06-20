@@ -1,0 +1,99 @@
+aid: htmlcsstoimage
+url: https://raw.githubusercontent.com/api-evangelist/htmlcsstoimage/refs/heads/main/apis.yml
+name: HTML/CSS to Image
+kind: company
+description: HTML/CSS to Image (HCTI) is a REST API that renders HTML, CSS, and
+  JavaScript into high quality images (PNG, JPG, WebP, PDF). Send markup or a URL
+  to the API and receive a permanent, hosted image URL. It supports reusable
+  templates with variable substitution and HMAC-signed URLs for generating images
+  from a simple GET request.
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+tags:
+- Image Generation
+- HTML to Image
+- CSS to Image
+- Rendering
+- Screenshots
+- Templates
+created: '2026-06-20'
+modified: '2026-06-20'
+specificationVersion: '0.19'
+apis:
+- aid: htmlcsstoimage:image-generation-api
+  name: HTML/CSS to Image Generation API
+  tags:
+  - Image Generation
+  - Rendering
+  - Screenshots
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://docs.htmlcsstoimage.com/getting-started/using-the-api/
+  baseURL: https://hcti.io/v1
+  properties:
+  - url: https://docs.htmlcsstoimage.com/getting-started/using-the-api/
+    type: Documentation
+  - url: https://docs.htmlcsstoimage.com/getting-started/create-and-render/
+    type: APIReference
+  - url: openapi/htmlcsstoimage-openapi.yml
+    type: OpenAPI
+  - url: collections/htmlcsstoimage.postman_collection.json
+    type: PostmanCollection
+  description: Render HTML, CSS, and JavaScript (or a URL) into a hosted image and
+    receive a permanent URL. Create single or batch images, retrieve them in PNG,
+    JPG, WebP, or PDF with resize and crop options, list images, delete images,
+    and check account usage.
+- aid: htmlcsstoimage:templates-api
+  name: HTML/CSS to Image Templates API
+  tags:
+  - Templates
+  - Variable Substitution
+  - Image Generation
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://docs.htmlcsstoimage.com/getting-started/templates/
+  baseURL: https://hcti.io/v1
+  properties:
+  - url: https://docs.htmlcsstoimage.com/getting-started/templates/
+    type: Documentation
+  - url: openapi/htmlcsstoimage-openapi.yml
+    type: OpenAPI
+  - url: collections/htmlcsstoimage.postman_collection.json
+    type: PostmanCollection
+  description: Create and edit reusable HTML/CSS templates with named variables,
+    list templates and their versions, and generate images from a template by
+    passing template_values, optionally pinning a specific template version.
+- aid: htmlcsstoimage:signed-urls-api
+  name: HTML/CSS to Image Signed URLs API
+  tags:
+  - Signed URLs
+  - HMAC
+  - Templates
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://docs.htmlcsstoimage.com/getting-started/templates/
+  baseURL: https://hcti.io/v1
+  properties:
+  - url: https://docs.htmlcsstoimage.com/getting-started/templates/
+    type: Documentation
+  - url: openapi/htmlcsstoimage-openapi.yml
+    type: OpenAPI
+  - url: collections/htmlcsstoimage.postman_collection.json
+    type: PostmanCollection
+  description: Generate a templated image with a simple GET request using an
+    HMAC-signed URL that encodes the template_values, so values cannot be altered
+    without the API key and no POST or stored image URL is required.
+common:
+- type: GitHubOrganization
+  url: https://github.com/htmlcsstoimage
+- type: LinkedIn
+  url: https://www.linkedin.com/company/htmlcsstoimage
+- type: Website
+  url: https://htmlcsstoimage.com
+- type: Documentation
+  url: https://docs.htmlcsstoimage.com
+- type: Plans
+  url: plans/htmlcsstoimage-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/htmlcsstoimage-rate-limits.yml
+- type: FinOps
+  url: finops/htmlcsstoimage-finops.yml
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

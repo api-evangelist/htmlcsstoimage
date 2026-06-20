@@ -1,0 +1,75 @@
+aid: htmlcsstoimage
+name: HTML/CSS to Image
+review:
+  question: Does HTML/CSS to Image expose a documented public WebSocket or streaming API?
+  answer: false
+  date: '2026-06-20'
+  reviewer: API Evangelist
+  asyncapiSpecCreated: false
+  asyncapiScopeNote: |
+    No AsyncAPI document was created. HTML/CSS to Image (HCTI) exposes only a
+    synchronous request/response REST API over HTTPS. There is no WebSocket,
+    Server-Sent Events, or other event-driven/streaming surface to model, so no
+    AsyncAPI artifact is in scope for this provider.
+findings:
+  summary: |
+    HTML/CSS to Image does not publish a documented public WebSocket or
+    streaming API. The HCTI platform exposes a REST (HTTPS) API under
+    https://hcti.io/v1 using HTTP Basic authentication (User ID as username,
+    API Key as password). Image creation is a synchronous POST that returns a
+    permanent hosted image URL; batch creation, retrieval, deletion, listing,
+    usage, templates, and HMAC-signed templated GET URLs are all standard
+    request/response REST. No realtime, bidirectional, or push transport is
+    documented.
+  transports:
+    - protocol: REST
+      scheme: https
+      baseURL: https://hcti.io/v1
+      documented: true
+    - protocol: SSE
+      scheme: https
+      documented: false
+      note: No Server-Sent Events surface is documented.
+    - protocol: WebSocket
+      scheme: wss
+      documented: false
+      note: No WebSocket endpoint is documented in the HCTI API reference.
+  endpointsConfirmedRest:
+    - POST   https://hcti.io/v1/image
+    - GET    https://hcti.io/v1/image/{image_id}
+    - DELETE https://hcti.io/v1/image/{image_id}
+    - POST   https://hcti.io/v1/image/batch
+    - DELETE https://hcti.io/v1/image/batch
+    - GET    https://hcti.io/v1/images
+    - GET    https://hcti.io/v1/usage
+    - POST   https://hcti.io/v1/template
+    - GET    https://hcti.io/v1/template
+    - POST   https://hcti.io/v1/template/{template_id}
+    - GET    https://hcti.io/v1/template/{template_id}
+    - POST   https://hcti.io/v1/image/{template_id}
+    - POST   https://hcti.io/v1/image/{template_id}/{template_version}
+    - GET    https://hcti.io/v1/image/{template_id}/{signed_token}{format}
+sources:
+  - url: https://docs.htmlcsstoimage.com/getting-started/using-the-api/
+    type: Documentation
+    note: Documents the REST base URL https://hcti.io and HTTP Basic auth; no WebSocket mentioned.
+  - url: https://docs.htmlcsstoimage.com/getting-started/create-and-render/
+    type: APIReference
+    note: Single-request synchronous image creation via POST /v1/image.
+  - url: https://docs.htmlcsstoimage.com/getting-started/templates/
+    type: Documentation
+    note: Templates and HMAC-signed GET URLs; all request/response REST, no streaming.
+  - url: https://htmlcsstoimage.com/pricing
+    type: Pricing
+    note: Tiered monthly plans metered by images per month with $10 per 1,000 overage.
+actions:
+  asyncapiPath: null
+  apisYmlUpdated: true
+  reason: |
+    No event-driven or streaming protocol surface exists for HTML/CSS to Image.
+    The API is entirely synchronous REST over HTTPS, so no AsyncAPI document was
+    authored and apis.yml references only OpenAPI and Postman/Open Collection
+    artifacts.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

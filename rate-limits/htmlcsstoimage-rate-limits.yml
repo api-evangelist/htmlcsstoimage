@@ -1,0 +1,66 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
+provider: HTML/CSS to Image
+providerId: htmlcsstoimage
+created: '2026-06-20'
+modified: '2026-06-20'
+reconciled: false
+tags:
+- Image Generation
+- HTML to Image
+- Rendering
+- Templates
+- Rate Limiting
+- Quotas
+- Throttling
+description: >-
+  HTML/CSS to Image meters usage by the number of images rendered per month
+  against the account's plan allowance. Concurrency and request throughput
+  limits apply to protect the rendering infrastructure; once a plan's monthly
+  image allowance is reached, additional images are billed as overages rather
+  than hard-blocked. Specific per-plan throughput and concurrency values are not
+  reconciled in this artifact.
+notes: >-
+  Verify current concurrency and request-rate limits in the HTML/CSS to Image
+  documentation and dashboard on reconciliation; the GET /v1/usage endpoint
+  exposes hourly, daily, and monthly usage counters.
+sources:
+- https://docs.htmlcsstoimage.com/getting-started/using-the-api/
+- https://htmlcsstoimage.com/pricing
+responseCodes:
+  throttled: 429
+limits:
+- name: Monthly Image Allowance
+  scope: account
+  metric: images
+  limit: per plan (50 free up to 1,000,000 on Unlimited)
+  notes: >-
+    Number of images included per month by plan; overages billed at $10 per
+    1,000 images when exceeded.
+- name: Concurrency
+  scope: account
+  metric: concurrent_requests
+  limit: see provider documentation
+  notes: Concurrent render limits protect the rendering pipeline; varies by plan.
+- name: Request Rate
+  scope: account
+  metric: requests
+  limit: see provider documentation
+  notes: Throughput limits on API requests; varies by plan.
+policies:
+- name: Overage Billing
+  description: >-
+    Images beyond the monthly allowance are billed as overages at $10 per
+    1,000 images rather than rejected.
+- name: Backoff Strategy
+  description: >-
+    Clients should implement exponential backoff with jitter and honor
+    Retry-After on 429 responses.
+- name: Usage Visibility
+  description: >-
+    The GET /v1/usage endpoint returns hourly, daily, and monthly usage so
+    clients can track consumption against the plan allowance.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com
