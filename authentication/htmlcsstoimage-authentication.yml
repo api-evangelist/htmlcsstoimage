@@ -1,0 +1,14 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/htmlcsstoimage-openapi.yml
+summary:
+  types:
+  - http
+schemes:
+- name: basicAuth
+  type: http
+  scheme: basic
+  description: HTTP Basic authentication using your User ID as the username and your API Key
+    as the password, both from the HTML/CSS to Image dashboard.
+  sources:
+  - openapi/htmlcsstoimage-openapi.yml
