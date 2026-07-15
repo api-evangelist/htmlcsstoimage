@@ -80,6 +80,8 @@ apis:
     HMAC-signed URL that encodes the template_values, so values cannot be altered
     without the API key and no POST or stored image URL is required.
 common:
+- type: AgenticAccess
+  url: agentic-access/htmlcsstoimage-agentic-access.yml
 - type: DomainSecurity
   url: security/htmlcsstoimage-domain-security.yml
 - type: Authentication
