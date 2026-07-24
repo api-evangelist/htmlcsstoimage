@@ -1,0 +1,322 @@
+openapi: 3.0.1
+info:
+  title: HTML/CSS to Image Image Generation API
+  description: REST API for rendering HTML, CSS, and JavaScript (or a URL) into high quality images (PNG, JPG, WebP, PDF). Supports single and batch image creation, image retrieval with resize/crop options, reusable templates with variable substitution, and HMAC-signed URLs for GET-based templated image generation. Authentication is HTTP Basic using your User ID as the username and your API Key as the password.
+  termsOfService: https://htmlcsstoimage.com/terms
+  contact:
+    name: HTML/CSS to Image Support
+    email: support@htmlcsstoimage.com
+    url: https://htmlcsstoimage.com
+  version: '1.0'
+servers:
+- url: https://hcti.io/v1
+security:
+- basicAuth: []
+tags:
+- name: Image Generation
+paths:
+  /image:
+    post:
+      operationId: createImage
+      tags:
+      - Image Generation
+      summary: Create an image from HTML/CSS or a URL.
+      description: Render HTML, CSS, and JavaScript into an image and return its ID and a permanent hosted URL. Provide either `html` or `url` (not both).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateImageRequest'
+      responses:
+        '200':
+          description: The created image, with its ID and permanent URL.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Image'
+        '401':
+          description: Missing or invalid authentication.
+        '422':
+          description: Validation error (e.g. neither or both of html and url provided).
+  /image/batch:
+    post:
+      operationId: createImageBatch
+      tags:
+      - Image Generation
+      summary: Create multiple images in a single request.
+      description: Render up to 25 image variations in one request. Shared options are provided in `default_options` and merged into each `variations` entry.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateImageBatchRequest'
+      responses:
+        '200':
+          description: The created images.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Image'
+        '401':
+          description: Missing or invalid authentication.
+    delete:
+      operationId: deleteImageBatch
+      tags:
+      - Image Generation
+      summary: Delete multiple images in a single request.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - ids
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: string
+                  description: Array of image IDs to delete.
+      responses:
+        '202':
+          description: Accepted; the images will be deleted.
+        '401':
+          description: Missing or invalid authentication.
+  /image/{image_id}:
+    get:
+      operationId: getImage
+      tags:
+      - Image Generation
+      summary: Retrieve a rendered image.
+      description: Fetch a previously created image. Append a format extension (.png, .jpg, .webp, .pdf) to control the output format; PNG is the default. Query parameters allow on-the-fly resize and crop.
+      parameters:
+      - name: image_id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: width
+        in: query
+        schema:
+          type: integer
+        description: Resize width in pixels.
+      - name: height
+        in: query
+        schema:
+          type: integer
+        description: Resize height in pixels.
+      - name: dpi
+        in: query
+        schema:
+          type: integer
+        description: Output DPI.
+      - name: aspect_ratio
+        in: query
+        schema:
+          type: string
+        description: Aspect ratio to apply, e.g. "16:9".
+      - name: crop_width
+        in: query
+        schema:
+          type: integer
+      - name: crop_height
+        in: query
+        schema:
+          type: integer
+      - name: dl
+        in: query
+        schema:
+          type: integer
+        description: Set to 1 to force a download response.
+      responses:
+        '200':
+          description: The rendered image binary.
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+            image/webp:
+              schema:
+                type: string
+                format: binary
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: Image not found.
+    delete:
+      operationId: deleteImage
+      tags:
+      - Image Generation
+      summary: Delete an image.
+      parameters:
+      - name: image_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '202':
+          description: Accepted; the image will be deleted.
+        '401':
+          description: Missing or invalid authentication.
+  /images:
+    get:
+      operationId: listImages
+      tags:
+      - Image Generation
+      summary: List images.
+      description: Return a paginated list of images created on the account.
+      parameters:
+      - name: count
+        in: query
+        schema:
+          type: integer
+          maximum: 50
+        description: Number of images to return (max 50).
+      - name: page_token
+        in: query
+        schema:
+          type: string
+        description: Pagination token returned by a previous call.
+      responses:
+        '200':
+          description: A paginated list of images.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageList'
+        '401':
+          description: Missing or invalid authentication.
+  /usage:
+    get:
+      operationId: getUsage
+      tags:
+      - Image Generation
+      summary: Check account usage.
+      description: Return hourly, daily, and monthly image usage statistics plus billing period totals for the account.
+      responses:
+        '200':
+          description: Account usage statistics.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usage'
+        '401':
+          description: Missing or invalid authentication.
+components:
+  schemas:
+    ImageList:
+      type: object
+      properties:
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/Image'
+        page_token:
+          type: string
+          description: Token to retrieve the next page of results.
+    Image:
+      type: object
+      properties:
+        url:
+          type: string
+          description: Permanent hosted URL of the rendered image.
+        viewBox:
+          type: string
+          description: The view box used to render the image.
+    CreateImageRequest:
+      type: object
+      description: One of `html` or `url` is required (not both).
+      properties:
+        html:
+          type: string
+          description: The HTML markup to render.
+        url:
+          type: string
+          description: A URL to render instead of inline HTML.
+        css:
+          type: string
+          description: CSS to apply to the HTML.
+        google_fonts:
+          type: string
+          description: Comma-separated Google Fonts to load, e.g. "Roboto".
+        selector:
+          type: string
+          description: CSS selector of the element to capture.
+        ms_delay:
+          type: integer
+          description: Milliseconds to wait before capturing.
+        max_wait_ms:
+          type: integer
+          description: Maximum milliseconds to wait for the page.
+        device_scale:
+          type: number
+          description: Device scale factor for higher resolution output.
+        render_when_ready:
+          type: boolean
+          description: Wait for a window.renderWhenReady() signal before capturing.
+        full_screen:
+          type: boolean
+          description: Capture the full screen rather than the content size.
+        block_consent_banners:
+          type: boolean
+          description: Attempt to hide cookie/consent banners.
+        viewport_width:
+          type: integer
+        viewport_height:
+          type: integer
+        viewport_mobile:
+          type: boolean
+        viewport_landscape:
+          type: boolean
+        viewport_touch:
+          type: boolean
+        color_scheme:
+          type: string
+          description: Emulated color scheme, e.g. "light" or "dark".
+        timezone:
+          type: string
+        disable_twemoji:
+          type: boolean
+        proxy_id:
+          type: string
+    Usage:
+      type: object
+      properties:
+        hourly:
+          type: integer
+        daily:
+          type: integer
+        monthly:
+          type: integer
+        billing_period_total:
+          type: integer
+    CreateImageBatchRequest:
+      type: object
+      required:
+      - variations
+      properties:
+        default_options:
+          $ref: '#/components/schemas/CreateImageRequest'
+        variations:
+          type: array
+          maxItems: 25
+          items:
+            $ref: '#/components/schemas/CreateImageRequest'
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic authentication using your User ID as the username and your API Key as the password, both from the HTML/CSS to Image dashboard.

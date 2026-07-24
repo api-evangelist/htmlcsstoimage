@@ -1,0 +1,215 @@
+openapi: 3.0.1
+info:
+  title: HTML/CSS to Image Image Generation Templates API
+  description: REST API for rendering HTML, CSS, and JavaScript (or a URL) into high quality images (PNG, JPG, WebP, PDF). Supports single and batch image creation, image retrieval with resize/crop options, reusable templates with variable substitution, and HMAC-signed URLs for GET-based templated image generation. Authentication is HTTP Basic using your User ID as the username and your API Key as the password.
+  termsOfService: https://htmlcsstoimage.com/terms
+  contact:
+    name: HTML/CSS to Image Support
+    email: support@htmlcsstoimage.com
+    url: https://htmlcsstoimage.com
+  version: '1.0'
+servers:
+- url: https://hcti.io/v1
+security:
+- basicAuth: []
+tags:
+- name: Templates
+paths:
+  /template:
+    get:
+      operationId: listTemplates
+      tags:
+      - Templates
+      summary: List all templates.
+      responses:
+        '200':
+          description: The account's templates.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Template'
+        '401':
+          description: Missing or invalid authentication.
+    post:
+      operationId: createTemplate
+      tags:
+      - Templates
+      summary: Create a template.
+      description: Create a reusable HTML/CSS template containing named variables that are substituted at render time via template_values.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTemplateRequest'
+      responses:
+        '200':
+          description: The created template.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Template'
+        '401':
+          description: Missing or invalid authentication.
+  /template/{template_id}:
+    get:
+      operationId: listTemplateVersions
+      tags:
+      - Templates
+      summary: List versions of a template.
+      parameters:
+      - name: template_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The versions of the template.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Template'
+        '404':
+          description: Template not found.
+    post:
+      operationId: editTemplate
+      tags:
+      - Templates
+      summary: Edit a template.
+      description: Create a new version of an existing template.
+      parameters:
+      - name: template_id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTemplateRequest'
+      responses:
+        '200':
+          description: The updated template.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Template'
+        '401':
+          description: Missing or invalid authentication.
+  /image/{template_id}:
+    post:
+      operationId: createTemplatedImage
+      tags:
+      - Templates
+      summary: Generate an image from a template.
+      description: Render a template into an image by supplying template_values for its named variables. Accepts JSON or form data; with form data the template_values must be JSON encoded.
+      parameters:
+      - name: template_id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTemplatedImageRequest'
+      responses:
+        '200':
+          description: The created image.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Image'
+        '401':
+          description: Missing or invalid authentication.
+  /image/{template_id}/{template_version}:
+    post:
+      operationId: createTemplatedImageVersion
+      tags:
+      - Templates
+      summary: Generate an image from a specific template version.
+      parameters:
+      - name: template_id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: template_version
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTemplatedImageRequest'
+      responses:
+        '200':
+          description: The created image.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Image'
+        '401':
+          description: Missing or invalid authentication.
+components:
+  schemas:
+    Template:
+      type: object
+      properties:
+        template_id:
+          type: string
+        template_version:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+    CreateTemplatedImageRequest:
+      type: object
+      required:
+      - template_values
+      properties:
+        template_values:
+          type: object
+          additionalProperties: true
+          description: Key/value substitutions for the template's named variables.
+    Image:
+      type: object
+      properties:
+        url:
+          type: string
+          description: Permanent hosted URL of the rendered image.
+        viewBox:
+          type: string
+          description: The view box used to render the image.
+    CreateTemplateRequest:
+      type: object
+      required:
+      - html
+      properties:
+        html:
+          type: string
+          description: The template HTML, including named variables.
+        css:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic authentication using your User ID as the username and your API Key as the password, both from the HTML/CSS to Image dashboard.

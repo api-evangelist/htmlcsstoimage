@@ -1,0 +1,76 @@
+openapi: 3.0.1
+info:
+  title: HTML/CSS to Image Image Generation Signed URLs API
+  description: REST API for rendering HTML, CSS, and JavaScript (or a URL) into high quality images (PNG, JPG, WebP, PDF). Supports single and batch image creation, image retrieval with resize/crop options, reusable templates with variable substitution, and HMAC-signed URLs for GET-based templated image generation. Authentication is HTTP Basic using your User ID as the username and your API Key as the password.
+  termsOfService: https://htmlcsstoimage.com/terms
+  contact:
+    name: HTML/CSS to Image Support
+    email: support@htmlcsstoimage.com
+    url: https://htmlcsstoimage.com
+  version: '1.0'
+servers:
+- url: https://hcti.io/v1
+security:
+- basicAuth: []
+tags:
+- name: Signed URLs
+paths:
+  /image/{template_id}/{signed_token}{format}:
+    get:
+      operationId: getSignedTemplatedImage
+      tags:
+      - Signed URLs
+      summary: Generate a templated image from an HMAC-signed URL.
+      description: Render an image from a template using a signed token that encodes the template_values. The token is HMAC-signed with the API key so values cannot be modified by anyone without the key, allowing image generation from a simple GET request with no POST or stored URL.
+      security: []
+      parameters:
+      - name: template_id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: signed_token
+        in: path
+        required: true
+        schema:
+          type: string
+        description: HMAC-signed token encoding the template_values.
+      - name: format
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - .png
+          - .jpg
+          - .webp
+          - .pdf
+        description: Output format extension.
+      responses:
+        '200':
+          description: The rendered image binary.
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+            image/webp:
+              schema:
+                type: string
+                format: binary
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        '403':
+          description: Invalid signature.
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic authentication using your User ID as the username and your API Key as the password, both from the HTML/CSS to Image dashboard.
