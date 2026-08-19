@@ -1,0 +1,1164 @@
+{
+  "item": [
+    {
+      "id": "f1c4ff82-677c-421a-b567-4c58240eb5f3",
+      "name": "Image Generation",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "1462bfaa-74ff-4b06-adda-cf5ce790cb5f",
+          "name": "Create an image from HTML/CSS or a URL.",
+          "request": {
+            "name": "Create an image from HTML/CSS or a URL.",
+            "description": {
+              "content": "Render HTML, CSS, and JavaScript into an image and return its ID and a permanent hosted URL. Provide either `html` or `url` (not both).",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "image"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"html\": \"<string>\",\n  \"url\": \"<string>\",\n  \"css\": \"<string>\",\n  \"google_fonts\": \"<string>\",\n  \"selector\": \"<string>\",\n  \"ms_delay\": \"<integer>\",\n  \"max_wait_ms\": \"<integer>\",\n  \"device_scale\": \"<number>\",\n  \"render_when_ready\": \"<boolean>\",\n  \"full_screen\": \"<boolean>\",\n  \"block_consent_banners\": \"<boolean>\",\n  \"viewport_width\": \"<integer>\",\n  \"viewport_height\": \"<integer>\",\n  \"viewport_mobile\": \"<boolean>\",\n  \"viewport_landscape\": \"<boolean>\",\n  \"viewport_touch\": \"<boolean>\",\n  \"color_scheme\": \"<string>\",\n  \"timezone\": \"<string>\",\n  \"disable_twemoji\": \"<boolean>\",\n  \"proxy_id\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "64ac63a1-189a-4c35-8ab1-4fc9cbf5e990",
+              "name": "The created image, with its ID and permanent URL.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "image"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"html\": \"<string>\",\n  \"url\": \"<string>\",\n  \"css\": \"<string>\",\n  \"google_fonts\": \"<string>\",\n  \"selector\": \"<string>\",\n  \"ms_delay\": \"<integer>\",\n  \"max_wait_ms\": \"<integer>\",\n  \"device_scale\": \"<number>\",\n  \"render_when_ready\": \"<boolean>\",\n  \"full_screen\": \"<boolean>\",\n  \"block_consent_banners\": \"<boolean>\",\n  \"viewport_width\": \"<integer>\",\n  \"viewport_height\": \"<integer>\",\n  \"viewport_mobile\": \"<boolean>\",\n  \"viewport_landscape\": \"<boolean>\",\n  \"viewport_touch\": \"<boolean>\",\n  \"color_scheme\": \"<string>\",\n  \"timezone\": \"<string>\",\n  \"disable_twemoji\": \"<boolean>\",\n  \"proxy_id\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"url\": \"string\",\n  \"viewBox\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1ec7bc17-4f77-40ca-be7a-e4ef553fe419",
+              "name": "Missing or invalid authentication.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "image"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"html\": \"<string>\",\n  \"url\": \"<string>\",\n  \"css\": \"<string>\",\n  \"google_fonts\": \"<string>\",\n  \"selector\": \"<string>\",\n  \"ms_delay\": \"<integer>\",\n  \"max_wait_ms\": \"<integer>\",\n  \"device_scale\": \"<number>\",\n  \"render_when_ready\": \"<boolean>\",\n  \"full_screen\": \"<boolean>\",\n  \"block_consent_banners\": \"<boolean>\",\n  \"viewport_width\": \"<integer>\",\n  \"viewport_height\": \"<integer>\",\n  \"viewport_mobile\": \"<boolean>\",\n  \"viewport_landscape\": \"<boolean>\",\n  \"viewport_touch\": \"<boolean>\",\n  \"color_scheme\": \"<string>\",\n  \"timezone\": \"<string>\",\n  \"disable_twemoji\": \"<boolean>\",\n  \"proxy_id\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "855855f2-c6ef-4072-bba4-905fb32af15a",
+              "name": "Validation error (e.g. neither or both of html and url provided).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "image"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"html\": \"<string>\",\n  \"url\": \"<string>\",\n  \"css\": \"<string>\",\n  \"google_fonts\": \"<string>\",\n  \"selector\": \"<string>\",\n  \"ms_delay\": \"<integer>\",\n  \"max_wait_ms\": \"<integer>\",\n  \"device_scale\": \"<number>\",\n  \"render_when_ready\": \"<boolean>\",\n  \"full_screen\": \"<boolean>\",\n  \"block_consent_banners\": \"<boolean>\",\n  \"viewport_width\": \"<integer>\",\n  \"viewport_height\": \"<integer>\",\n  \"viewport_mobile\": \"<boolean>\",\n  \"viewport_landscape\": \"<boolean>\",\n  \"viewport_touch\": \"<boolean>\",\n  \"color_scheme\": \"<string>\",\n  \"timezone\": \"<string>\",\n  \"disable_twemoji\": \"<boolean>\",\n  \"proxy_id\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "27ad84d7-dd96-4192-9be6-761f03758613",
+          "name": "Create multiple images in a single request.",
+          "request": {
+            "name": "Create multiple images in a single request.",
+            "description": {
+              "content": "Render up to 25 image variations in one request. Shared options are provided in `default_options` and merged into each `variations` entry.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "image",
+                "batch"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"variations\": [\n    {\n      \"html\": \"<string>\",\n      \"url\": \"<string>\",\n      \"css\": \"<string>\",\n      \"google_fonts\": \"<string>\",\n      \"selector\": \"<string>\",\n      \"ms_delay\": \"<integer>\",\n      \"max_wait_ms\": \"<integer>\",\n      \"device_scale\": \"<number>\",\n      \"render_when_ready\": \"<boolean>\",\n      \"full_screen\": \"<boolean>\",\n      \"block_consent_banners\": \"<boolean>\",\n      \"viewport_width\": \"<integer>\",\n      \"viewport_height\": \"<integer>\",\n      \"viewport_mobile\": \"<boolean>\",\n      \"viewport_landscape\": \"<boolean>\",\n      \"viewport_touch\": \"<boolean>\",\n      \"color_scheme\": \"<string>\",\n      \"timezone\": \"<string>\",\n      \"disable_twemoji\": \"<boolean>\",\n      \"proxy_id\": \"<string>\"\n    },\n    {\n      \"html\": \"<string>\",\n      \"url\": \"<string>\",\n      \"css\": \"<string>\",\n      \"google_fonts\": \"<string>\",\n      \"selector\": \"<string>\",\n      \"ms_delay\": \"<integer>\",\n      \"max_wait_ms\": \"<integer>\",\n      \"device_scale\": \"<number>\",\n      \"render_when_ready\": \"<boolean>\",\n      \"full_screen\": \"<boolean>\",\n      \"block_consent_banners\": \"<boolean>\",\n      \"viewport_width\": \"<integer>\",\n      \"viewport_height\": \"<integer>\",\n      \"viewport_mobile\": \"<boolean>\",\n      \"viewport_landscape\": \"<boolean>\",\n      \"viewport_touch\": \"<boolean>\",\n      \"color_scheme\": \"<string>\",\n      \"timezone\": \"<string>\",\n      \"disable_twemoji\": \"<boolean>\",\n      \"proxy_id\": \"<string>\"\n    }\n  ],\n  \"default_options\": {\n    \"html\": \"<string>\",\n    \"url\": \"<string>\",\n    \"css\": \"<string>\",\n    \"google_fonts\": \"<string>\",\n    \"selector\": \"<string>\",\n    \"ms_delay\": \"<integer>\",\n    \"max_wait_ms\": \"<integer>\",\n    \"device_scale\": \"<number>\",\n    \"render_when_ready\": \"<boolean>\",\n    \"full_screen\": \"<boolean>\",\n    \"block_consent_banners\": \"<boolean>\",\n    \"viewport_width\": \"<integer>\",\n    \"viewport_height\": \"<integer>\",\n    \"viewport_mobile\": \"<boolean>\",\n    \"viewport_landscape\": \"<boolean>\",\n    \"viewport_touch\": \"<boolean>\",\n    \"color_scheme\": \"<string>\",\n    \"timezone\": \"<string>\",\n    \"disable_twemoji\": \"<boolean>\",\n    \"proxy_id\": \"<string>\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "eb211670-4ebc-45c1-9188-a1981c385057",
+              "name": "The created images.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "image",
+                    "batch"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"variations\": [\n    {\n      \"html\": \"<string>\",\n      \"url\": \"<string>\",\n      \"css\": \"<string>\",\n      \"google_fonts\": \"<string>\",\n      \"selector\": \"<string>\",\n      \"ms_delay\": \"<integer>\",\n      \"max_wait_ms\": \"<integer>\",\n      \"device_scale\": \"<number>\",\n      \"render_when_ready\": \"<boolean>\",\n      \"full_screen\": \"<boolean>\",\n      \"block_consent_banners\": \"<boolean>\",\n      \"viewport_width\": \"<integer>\",\n      \"viewport_height\": \"<integer>\",\n      \"viewport_mobile\": \"<boolean>\",\n      \"viewport_landscape\": \"<boolean>\",\n      \"viewport_touch\": \"<boolean>\",\n      \"color_scheme\": \"<string>\",\n      \"timezone\": \"<string>\",\n      \"disable_twemoji\": \"<boolean>\",\n      \"proxy_id\": \"<string>\"\n    },\n    {\n      \"html\": \"<string>\",\n      \"url\": \"<string>\",\n      \"css\": \"<string>\",\n      \"google_fonts\": \"<string>\",\n      \"selector\": \"<string>\",\n      \"ms_delay\": \"<integer>\",\n      \"max_wait_ms\": \"<integer>\",\n      \"device_scale\": \"<number>\",\n      \"render_when_ready\": \"<boolean>\",\n      \"full_screen\": \"<boolean>\",\n      \"block_consent_banners\": \"<boolean>\",\n      \"viewport_width\": \"<integer>\",\n      \"viewport_height\": \"<integer>\",\n      \"viewport_mobile\": \"<boolean>\",\n      \"viewport_landscape\": \"<boolean>\",\n      \"viewport_touch\": \"<boolean>\",\n      \"color_scheme\": \"<string>\",\n      \"timezone\": \"<string>\",\n      \"disable_twemoji\": \"<boolean>\",\n      \"proxy_id\": \"<string>\"\n    }\n  ],\n  \"default_options\": {\n    \"html\": \"<string>\",\n    \"url\": \"<string>\",\n    \"css\": \"<string>\",\n    \"google_fonts\": \"<string>\",\n    \"selector\": \"<string>\",\n    \"ms_delay\": \"<integer>\",\n    \"max_wait_ms\": \"<integer>\",\n    \"device_scale\": \"<number>\",\n    \"render_when_ready\": \"<boolean>\",\n    \"full_screen\": \"<boolean>\",\n    \"block_consent_banners\": \"<boolean>\",\n    \"viewport_width\": \"<integer>\",\n    \"viewport_height\": \"<integer>\",\n    \"viewport_mobile\": \"<boolean>\",\n    \"viewport_landscape\": \"<boolean>\",\n    \"viewport_touch\": \"<boolean>\",\n    \"color_scheme\": \"<string>\",\n    \"timezone\": \"<string>\",\n    \"disable_twemoji\": \"<boolean>\",\n    \"proxy_id\": \"<string>\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"url\": \"string\",\n    \"viewBox\": \"string\"\n  },\n  {\n    \"url\": \"string\",\n    \"viewBox\": \"string\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "cfce1a88-a049-43c9-bd58-4f235df95ad0",
+              "name": "Missing or invalid authentication.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "image",
+                    "batch"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"variations\": [\n    {\n      \"html\": \"<string>\",\n      \"url\": \"<string>\",\n      \"css\": \"<string>\",\n      \"google_fonts\": \"<string>\",\n      \"selector\": \"<string>\",\n      \"ms_delay\": \"<integer>\",\n      \"max_wait_ms\": \"<integer>\",\n      \"device_scale\": \"<number>\",\n      \"render_when_ready\": \"<boolean>\",\n      \"full_screen\": \"<boolean>\",\n      \"block_consent_banners\": \"<boolean>\",\n      \"viewport_width\": \"<integer>\",\n      \"viewport_height\": \"<integer>\",\n      \"viewport_mobile\": \"<boolean>\",\n      \"viewport_landscape\": \"<boolean>\",\n      \"viewport_touch\": \"<boolean>\",\n      \"color_scheme\": \"<string>\",\n      \"timezone\": \"<string>\",\n      \"disable_twemoji\": \"<boolean>\",\n      \"proxy_id\": \"<string>\"\n    },\n    {\n      \"html\": \"<string>\",\n      \"url\": \"<string>\",\n      \"css\": \"<string>\",\n      \"google_fonts\": \"<string>\",\n      \"selector\": \"<string>\",\n      \"ms_delay\": \"<integer>\",\n      \"max_wait_ms\": \"<integer>\",\n      \"device_scale\": \"<number>\",\n      \"render_when_ready\": \"<boolean>\",\n      \"full_screen\": \"<boolean>\",\n      \"block_consent_banners\": \"<boolean>\",\n      \"viewport_width\": \"<integer>\",\n      \"viewport_height\": \"<integer>\",\n      \"viewport_mobile\": \"<boolean>\",\n      \"viewport_landscape\": \"<boolean>\",\n      \"viewport_touch\": \"<boolean>\",\n      \"color_scheme\": \"<string>\",\n      \"timezone\": \"<string>\",\n      \"disable_twemoji\": \"<boolean>\",\n      \"proxy_id\": \"<string>\"\n    }\n  ],\n  \"default_options\": {\n    \"html\": \"<string>\",\n    \"url\": \"<string>\",\n    \"css\": \"<string>\",\n    \"google_fonts\": \"<string>\",\n    \"selector\": \"<string>\",\n    \"ms_delay\": \"<integer>\",\n    \"max_wait_ms\": \"<integer>\",\n    \"device_scale\": \"<number>\",\n    \"render_when_ready\": \"<boolean>\",\n    \"full_screen\": \"<boolean>\",\n    \"block_consent_banners\": \"<boolean>\",\n    \"viewport_width\": \"<integer>\",\n    \"viewport_height\": \"<integer>\",\n    \"viewport_mobile\": \"<boolean>\",\n    \"viewport_landscape\": \"<boolean>\",\n    \"viewport_touch\": \"<boolean>\",\n    \"color_scheme\": \"<string>\",\n    \"timezone\": \"<string>\",\n    \"disable_twemoji\": \"<boolean>\",\n    \"proxy_id\": \"<string>\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "28ed6a82-c8c6-4b88-8649-6a9dd15dd951",
+          "name": "Delete multiple images in a single request.",
+          "request": {
+            "name": "Delete multiple images in a single request.",
+            "description": {},
+            "url": {
+              "path": [
+                "image",
+                "batch"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ids\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "7c9e59b4-4675-4eef-9809-e26c237bd1fe",
+              "name": "Accepted; the images will be deleted.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "image",
+                    "batch"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"ids\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Accepted",
+              "code": 202,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "da79b000-bc27-449e-8940-9b32a1f804bf",
+              "name": "Missing or invalid authentication.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "image",
+                    "batch"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"ids\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "07c6f948-efbc-435e-8b79-c084d26319b5",
+          "name": "Retrieve a rendered image.",
+          "request": {
+            "name": "Retrieve a rendered image.",
+            "description": {
+              "content": "Fetch a previously created image. Append a format extension (.png, .jpg, .webp, .pdf) to control the output format; PNG is the default. Query parameters allow on-the-fly resize and crop.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "image",
+                ":image_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "width",
+                  "value": "<integer>",
+                  "description": "Resize width in pixels."
+                },
+                {
+                  "disabled": false,
+                  "key": "height",
+                  "value": "<integer>",
+                  "description": "Resize height in pixels."
+                },
+                {
+                  "disabled": false,
+                  "key": "dpi",
+                  "value": "<integer>",
+                  "description": "Output DPI."
+                },
+                {
+                  "disabled": false,
+                  "key": "aspect_ratio",
+                  "value": "<string>",
+                  "description": "Aspect ratio to apply, e.g. \"16:9\"."
+                },
+                {
+                  "disabled": false,
+                  "key": "crop_width",
+                  "value": "<integer>"
+                },
+                {
+                  "disabled": false,
+                  "key": "crop_height",
+                  "value": "<integer>"
+                },
+                {
+                  "disabled": false,
+                  "key": "dl",
+                  "value": "<integer>",
+                  "description": "Set to 1 to force a download response."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "image_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "image/png"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "0cdf2a6b-14d3-4496-a712-0f7247448791",
+              "name": "The rendered image binary.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "image",
+                    ":image_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "width",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "height",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "dpi",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "aspect_ratio",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "crop_width",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "crop_height",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "dl",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "image_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "image/png"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "image/png"
+                }
+              ],
+              "body": "string",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "0f0909cd-5092-4af5-9dec-4da6345c0c4d",
+              "name": "Image not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "image",
+                    ":image_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "width",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "height",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "dpi",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "aspect_ratio",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "crop_width",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "crop_height",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "dl",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "image_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "38eb2718-3c8a-4e49-bea0-435fcdabc318",
+          "name": "Delete an image.",
+          "request": {
+            "name": "Delete an image.",
+            "description": {},
+            "url": {
+              "path": [
+                "image",
+                ":image_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "image_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "ef977e58-85e8-4e5c-a230-97782fa95fc0",
+              "name": "Accepted; the image will be deleted.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "image",
+                    ":image_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "image_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Accepted",
+              "code": 202,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "c6ab5968-879f-4c45-b23b-1c2cdacf9ea0",
+              "name": "Missing or invalid authentication.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "image",
+                    ":image_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "image_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "928e1971-3a18-404f-a2ac-5bbd874e3b7e",
+          "name": "List images.",
+          "request": {
+            "name": "List images.",
+            "description": {
+              "content": "Return a paginated list of images created on the account.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "images"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "count",
+                  "value": "<integer>",
+                  "description": "Number of images to return (max 50)."
+                },
+                {
+                  "disabled": false,
+                  "key": "page_token",
+                  "value": "<string>",
+                  "description": "Pagination token returned by a previous call."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "0e6ecdcb-8941-4134-85e5-0d62ed2f6607",
+              "name": "A paginated list of images.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "images"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "count",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "page_token",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"images\": [\n    {\n      \"url\": \"string\",\n      \"viewBox\": \"string\"\n    },\n    {\n      \"url\": \"string\",\n      \"viewBox\": \"string\"\n    }\n  ],\n  \"page_token\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "025522c1-f626-4a52-9c15-5a67d49480e4",
+              "name": "Missing or invalid authentication.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "images"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "count",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "page_token",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "62154e4a-dc97-414d-9614-dbce425b44f4",
+          "name": "Check account usage.",
+          "request": {
+            "name": "Check account usage.",
+            "description": {
+              "content": "Return hourly, daily, and monthly image usage statistics plus billing period totals for the account.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "usage"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "952371c4-5d19-4750-bb93-7d319d815b4d",
+              "name": "Account usage statistics.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "usage"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"hourly\": 2469,\n  \"daily\": 7441,\n  \"monthly\": 8468,\n  \"billing_period_total\": 58\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "27e51a5b-d4fb-480e-aa97-79bdd6e33276",
+              "name": "Missing or invalid authentication.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "usage"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://hcti.io/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "basic",
+    "basic": [
+      {
+        "key": "username",
+        "value": "{{basicAuthUsername}}"
+      },
+      {
+        "key": "password",
+        "value": "{{basicAuthPassword}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "82103285-7083-4939-84bd-884db7b32ffa",
+    "name": "HTML/CSS to Image Image Generation API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "REST API for rendering HTML, CSS, and JavaScript (or a URL) into high quality images (PNG, JPG, WebP, PDF). Supports single and batch image creation, image retrieval with resize/crop options, reusable templates with variable substitution, and HMAC-signed URLs for GET-based templated image generation. Authentication is HTTP Basic using your User ID as the username and your API Key as the password.\n\nContact Support:\n Name: HTML/CSS to Image Support\n Email: support@htmlcsstoimage.com",
+      "type": "text/plain"
+    }
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "HTML/CSS to Image Image Generation Signed URLs API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Signed URLs",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Generate a templated image from an HMAC-signed URL.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://hcti.io/v1/image/:template_id/:signed_token:format",
+            "params": [
+              {
+                "name": "template_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "signed_token",
+                "value": "",
+                "type": "path",
+                "description": "HMAC-signed token encoding the template_values."
+              },
+              {
+                "name": "format",
+                "value": "",
+                "type": "path",
+                "description": "Output format extension."
+              }
+            ]
+          },
+          "docs": "Render an image from a template using a signed token that encodes the template_values. The token is HMAC-signed with the API key so values cannot be modified by anyone without the key, allowing image generation from a simple GET request with no POST or stored URL."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

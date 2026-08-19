@@ -1,0 +1,182 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "HTML/CSS to Image Image Generation API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Image Generation",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create an image from HTML/CSS or a URL.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://hcti.io/v1/image",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Render HTML, CSS, and JavaScript into an image and return its ID and a permanent hosted URL. Provide either `html` or `url` (not both)."
+        },
+        {
+          "info": {
+            "name": "Create multiple images in a single request.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://hcti.io/v1/image/batch",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Render up to 25 image variations in one request. Shared options are provided in `default_options` and merged into each `variations` entry."
+        },
+        {
+          "info": {
+            "name": "Delete multiple images in a single request.",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://hcti.io/v1/image/batch",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Delete multiple images in a single request."
+        },
+        {
+          "info": {
+            "name": "Retrieve a rendered image.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://hcti.io/v1/image/:image_id",
+            "params": [
+              {
+                "name": "image_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "width",
+                "value": "",
+                "type": "query",
+                "description": "Resize width in pixels."
+              },
+              {
+                "name": "height",
+                "value": "",
+                "type": "query",
+                "description": "Resize height in pixels."
+              },
+              {
+                "name": "dpi",
+                "value": "",
+                "type": "query",
+                "description": "Output DPI."
+              },
+              {
+                "name": "aspect_ratio",
+                "value": "",
+                "type": "query",
+                "description": "Aspect ratio to apply, e.g. \"16:9\"."
+              },
+              {
+                "name": "crop_width",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "crop_height",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "dl",
+                "value": "",
+                "type": "query",
+                "description": "Set to 1 to force a download response."
+              }
+            ]
+          },
+          "docs": "Fetch a previously created image. Append a format extension (.png, .jpg, .webp, .pdf) to control the output format; PNG is the default. Query parameters allow on-the-fly resize and crop."
+        },
+        {
+          "info": {
+            "name": "Delete an image.",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://hcti.io/v1/image/:image_id",
+            "params": [
+              {
+                "name": "image_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Delete an image."
+        },
+        {
+          "info": {
+            "name": "List images.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://hcti.io/v1/images",
+            "params": [
+              {
+                "name": "count",
+                "value": "",
+                "type": "query",
+                "description": "Number of images to return (max 50)."
+              },
+              {
+                "name": "page_token",
+                "value": "",
+                "type": "query",
+                "description": "Pagination token returned by a previous call."
+              }
+            ]
+          },
+          "docs": "Return a paginated list of images created on the account."
+        },
+        {
+          "info": {
+            "name": "Check account usage.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://hcti.io/v1/usage"
+          },
+          "docs": "Return hourly, daily, and monthly image usage statistics plus billing period totals for the account."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
