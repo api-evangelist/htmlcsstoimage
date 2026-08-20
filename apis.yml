@@ -22,6 +22,13 @@ accessModel:
   method: derived
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/htmlcsstoimage.png
 tags:
+- Image-Generation
+- HTML to Image
+- CSS to Image
+- Rendering
+- Screenshots
+- Templates
+tags_raw:
 - Image Generation
 - HTML to Image
 - CSS to Image
@@ -38,6 +45,8 @@ apis:
   humanURL: https://docs.htmlcsstoimage.com/getting-started/using-the-api/
   baseURL: https://hcti.io/v1
   tags:
+  - Image-Generation
+  tags_raw:
   - Image Generation
   properties:
   - type: OpenAPI
