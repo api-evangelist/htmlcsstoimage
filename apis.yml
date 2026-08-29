@@ -7,6 +7,18 @@ description: HTML/CSS to Image (HCTI) is a REST API that renders HTML, CSS, and
   to the API and receive a permanent, hosted image URL. It supports reusable
   templates with variable substitution and HMAC-signed URLs for generating images
   from a simple GET request.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: freemium
   onboarding: self-serve
