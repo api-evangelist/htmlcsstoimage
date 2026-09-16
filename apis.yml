@@ -2,10 +2,9 @@ aid: htmlcsstoimage
 url: https://raw.githubusercontent.com/api-evangelist/htmlcsstoimage/refs/heads/main/apis.yml
 name: HTML/CSS to Image
 kind: company
-description: HTML/CSS to Image (HCTI) is a REST API that renders HTML, CSS, and
-  JavaScript into high quality images (PNG, JPG, WebP, PDF). Send markup or a URL
-  to the API and receive a permanent, hosted image URL. It supports reusable
-  templates with variable substitution and HMAC-signed URLs for generating images
+description: HTML/CSS to Image (HCTI) is a REST API that renders HTML, CSS, and JavaScript into high quality
+  images (PNG, JPG, WebP, PDF). Send markup or a URL to the API and receive a permanent, hosted image
+  URL. It supports reusable templates with variable substitution and HMAC-signed URLs for generating images
   from a simple GET request.
 deliveryModel:
   model: saas
@@ -48,11 +47,11 @@ tags_raw:
 - Screenshots
 - Templates
 created: '2026-06-20'
-modified: '2026-06-20'
+modified: '2026-09-16'
 specificationVersion: '0.23'
 apis:
 - aid: htmlcsstoimage:htmlcsstoimage-image-generation-api
-  name: HTML/CSS to Image Image Generation API
+  name: HTML/CSS to Image Generation API
   description: The Image Generation API from HTML/CSS to Image — 5 operation(s) for image generation.
   humanURL: https://docs.htmlcsstoimage.com/getting-started/using-the-api/
   baseURL: https://hcti.io/v1
