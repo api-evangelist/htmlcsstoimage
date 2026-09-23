@@ -1,4 +1,4 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
   title: HTML/CSS to Image Image Generation API
   description: REST API for rendering HTML, CSS, and JavaScript (or a URL) into high quality images (PNG, JPG, WebP, PDF). Supports single and batch image creation, image retrieval with resize/crop options, reusable templates with variable substitution, and HMAC-signed URLs for GET-based templated image generation. Authentication is HTTP Basic using your User ID as the username and your API Key as the password.
@@ -20,7 +20,7 @@ paths:
       operationId: createImage
       tags:
       - Image Generation
-      summary: Create an image from HTML/CSS or a URL.
+      summary: Create an image from HTML/CSS or a URL
       description: Render HTML, CSS, and JavaScript into an image and return its ID and a permanent hosted URL. Provide either `html` or `url` (not both).
       requestBody:
         required: true
@@ -44,7 +44,7 @@ paths:
       operationId: createImageBatch
       tags:
       - Image Generation
-      summary: Create multiple images in a single request.
+      summary: Create multiple images in a single request
       description: Render up to 25 image variations in one request. Shared options are provided in `default_options` and merged into each `variations` entry.
       requestBody:
         required: true
@@ -67,7 +67,7 @@ paths:
       operationId: deleteImageBatch
       tags:
       - Image Generation
-      summary: Delete multiple images in a single request.
+      summary: Delete multiple images in a single request
       requestBody:
         required: true
         content:
@@ -92,7 +92,7 @@ paths:
       operationId: getImage
       tags:
       - Image Generation
-      summary: Retrieve a rendered image.
+      summary: Retrieve a rendered image
       description: Fetch a previously created image. Append a format extension (.png, .jpg, .webp, .pdf) to control the output format; PNG is the default. Query parameters allow on-the-fly resize and crop.
       parameters:
       - name: image_id
@@ -159,7 +159,7 @@ paths:
       operationId: deleteImage
       tags:
       - Image Generation
-      summary: Delete an image.
+      summary: Delete an image
       parameters:
       - name: image_id
         in: path
@@ -176,7 +176,7 @@ paths:
       operationId: listImages
       tags:
       - Image Generation
-      summary: List images.
+      summary: List images
       description: Return a paginated list of images created on the account.
       parameters:
       - name: count
@@ -204,7 +204,7 @@ paths:
       operationId: getUsage
       tags:
       - Image Generation
-      summary: Check account usage.
+      summary: Check account usage
       description: Return hourly, daily, and monthly image usage statistics plus billing period totals for the account.
       responses:
         '200':
@@ -217,16 +217,17 @@ paths:
           description: Missing or invalid authentication.
 components:
   schemas:
-    ImageList:
+    Usage:
       type: object
       properties:
-        images:
-          type: array
-          items:
-            $ref: '#/components/schemas/Image'
-        page_token:
-          type: string
-          description: Token to retrieve the next page of results.
+        hourly:
+          type: integer
+        daily:
+          type: integer
+        monthly:
+          type: integer
+        billing_period_total:
+          type: integer
     Image:
       type: object
       properties:
@@ -292,17 +293,6 @@ components:
           type: boolean
         proxy_id:
           type: string
-    Usage:
-      type: object
-      properties:
-        hourly:
-          type: integer
-        daily:
-          type: integer
-        monthly:
-          type: integer
-        billing_period_total:
-          type: integer
     CreateImageBatchRequest:
       type: object
       required:
@@ -315,6 +305,16 @@ components:
           maxItems: 25
           items:
             $ref: '#/components/schemas/CreateImageRequest'
+    ImageList:
+      type: object
+      properties:
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/Image'
+        page_token:
+          type: string
+          description: Token to retrieve the next page of results.
   securitySchemes:
     basicAuth:
       type: http

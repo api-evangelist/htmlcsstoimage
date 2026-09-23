@@ -1,6 +1,6 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: HTML/CSS to Image Image Generation Templates API
+  title: HTML/CSS to Image Templates API
   description: REST API for rendering HTML, CSS, and JavaScript (or a URL) into high quality images (PNG, JPG, WebP, PDF). Supports single and batch image creation, image retrieval with resize/crop options, reusable templates with variable substitution, and HMAC-signed URLs for GET-based templated image generation. Authentication is HTTP Basic using your User ID as the username and your API Key as the password.
   termsOfService: https://htmlcsstoimage.com/terms
   contact:
@@ -20,7 +20,7 @@ paths:
       operationId: listTemplates
       tags:
       - Templates
-      summary: List all templates.
+      summary: List all templates
       responses:
         '200':
           description: The account's templates.
@@ -36,7 +36,7 @@ paths:
       operationId: createTemplate
       tags:
       - Templates
-      summary: Create a template.
+      summary: Create a template
       description: Create a reusable HTML/CSS template containing named variables that are substituted at render time via template_values.
       requestBody:
         required: true
@@ -58,7 +58,7 @@ paths:
       operationId: listTemplateVersions
       tags:
       - Templates
-      summary: List versions of a template.
+      summary: List versions of a template
       parameters:
       - name: template_id
         in: path
@@ -80,7 +80,7 @@ paths:
       operationId: editTemplate
       tags:
       - Templates
-      summary: Edit a template.
+      summary: Edit a template
       description: Create a new version of an existing template.
       parameters:
       - name: template_id
@@ -108,7 +108,7 @@ paths:
       operationId: createTemplatedImage
       tags:
       - Templates
-      summary: Generate an image from a template.
+      summary: Generate an image from a template
       description: Render a template into an image by supplying template_values for its named variables. Accepts JSON or form data; with form data the template_values must be JSON encoded.
       parameters:
       - name: template_id
@@ -136,7 +136,7 @@ paths:
       operationId: createTemplatedImageVersion
       tags:
       - Templates
-      summary: Generate an image from a specific template version.
+      summary: Generate an image from a specific template version
       parameters:
       - name: template_id
         in: path
@@ -176,15 +176,6 @@ components:
           type: string
         description:
           type: string
-    CreateTemplatedImageRequest:
-      type: object
-      required:
-      - template_values
-      properties:
-        template_values:
-          type: object
-          additionalProperties: true
-          description: Key/value substitutions for the template's named variables.
     Image:
       type: object
       properties:
@@ -194,6 +185,15 @@ components:
         viewBox:
           type: string
           description: The view box used to render the image.
+    CreateTemplatedImageRequest:
+      type: object
+      required:
+      - template_values
+      properties:
+        template_values:
+          type: object
+          additionalProperties: true
+          description: Key/value substitutions for the template's named variables.
     CreateTemplateRequest:
       type: object
       required:

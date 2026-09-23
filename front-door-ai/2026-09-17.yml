@@ -1,0 +1,34 @@
+# Front Door AI Index — htmlcsstoimage — 2026-09-17
+# AI vocabulary counted on the provider's root page. Generated; do not edit.
+# `score` is null unless ownership is `own` — see front_door_ai.py.
+front_door_ai:
+  slug: htmlcsstoimage
+  lexicon_version: '1.0'
+  probed_at: '2026-09-17'
+  host: htmlcsstoimage.com
+  final_host: htmlcsstoimage.com
+  ownership: own
+  owner: htmlcsstoimage
+  shares_host_with: null
+  inherited_from: null
+  verdict: scored
+  score: 21
+  host_score: 21
+  density: 16.61
+  words: 1264
+  tiers:
+    agentic: 11
+    core: 6
+    model: 4
+  ambiguous: 9
+  top_terms:
+    MCP: 8
+    automation: 7
+    AI: 6
+    Claude: 2
+    agent: 2
+    AI agent: 1
+    Gemini: 1
+    OpenAI: 1
+    copilot: 1
+    prompts: 1
