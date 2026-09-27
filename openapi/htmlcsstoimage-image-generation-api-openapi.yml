@@ -217,26 +217,6 @@ paths:
           description: Missing or invalid authentication.
 components:
   schemas:
-    Usage:
-      type: object
-      properties:
-        hourly:
-          type: integer
-        daily:
-          type: integer
-        monthly:
-          type: integer
-        billing_period_total:
-          type: integer
-    Image:
-      type: object
-      properties:
-        url:
-          type: string
-          description: Permanent hosted URL of the rendered image.
-        viewBox:
-          type: string
-          description: The view box used to render the image.
     CreateImageRequest:
       type: object
       description: One of `html` or `url` is required (not both).
@@ -293,6 +273,27 @@ components:
           type: boolean
         proxy_id:
           type: string
+    ImageList:
+      type: object
+      properties:
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/Image'
+        page_token:
+          type: string
+          description: Token to retrieve the next page of results.
+    Usage:
+      type: object
+      properties:
+        hourly:
+          type: integer
+        daily:
+          type: integer
+        monthly:
+          type: integer
+        billing_period_total:
+          type: integer
     CreateImageBatchRequest:
       type: object
       required:
@@ -305,16 +306,15 @@ components:
           maxItems: 25
           items:
             $ref: '#/components/schemas/CreateImageRequest'
-    ImageList:
+    Image:
       type: object
       properties:
-        images:
-          type: array
-          items:
-            $ref: '#/components/schemas/Image'
-        page_token:
+        url:
           type: string
-          description: Token to retrieve the next page of results.
+          description: Permanent hosted URL of the rendered image.
+        viewBox:
+          type: string
+          description: The view box used to render the image.
   securitySchemes:
     basicAuth:
       type: http

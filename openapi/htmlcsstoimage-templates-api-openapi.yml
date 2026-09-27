@@ -165,26 +165,6 @@ paths:
           description: Missing or invalid authentication.
 components:
   schemas:
-    Template:
-      type: object
-      properties:
-        template_id:
-          type: string
-        template_version:
-          type: string
-        name:
-          type: string
-        description:
-          type: string
-    Image:
-      type: object
-      properties:
-        url:
-          type: string
-          description: Permanent hosted URL of the rendered image.
-        viewBox:
-          type: string
-          description: The view box used to render the image.
     CreateTemplatedImageRequest:
       type: object
       required:
@@ -194,6 +174,15 @@ components:
           type: object
           additionalProperties: true
           description: Key/value substitutions for the template's named variables.
+    Image:
+      type: object
+      properties:
+        url:
+          type: string
+          description: Permanent hosted URL of the rendered image.
+        viewBox:
+          type: string
+          description: The view box used to render the image.
     CreateTemplateRequest:
       type: object
       required:
@@ -203,6 +192,17 @@ components:
           type: string
           description: The template HTML, including named variables.
         css:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+    Template:
+      type: object
+      properties:
+        template_id:
+          type: string
+        template_version:
           type: string
         name:
           type: string
