@@ -183,6 +183,17 @@ components:
         viewBox:
           type: string
           description: The view box used to render the image.
+    Template:
+      type: object
+      properties:
+        template_id:
+          type: string
+        template_version:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
     CreateTemplateRequest:
       type: object
       required:
@@ -192,17 +203,6 @@ components:
           type: string
           description: The template HTML, including named variables.
         css:
-          type: string
-        name:
-          type: string
-        description:
-          type: string
-    Template:
-      type: object
-      properties:
-        template_id:
-          type: string
-        template_version:
           type: string
         name:
           type: string
