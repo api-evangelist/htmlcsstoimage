@@ -174,15 +174,6 @@ components:
           type: object
           additionalProperties: true
           description: Key/value substitutions for the template's named variables.
-    Image:
-      type: object
-      properties:
-        url:
-          type: string
-          description: Permanent hosted URL of the rendered image.
-        viewBox:
-          type: string
-          description: The view box used to render the image.
     Template:
       type: object
       properties:
@@ -194,6 +185,15 @@ components:
           type: string
         description:
           type: string
+    Image:
+      type: object
+      properties:
+        url:
+          type: string
+          description: Permanent hosted URL of the rendered image.
+        viewBox:
+          type: string
+          description: The view box used to render the image.
     CreateTemplateRequest:
       type: object
       required:

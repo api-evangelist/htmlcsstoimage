@@ -238,6 +238,17 @@ components:
         viewBox:
           type: string
           description: The view box used to render the image.
+    Usage:
+      type: object
+      properties:
+        hourly:
+          type: integer
+        daily:
+          type: integer
+        monthly:
+          type: integer
+        billing_period_total:
+          type: integer
     CreateImageRequest:
       type: object
       description: One of `html` or `url` is required (not both).
@@ -294,17 +305,6 @@ components:
           type: boolean
         proxy_id:
           type: string
-    Usage:
-      type: object
-      properties:
-        hourly:
-          type: integer
-        daily:
-          type: integer
-        monthly:
-          type: integer
-        billing_period_total:
-          type: integer
     ImageList:
       type: object
       properties:
