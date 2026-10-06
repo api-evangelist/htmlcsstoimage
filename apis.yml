@@ -48,7 +48,7 @@ tags_raw:
 - Templates
 - Image-Generation
 created: '2026-06-20'
-modified: '2026-09-16'
+modified: '2026-10-06'
 specificationVersion: '0.23'
 apis:
 - aid: htmlcsstoimage:htmlcsstoimage-image-generation-api
@@ -109,6 +109,10 @@ apis:
   - type: Documentation
     url: https://docs.htmlcsstoimage.com/getting-started/templates/
 common:
+- url: https://htmlcsstoimage.com/blog
+  type: Blog
+- url: https://htmlcsstoimage.com/blog/rss.xml
+  type: BlogRSS
 - type: AgenticAccess
   url: agentic-access/htmlcsstoimage-agentic-access.yml
 - type: DomainSecurity
