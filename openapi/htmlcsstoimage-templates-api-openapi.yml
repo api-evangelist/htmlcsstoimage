@@ -165,26 +165,6 @@ paths:
           description: Missing or invalid authentication.
 components:
   schemas:
-    CreateTemplatedImageRequest:
-      type: object
-      required:
-      - template_values
-      properties:
-        template_values:
-          type: object
-          additionalProperties: true
-          description: Key/value substitutions for the template's named variables.
-    Template:
-      type: object
-      properties:
-        template_id:
-          type: string
-        template_version:
-          type: string
-        name:
-          type: string
-        description:
-          type: string
     Image:
       type: object
       properties:
@@ -208,6 +188,26 @@ components:
           type: string
         description:
           type: string
+    Template:
+      type: object
+      properties:
+        template_id:
+          type: string
+        template_version:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+    CreateTemplatedImageRequest:
+      type: object
+      required:
+      - template_values
+      properties:
+        template_values:
+          type: object
+          additionalProperties: true
+          description: Key/value substitutions for the template's named variables.
   securitySchemes:
     basicAuth:
       type: http
