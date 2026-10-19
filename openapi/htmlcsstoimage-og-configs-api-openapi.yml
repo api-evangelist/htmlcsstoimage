@@ -1,0 +1,1033 @@
+openapi: 3.2.0
+info:
+  title: HTML/CSS to Image OG Configs API
+  description: Capture website screenshots, render HTML/CSS, or create templated graphics. Use MCP with AI, no-code automation, or the REST API. No browsers needed.
+  version: 1.0.0
+servers:
+- url: https://hcti.io
+security:
+- basic: []
+tags:
+- name: OG Configs
+paths:
+  /v1/og-configs:
+    post:
+      tags:
+      - OG Configs
+      summary: Create an OG configuration
+      description: '**Rate limit:** 20 requests per minute per organization, shared across all operations in the `og-config:write` group and all API keys belonging to that organization.'
+      operationId: create-og-config
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrUpdateOgConfigRequest'
+        required: true
+      responses:
+        '429':
+          description: Too Many Requests
+          headers:
+            RateLimit-Policy:
+              description: 'The shared organization quota policy: policy name, request allowance (q), and sliding-window length in seconds (w).'
+              schema:
+                type: string
+              example: '"og-config:write";q=20;w=60'
+            RateLimit:
+              description: The policy name and remaining requests (r) after this rate-limit check. Concurrent requests share this allowance; it does not guarantee subsequent requests will be accepted.
+              schema:
+                type: string
+              example: '"og-config:write";r=0'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '200':
+          description: OK
+          headers:
+            RateLimit-Policy:
+              description: 'The shared organization quota policy: policy name, request allowance (q), and sliding-window length in seconds (w).'
+              schema:
+                type: string
+              example: '"og-config:write";q=20;w=60'
+            RateLimit:
+              description: The policy name and remaining requests (r) after this rate-limit check. Concurrent requests share this allowance; it does not guarantee subsequent requests will be accepted.
+              schema:
+                type: string
+              example: '"og-config:write";r=19'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OgConfig'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+      x-badges:
+      - name: Requires og_configs:create_update
+        position: after
+        color: '#64748b'
+      x-required-permissions:
+      - og_configs:create_update
+      x-rate-limit:
+        group: og-config:write
+        limit: 20
+        window_seconds: 60
+        scope: organization
+    get:
+      tags:
+      - OG Configs
+      summary: List OG configurations
+      description: 'Returns configurations in descending creation order, including disabled configurations. Pass pagination.next_page_start as page_start to continue; null indicates the final page.
+
+
+        **Rate limit:** 100 requests per minute per organization, shared across all operations in the `og-config:read` group and all API keys belonging to that organization.'
+      operationId: list-og-configs
+      parameters:
+      - name: count
+        in: query
+        description: Maximum number of configurations to return, from 1 to 100. Defaults to 10.
+        schema:
+          maximum: 100
+          minimum: 1
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - integer
+          - string
+          format: int32
+          default: 10
+      - name: page_start
+        in: query
+        description: pagination.next_page_start from the previous response. Omit for the first page.
+        schema:
+          type: string
+      responses:
+        '429':
+          description: Too Many Requests
+          headers:
+            RateLimit-Policy:
+              description: 'The shared organization quota policy: policy name, request allowance (q), and sliding-window length in seconds (w).'
+              schema:
+                type: string
+              example: '"og-config:read";q=100;w=60'
+            RateLimit:
+              description: The policy name and remaining requests (r) after this rate-limit check. Concurrent requests share this allowance; it does not guarantee subsequent requests will be accepted.
+              schema:
+                type: string
+              example: '"og-config:read";r=0'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '200':
+          description: OK
+          headers:
+            RateLimit-Policy:
+              description: 'The shared organization quota policy: policy name, request allowance (q), and sliding-window length in seconds (w).'
+              schema:
+                type: string
+              example: '"og-config:read";q=100;w=60'
+            RateLimit:
+              description: The policy name and remaining requests (r) after this rate-limit check. Concurrent requests share this allowance; it does not guarantee subsequent requests will be accepted.
+              schema:
+                type: string
+              example: '"og-config:read";r=99'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedListBaseOfOgConfigAndstring'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+      x-badges:
+      - name: Requires og_configs:read
+        position: after
+        color: '#64748b'
+      x-required-permissions:
+      - og_configs:read
+      x-rate-limit:
+        group: og-config:read
+        limit: 100
+        window_seconds: 60
+        scope: organization
+  /v1/og-configs/{id}:
+    post:
+      tags:
+      - OG Configs
+      summary: Update an OG configuration
+      description: '**Rate limit:** 20 requests per minute per organization, shared across all operations in the `og-config:write` group and all API keys belonging to that organization.'
+      operationId: update-og-config
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrUpdateOgConfigRequest'
+        required: true
+      responses:
+        '429':
+          description: Too Many Requests
+          headers:
+            RateLimit-Policy:
+              description: 'The shared organization quota policy: policy name, request allowance (q), and sliding-window length in seconds (w).'
+              schema:
+                type: string
+              example: '"og-config:write";q=20;w=60'
+            RateLimit:
+              description: The policy name and remaining requests (r) after this rate-limit check. Concurrent requests share this allowance; it does not guarantee subsequent requests will be accepted.
+              schema:
+                type: string
+              example: '"og-config:write";r=0'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '200':
+          description: OK
+          headers:
+            RateLimit-Policy:
+              description: 'The shared organization quota policy: policy name, request allowance (q), and sliding-window length in seconds (w).'
+              schema:
+                type: string
+              example: '"og-config:write";q=20;w=60'
+            RateLimit:
+              description: The policy name and remaining requests (r) after this rate-limit check. Concurrent requests share this allowance; it does not guarantee subsequent requests will be accepted.
+              schema:
+                type: string
+              example: '"og-config:write";r=19'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OgConfig'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+      x-badges:
+      - name: Requires og_configs:create_update
+        position: after
+        color: '#64748b'
+      x-required-permissions:
+      - og_configs:create_update
+      x-rate-limit:
+        group: og-config:write
+        limit: 20
+        window_seconds: 60
+        scope: organization
+    get:
+      tags:
+      - OG Configs
+      summary: Get an OG configuration
+      description: '**Rate limit:** 100 requests per minute per organization, shared across all operations in the `og-config:read` group and all API keys belonging to that organization.'
+      operationId: get-og-config
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '429':
+          description: Too Many Requests
+          headers:
+            RateLimit-Policy:
+              description: 'The shared organization quota policy: policy name, request allowance (q), and sliding-window length in seconds (w).'
+              schema:
+                type: string
+              example: '"og-config:read";q=100;w=60'
+            RateLimit:
+              description: The policy name and remaining requests (r) after this rate-limit check. Concurrent requests share this allowance; it does not guarantee subsequent requests will be accepted.
+              schema:
+                type: string
+              example: '"og-config:read";r=0'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '200':
+          description: OK
+          headers:
+            RateLimit-Policy:
+              description: 'The shared organization quota policy: policy name, request allowance (q), and sliding-window length in seconds (w).'
+              schema:
+                type: string
+              example: '"og-config:read";q=100;w=60'
+            RateLimit:
+              description: The policy name and remaining requests (r) after this rate-limit check. Concurrent requests share this allowance; it does not guarantee subsequent requests will be accepted.
+              schema:
+                type: string
+              example: '"og-config:read";r=99'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OgConfig'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+      x-badges:
+      - name: Requires og_configs:read
+        position: after
+        color: '#64748b'
+      x-required-permissions:
+      - og_configs:read
+      x-rate-limit:
+        group: og-config:read
+        limit: 100
+        window_seconds: 60
+        scope: organization
+    delete:
+      tags:
+      - OG Configs
+      summary: Delete an OG configuration
+      description: '**Rate limit:** 20 requests per minute per organization, shared across all operations in the `og-config:write` group and all API keys belonging to that organization.'
+      operationId: delete-og-config
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '429':
+          description: Too Many Requests
+          headers:
+            RateLimit-Policy:
+              description: 'The shared organization quota policy: policy name, request allowance (q), and sliding-window length in seconds (w).'
+              schema:
+                type: string
+              example: '"og-config:write";q=20;w=60'
+            RateLimit:
+              description: The policy name and remaining requests (r) after this rate-limit check. Concurrent requests share this allowance; it does not guarantee subsequent requests will be accepted.
+              schema:
+                type: string
+              example: '"og-config:write";r=0'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '204':
+          description: No Content
+          headers:
+            RateLimit-Policy:
+              description: 'The shared organization quota policy: policy name, request allowance (q), and sliding-window length in seconds (w).'
+              schema:
+                type: string
+              example: '"og-config:write";q=20;w=60'
+            RateLimit:
+              description: The policy name and remaining requests (r) after this rate-limit check. Concurrent requests share this allowance; it does not guarantee subsequent requests will be accepted.
+              schema:
+                type: string
+              example: '"og-config:write";r=19'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+      x-badges:
+      - name: Requires og_configs:delete
+        position: after
+        color: '#64748b'
+      x-required-permissions:
+      - og_configs:delete
+      x-rate-limit:
+        group: og-config:write
+        limit: 20
+        window_seconds: 60
+        scope: organization
+components:
+  schemas:
+    OgConfigOgConfig_Templated:
+      title: Templated OG Config
+      required:
+      - template_id
+      - id
+      - domain_id
+      - base_url
+      properties:
+        config_type:
+          enum:
+          - templated
+          type: string
+        template_id:
+          type: string
+          description: ID of the template used to render images.
+        template_version:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: Template version used to render images. Null means the latest version is used.
+          format: int64
+        template_values_mapping:
+          type:
+          - 'null'
+          - array
+          items:
+            $ref: '#/components/schemas/OgTemplateValueMapping'
+          description: Mappings from page metadata to template fields. Each mapping uses either a meta_key or a fallback.
+        headers:
+          type:
+          - 'null'
+          - object
+          additionalProperties:
+            type: string
+          description: Custom HTTP headers sent on top-level page navigations to the source website's origin and any additional_header_origins.
+        additional_header_origins:
+          type:
+          - 'null'
+          - array
+          items:
+            type: string
+          description: Additional exact HTTP or HTTPS origins allowed to receive custom headers, in the format scheme://host[:port] without a path.
+        id:
+          type: string
+        domain_id:
+          type: string
+          description: Domain identifier used in this configuration's Open Graph image URLs.
+        name:
+          type:
+          - 'null'
+          - string
+        description:
+          type:
+          - 'null'
+          - string
+        base_url:
+          type: string
+        optimization_mode:
+          $ref: '#/components/schemas/OgSocialSizeOptimizationMode'
+        enabled:
+          type: boolean
+          description: Whether the configuration is enabled to serve Open Graph images.
+        refresh_interval_s:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - integer
+          - string
+          format: uint32
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      description: An Open Graph configuration that renders a template using extracted page metadata.
+    CreateOrUpdateOgConfigRequestCreateOrUpdateOgConfigRequest_HtmlCss:
+      title: HTML/CSS OG Config Request
+      required:
+      - name
+      - base_url
+      properties:
+        config_type:
+          enum:
+          - html_css
+          type: string
+        default_options:
+          oneOf:
+          - type: 'null'
+          - description: Default image rendering options for pages served by this configuration. Any extracted values will override these defaults.
+            $ref: '#/components/schemas/OgDefaultImageOptions'
+        extract_values:
+          type: boolean
+          description: Whether to extract image options from page metadata. When disabled, only the configured defaults are used.
+        name:
+          maxLength: 255
+          type: string
+          description: Display name for the configuration, up to 255 characters.
+        description:
+          maxLength: 1023
+          type:
+          - 'null'
+          - string
+          description: Optional description of the configuration, up to 1023 characters.
+        base_url:
+          maxLength: 2048
+          type: string
+          description: HTTPS origin of the source website, such as https://example.com. Do not include a path, query string, fragment, or credentials.
+        optimization_mode:
+          description: 'How images are sized for social platforms: keep their original dimensions, adapt them after rendering, or set the viewport before rendering. Defaults to post_process.'
+          $ref: '#/components/schemas/OgSocialSizeOptimizationMode'
+        disabled:
+          type: boolean
+          description: Whether this configuration is disabled from serving Open Graph images. Defaults to false.
+          default: false
+        refresh_interval_s:
+          maximum: 31536000
+          minimum: 1800
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - integer
+          - string
+          description: Interval in seconds before cached images are eligible for refresh. The minimum depends on your plan; the maximum is one year.
+          format: uint32
+          default: 86400
+      description: Settings for an Open Graph configuration that renders page HTML/CSS.
+    RequestOverrideRequestOverrideBlock:
+      properties:
+        action:
+          enum:
+          - block
+          type: string
+        url:
+          type:
+          - 'null'
+          - string
+          description: URL wildcard pattern to match, using * for any sequence of characters. When resource_types is also supplied, both matchers must match.
+        resource_types:
+          type:
+          - 'null'
+          - array
+          items:
+            $ref: '#/components/schemas/RequestOverrideResourceType'
+          description: Resource types to match, supplied as an array of names, such as image, script, xhr, or fetch. Any listed type may match. When url is also supplied, it must match too.
+    OgSocialSizeOptimizationMode:
+      enum:
+      - no_optimization
+      - post_process
+      - set_viewport
+      description: How images are sized for different social platforms.
+    RequestOverrideResourceType:
+      enum:
+      - beacon
+      - document
+      - stylesheet
+      - image
+      - image_set
+      - media
+      - font
+      - script
+      - text_track
+      - xhr
+      - fetch
+      - event_source
+      - manifest
+      - ping
+      - img
+      - other
+    CreateOrUpdateOgConfigRequestCreateOrUpdateOgConfigRequest_Templated:
+      title: Templated OG Config Request
+      required:
+      - template_id
+      - name
+      - base_url
+      properties:
+        config_type:
+          enum:
+          - templated
+          type: string
+        template_id:
+          type: string
+          description: ID of the template used to render images.
+        template_version:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: Template version to use. Omit or set to null to use the latest version.
+          format: int64
+        template_values_mapping:
+          maxItems: 32
+          type:
+          - 'null'
+          - array
+          items:
+            $ref: '#/components/schemas/OgTemplateValueMapping'
+          description: Up to 32 mappings from page metadata to template fields. Each mapping supplies either a meta_key or a fallback.
+        headers:
+          type:
+          - 'null'
+          - object
+          additionalProperties:
+            type: string
+          description: HTTP headers to include on top-level page navigations to the requested URL's origin and any additional_header_origins. Supports up to 20 headers with names up to 512 ASCII characters and values up to 8192 UTF-8 bytes.
+        additional_header_origins:
+          type:
+          - 'null'
+          - array
+          items:
+            type: string
+          description: Additional exact HTTP or HTTPS origins allowed to receive custom headers. Supports up to 20 unique origins of up to 512 UTF-8 bytes each. Origins must use the format scheme://host[:port] without a path; duplicates are ignored.
+        name:
+          maxLength: 255
+          type: string
+          description: Display name for the configuration, up to 255 characters.
+        description:
+          maxLength: 1023
+          type:
+          - 'null'
+          - string
+          description: Optional description of the configuration, up to 1023 characters.
+        base_url:
+          maxLength: 2048
+          type: string
+          description: HTTPS origin of the source website, such as https://example.com. Do not include a path, query string, fragment, or credentials.
+        optimization_mode:
+          description: 'How images are sized for social platforms: keep their original dimensions, adapt them after rendering, or set the viewport before rendering. Defaults to post_process.'
+          $ref: '#/components/schemas/OgSocialSizeOptimizationMode'
+        disabled:
+          type: boolean
+          description: Whether this configuration is disabled from serving Open Graph images. Defaults to false.
+          default: false
+        refresh_interval_s:
+          maximum: 31536000
+          minimum: 1800
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - integer
+          - string
+          description: Interval in seconds before cached images are eligible for refresh. The minimum depends on your plan; the maximum is one year.
+          format: uint32
+          default: 86400
+      description: Settings for an Open Graph configuration that renders a template using values extracted from page metadata.
+    OgConfigOgConfig_HtmlCss:
+      title: HTML/CSS OG Config
+      required:
+      - id
+      - domain_id
+      - base_url
+      properties:
+        config_type:
+          enum:
+          - html_css
+          type: string
+        default_options:
+          oneOf:
+          - type: 'null'
+          - description: Default image rendering options for pages served by this configuration. Extracted image options override these defaults.
+            $ref: '#/components/schemas/OgDefaultImageOptions'
+        extract_values:
+          type: boolean
+          description: Whether image options are extracted from page metadata. When disabled, only the configured defaults are used.
+        id:
+          type: string
+        domain_id:
+          type: string
+          description: Domain identifier used in this configuration's Open Graph image URLs.
+        name:
+          type:
+          - 'null'
+          - string
+        description:
+          type:
+          - 'null'
+          - string
+        base_url:
+          type: string
+        optimization_mode:
+          $ref: '#/components/schemas/OgSocialSizeOptimizationMode'
+        enabled:
+          type: boolean
+          description: Whether the configuration is enabled to serve Open Graph images.
+        refresh_interval_s:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - integer
+          - string
+          format: uint32
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      description: An Open Graph configuration that renders page HTML/CSS.
+    OgConfig:
+      title: OG Config
+      required:
+      - config_type
+      type: object
+      anyOf:
+      - $ref: '#/components/schemas/OgConfigOgConfig_HtmlCss'
+      - $ref: '#/components/schemas/OgConfigOgConfig_Templated'
+      description: An Open Graph image configuration.
+      discriminator:
+        propertyName: config_type
+        mapping:
+          html_css: '#/components/schemas/OgConfigOgConfig_HtmlCss'
+          templated: '#/components/schemas/OgConfigOgConfig_Templated'
+    OgTemplateValueFallback:
+      enum:
+      - titles
+      - descriptions
+      - null
+    CreateOrUpdateOgConfigRequest:
+      title: Create or Update OG Config Request
+      required:
+      - config_type
+      type: object
+      anyOf:
+      - $ref: '#/components/schemas/CreateOrUpdateOgConfigRequestCreateOrUpdateOgConfigRequest_HtmlCss'
+      - $ref: '#/components/schemas/CreateOrUpdateOgConfigRequestCreateOrUpdateOgConfigRequest_Templated'
+      description: Settings for creating or updating an Open Graph image configuration.
+      discriminator:
+        propertyName: config_type
+        mapping:
+          html_css: '#/components/schemas/CreateOrUpdateOgConfigRequestCreateOrUpdateOgConfigRequest_HtmlCss'
+          templated: '#/components/schemas/CreateOrUpdateOgConfigRequestCreateOrUpdateOgConfigRequest_Templated'
+    OgDefaultImageOptions:
+      type: object
+      properties:
+        css:
+          type:
+          - 'null'
+          - string
+          description: CSS injected into the loaded page to override its styles.
+        device_scale:
+          maximum: 3
+          minimum: 0.1
+          pattern: ^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$
+          type:
+          - 'null'
+          - number
+          - string
+          description: 'Adjusts the pixel ratio used for the screenshot. Minimum: 0.1. Maximum: 3. HTML and template renders default to 2; URL renders default to 1.'
+          format: double
+        max_wait_ms:
+          maximum: 10000
+          minimum: 500
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: 'Sets a limit on how long to wait before taking the screenshot when the page continues loading irrelevant content. Minimum: 500. Maximum: 10000 and subject to the account plan limit.'
+          format: int32
+        ms_delay:
+          maximum: 10000
+          minimum: 0
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: 'Adds extra time in milliseconds before taking the screenshot so JavaScript can execute. Minimum: 0. Maximum: 10000.'
+          format: int32
+          default: 0
+        render_when_ready:
+          type:
+          - 'null'
+          - boolean
+          description: Waits until the page signals that the screenshot is ready. The image fails if the readiness signal is never sent.
+        selector:
+          type:
+          - 'null'
+          - string
+          description: A CSS selector for an element in the HTML. We’ll crop the image to this specific element.
+        viewport_height:
+          maximum: 6000
+          minimum: 1
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: 'Sets the height of Chrome''s viewport and disables automatic cropping. Minimum: 1. Maximum: 6000. Both viewport dimensions must be supplied together.'
+          format: int32
+        viewport_width:
+          maximum: 6000
+          minimum: 1
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: 'Sets the width of Chrome''s viewport and disables automatic cropping. Minimum: 1. Maximum: 6000. Both viewport dimensions must be supplied together.'
+          format: int32
+        disable_twemoji:
+          type:
+          - 'null'
+          - boolean
+          description: Set explicitly to false to inject Twemoji into the captured URL page. Omitted, null, or true leaves the page's emoji handling unchanged and does not disable the website's own emoji scripts.
+        color_scheme:
+          oneOf:
+          - type: 'null'
+          - description: 'Sets Chrome''s preferred color scheme. Valid values: light or dark.'
+            $ref: '#/components/schemas/ColorSchemeType'
+        timezone:
+          type:
+          - 'null'
+          - string
+          description: Sets the IANA timezone used by Chrome while rendering. Must be a recognized IANA timezone identifier.
+        block_consent_banners:
+          type:
+          - 'null'
+          - boolean
+          description: Attempt to block cookie/consent banners from displaying.
+        identify_as_hcti:
+          type:
+          - 'null'
+          - boolean
+          description: Identify the top-level page navigation as an HCTI screenshot request using the X-HCTI-SCREENSHOT header.
+        headers:
+          type:
+          - 'null'
+          - object
+          additionalProperties:
+            type: string
+          description: HTTP headers to include on top-level page navigations to the requested URL's origin and any additional_header_origins. Supports up to 20 headers with names up to 512 ASCII characters and values up to 8192 UTF-8 bytes. For GET and form-encoded requests, repeat this parameter using the format `headers=name:value`.
+        additional_header_origins:
+          type:
+          - 'null'
+          - array
+          items:
+            type: string
+          description: Additional exact HTTP or HTTPS origins allowed to receive custom headers. Supports up to 20 unique origins of up to 512 UTF-8 bytes each. Origins must use the format scheme://host[:port] without a path; duplicates are ignored. For GET and form-encoded requests, repeat this parameter for each origin.
+        include_headers_on_subrequests:
+          type:
+          - 'null'
+          - boolean
+          description: Include custom headers on subrequests to the requested URL's origin and any additional_header_origins. Defaults to false. Requires at least one header.
+        viewport_mobile:
+          type:
+          - 'null'
+          - boolean
+          description: Specifies whether the page uses mobile viewport behavior, including its viewport meta tag.
+        viewport_landscape:
+          type:
+          - 'null'
+          - boolean
+          description: Specifies whether the emulated viewport is in landscape orientation.
+        viewport_touch:
+          type:
+          - 'null'
+          - boolean
+          description: Specifies whether the emulated viewport supports touch events.
+        media_type:
+          oneOf:
+          - type: 'null'
+          - description: 'Sets the CSS media type used while rendering the page. Valid values: print or screen.'
+            $ref: '#/components/schemas/MediaType'
+        proxy_id:
+          type:
+          - 'null'
+          - string
+        storage_destination_id:
+          type:
+          - 'null'
+          - string
+        transparent_background:
+          type:
+          - 'null'
+          - boolean
+          description: Specifies whether the image is rendered with a transparent background.
+        request_overrides:
+          type:
+          - 'null'
+          - array
+          items:
+            $ref: '#/components/schemas/RequestOverride'
+          description: 'Rules that override browser network requests. The block action blocks requests matching a URL wildcard pattern and/or resource types. When both matchers are supplied, both must match. A request is blocked if any block rule matches. Omitted, null, or an empty array adds no overrides. Requires a paid plan. Set default_options.request_overrides to a JSON array. Maximum 100 rules and 512 characters per URL pattern. Each block rule requires a nonempty URL pattern or at least one resource type; supplied matchers cannot be empty. Not supported in hcti: meta tags.'
+    ApiErrorResult:
+      required:
+      - error
+      - message
+      - statusCode
+      type: object
+      properties:
+        success:
+          type: boolean
+        error:
+          type: string
+        validationErrors:
+          type:
+          - 'null'
+          - array
+          items:
+            $ref: '#/components/schemas/ValidationError'
+        referenceId:
+          type:
+          - 'null'
+          - string
+        message:
+          type: string
+        statusCode:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - integer
+          - string
+          format: int32
+    ColorSchemeType:
+      enum:
+      - light
+      - dark
+      - null
+    RequestOverride:
+      required:
+      - action
+      type: object
+      anyOf:
+      - $ref: '#/components/schemas/RequestOverrideRequestOverrideBlock'
+      description: A browser request override. The action discriminator selects the rule type; currently only block is supported.
+      discriminator:
+        propertyName: action
+        mapping:
+          block: '#/components/schemas/RequestOverrideRequestOverrideBlock'
+    MediaType:
+      enum:
+      - print
+      - screen
+      - null
+    PaginationInfoOfstring:
+      required:
+      - next_page_start
+      type: object
+      properties:
+        next_page_start:
+          type:
+          - 'null'
+          - string
+    OgTemplateValueMapping:
+      required:
+      - template_key
+      type: object
+      properties:
+        template_key:
+          maxLength: 128
+          type: string
+          description: Template field path to populate, up to 128 characters.
+        meta_key:
+          maxLength: 136
+          type:
+          - 'null'
+          - string
+          description: Meta tag name or property, such as og:title or twitter:description. Supply this or fallback, not both.
+        fallback:
+          oneOf:
+          - type: 'null'
+          - description: Use the page's available title or description metadata. Supply this or meta_key, not both.
+            $ref: '#/components/schemas/OgTemplateValueFallback'
+      description: Maps page metadata to a template field. Supply exactly one of meta_key or fallback.
+    PaginatedListBaseOfOgConfigAndstring:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/OgConfig'
+        pagination:
+          $ref: '#/components/schemas/PaginationInfoOfstring'
+    ValidationError:
+      type: object
+      properties:
+        path:
+          type: string
+        message:
+          type: string
+  securitySchemes:
+    basic:
+      type: http
+      description: 'Basic auth using API ID as username and API Key as password. Example: `Authorization: Basic {base64(api-id:api-key)}`'
+      scheme: basic

@@ -1,215 +1,985 @@
 openapi: 3.2.0
 info:
   title: HTML/CSS to Image Templates API
-  description: REST API for rendering HTML, CSS, and JavaScript (or a URL) into high quality images (PNG, JPG, WebP, PDF). Supports single and batch image creation, image retrieval with resize/crop options, reusable templates with variable substitution, and HMAC-signed URLs for GET-based templated image generation. Authentication is HTTP Basic using your User ID as the username and your API Key as the password.
-  termsOfService: https://htmlcsstoimage.com/terms
-  contact:
-    name: HTML/CSS to Image Support
-    email: support@htmlcsstoimage.com
-    url: https://htmlcsstoimage.com
-  version: '1.0'
+  description: Capture website screenshots, render HTML/CSS, or create templated graphics. Use MCP with AI, no-code automation, or the REST API. No browsers needed.
+  version: 1.0.0
 servers:
-- url: https://hcti.io/v1
+- url: https://hcti.io
 security:
-- basicAuth: []
+- basic: []
 tags:
 - name: Templates
 paths:
-  /template:
-    get:
-      operationId: listTemplates
-      tags:
-      - Templates
-      summary: List all templates
-      responses:
-        '200':
-          description: The account's templates.
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Template'
-        '401':
-          description: Missing or invalid authentication.
+  /v1/template:
     post:
-      operationId: createTemplate
       tags:
       - Templates
-      summary: Create a template
-      description: Create a reusable HTML/CSS template containing named variables that are substituted at render time via template_values.
+      summary: Create a new template
+      operationId: create-template
       requestBody:
-        required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateTemplateRequest'
+              $ref: '#/components/schemas/TemplateRequest'
+        required: true
       responses:
         '200':
-          description: The created template.
+          description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Template'
-        '401':
-          description: Missing or invalid authentication.
-  /template/{template_id}:
+                $ref: '#/components/schemas/TemplateCreateResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+      x-badges:
+      - name: Requires templates:create_update
+        position: after
+        color: '#64748b'
+      x-required-permissions:
+      - templates:create_update
     get:
-      operationId: listTemplateVersions
       tags:
       - Templates
-      summary: List versions of a template
+      summary: List templates
+      operationId: list-templates
       parameters:
-      - name: template_id
+      - name: count
+        in: query
+        schema:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - integer
+          - string
+          format: int32
+          default: 10
+      - name: max_version
+        in: query
+        schema:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - integer
+          - string
+          format: int64
+          default: 9223372036854775807
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListOfTemplates'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+      x-badges:
+      - name: Requires templates:read
+        position: after
+        color: '#64748b'
+      x-required-permissions:
+      - templates:read
+  /v1/template/{id}:
+    post:
+      tags:
+      - Templates
+      summary: Create a new version for an existing template
+      operationId: create-template-version
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TemplateRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TemplateCreateResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+      x-badges:
+      - name: Requires templates:create_update
+        position: after
+        color: '#64748b'
+      x-required-permissions:
+      - templates:create_update
+    get:
+      tags:
+      - Templates
+      summary: List template versions for a template
+      operationId: list-template-versions
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: count
+        in: query
+        schema:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - integer
+          - string
+          format: int32
+          default: 10
+      - name: max_version
+        in: query
+        schema:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - integer
+          - string
+          format: int64
+          default: 9223372036854775807
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListOfTemplates'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+      x-badges:
+      - name: Requires templates:read
+        position: after
+        color: '#64748b'
+      x-required-permissions:
+      - templates:read
+    delete:
+      tags:
+      - Templates
+      summary: Remove a template
+      description: Remove a template and clear all of its contents. Images already rendered with this template may still be cached, but rendering an image with this template, which was never rendered before will fail.
+      operationId: remove-template
+      parameters:
+      - name: id
         in: path
         required: true
         schema:
           type: string
       responses:
-        '200':
-          description: The versions of the template.
+        '400':
+          description: Bad Request
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Template'
+                $ref: '#/components/schemas/ApiErrorResult'
         '404':
-          description: Template not found.
-    post:
-      operationId: editTemplate
-      tags:
-      - Templates
-      summary: Edit a template
-      description: Create a new version of an existing template.
-      parameters:
-      - name: template_id
-        in: path
-        required: true
-        schema:
-          type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateTemplateRequest'
-      responses:
-        '200':
-          description: The updated template.
+          description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Template'
-        '401':
-          description: Missing or invalid authentication.
-  /image/{template_id}:
-    post:
-      operationId: createTemplatedImage
-      tags:
-      - Templates
-      summary: Generate an image from a template
-      description: Render a template into an image by supplying template_values for its named variables. Accepts JSON or form data; with form data the template_values must be JSON encoded.
-      parameters:
-      - name: template_id
-        in: path
-        required: true
-        schema:
-          type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateTemplatedImageRequest'
-      responses:
-        '200':
-          description: The created image.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Image'
-        '401':
-          description: Missing or invalid authentication.
-  /image/{template_id}/{template_version}:
-    post:
-      operationId: createTemplatedImageVersion
-      tags:
-      - Templates
-      summary: Generate an image from a specific template version
-      parameters:
-      - name: template_id
-        in: path
-        required: true
-        schema:
-          type: string
-      - name: template_version
-        in: path
-        required: true
-        schema:
-          type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateTemplatedImageRequest'
-      responses:
-        '200':
-          description: The created image.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Image'
-        '401':
-          description: Missing or invalid authentication.
+                $ref: '#/components/schemas/ApiErrorResult'
+      x-badges:
+      - name: Requires templates:delete
+        position: after
+        color: '#64748b'
+      x-required-permissions:
+      - templates:delete
 components:
   schemas:
-    Image:
-      type: object
-      properties:
-        url:
-          type: string
-          description: Permanent hosted URL of the rendered image.
-        viewBox:
-          type: string
-          description: The view box used to render the image.
-    CreateTemplateRequest:
-      type: object
+    TemplateVariableMode:
+      enum:
+      - Required
+      - Ignore
+      - Fallback
+      description: How a block-template variable is handled when rendering.
+    ImageTemplateBase:
+      title: Base Image Template
       required:
-      - html
+      - template_type
+      type: object
+      anyOf:
+      - $ref: '#/components/schemas/ImageTemplateBaseImageTemplate_HtmlCss'
+      - $ref: '#/components/schemas/ImageTemplateBaseImageTemplate_Blocks'
+      description: A saved image template version. template_type identifies the html_css or blocks variant. Use id as the template identifier and version to render a specific saved version. Nullable rendering settings are stored overrides; null means the setting is unset.
+      discriminator:
+        propertyName: template_type
+        mapping:
+          html_css: '#/components/schemas/ImageTemplateBaseImageTemplate_HtmlCss'
+          blocks: '#/components/schemas/ImageTemplateBaseImageTemplate_Blocks'
+    RequestOverrideRequestOverrideBlock:
       properties:
-        html:
+        action:
+          enum:
+          - block
           type: string
-          description: The template HTML, including named variables.
-        css:
-          type: string
-        name:
-          type: string
-        description:
-          type: string
-    Template:
+        url:
+          type:
+          - 'null'
+          - string
+          description: URL wildcard pattern to match, using * for any sequence of characters. When resource_types is also supplied, both matchers must match.
+        resource_types:
+          type:
+          - 'null'
+          - array
+          items:
+            $ref: '#/components/schemas/RequestOverrideResourceType'
+          description: Resource types to match, supplied as an array of names, such as image, script, xhr, or fetch. Any listed type may match. When url is also supplied, it must match too.
+    ListOfTemplates:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ImageTemplateBase'
+        pagination:
+          $ref: '#/components/schemas/PaginationInfoOflong'
+    TemplateCreateResponse:
       type: object
       properties:
         template_id:
           type: string
         template_version:
-          type: string
-        name:
-          type: string
-        description:
-          type: string
-    CreateTemplatedImageRequest:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - integer
+          - string
+          format: int64
+    HandlebarsHelperKind:
+      enum:
+      - UNKNOWN
+      - None
+      - If
+      - Unless
+      - With
+      - Each
+    RequestOverrideResourceType:
+      enum:
+      - beacon
+      - document
+      - stylesheet
+      - image
+      - image_set
+      - media
+      - font
+      - script
+      - text_track
+      - xhr
+      - fetch
+      - event_source
+      - manifest
+      - ping
+      - img
+      - other
+    PDFOptions:
       type: object
-      required:
-      - template_values
       properties:
-        template_values:
+        page_height:
+          type:
+          - 'null'
+          - string
+          description: Height of the page, with unit (px, in, cm, mm, pt)
+        page_width:
+          type:
+          - 'null'
+          - string
+          description: Width of the page, with unit (px, in, cm, mm, pt)
+        scale:
+          maximum: 2
+          minimum: 0.1
+          pattern: ^-?(?:0|[1-9]\d*)(?:\.\d+)?$
+          type:
+          - 'null'
+          - number
+          - string
+          description: Scale of the webpage rendering. Defaults to 1.
+          format: double
+        margins:
+          type:
+          - 'null'
+          - array
+          items:
+            type: string
+          description: 'Margins of the webpage rendering. Defaults to 0. 4 values must be supplied: top, right, bottom, left. Units are px, cm, in, mm, or pt.'
+        print_background:
+          type: boolean
+          description: Print background graphics.
+    JsonNode: {}
+    ApiErrorResult:
+      required:
+      - error
+      - message
+      - statusCode
+      type: object
+      properties:
+        success:
+          type: boolean
+        error:
+          type: string
+        validationErrors:
+          type:
+          - 'null'
+          - array
+          items:
+            $ref: '#/components/schemas/ValidationError'
+        referenceId:
+          type:
+          - 'null'
+          - string
+        message:
+          type: string
+        statusCode:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - integer
+          - string
+          format: int32
+    TemplateRequest:
+      title: Template Request
+      required:
+      - html
+      type: object
+      properties:
+        html:
+          type: string
+          description: HTML to render for the template. Use Handlebars placeholders for values that will be substituted when an image is rendered. Must be non-empty, contain at least one Handlebars placeholder, and compile as valid Handlebars.
+        name:
+          maxLength: 64
+          type:
+          - 'null'
+          - string
+          description: 'The name of the template, used to identify it in your account. Maximum: 64 characters.'
+        description:
+          maxLength: 1024
+          type:
+          - 'null'
+          - string
+          description: 'An optional description of the template for your reference. Maximum: 1024 characters.'
+        css:
+          type:
+          - 'null'
+          - string
+          description: CSS used to style images rendered from the template. Handlebars expressions are not supported in CSS; put dynamic CSS in the HTML instead.
+        device_scale:
+          maximum: 3
+          minimum: 0.1
+          pattern: ^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$
+          type:
+          - 'null'
+          - number
+          - string
+          description: 'Adjusts the pixel ratio used for the screenshot. Minimum: 0.1. Maximum: 3. HTML and template renders default to 2; URL renders default to 1.'
+          format: double
+        google_fonts:
+          type:
+          - 'null'
+          - string
+          description: Google fonts to load. Separate multiple fonts with a pipe, such as 'Roboto|OpenSans', and set font-family in the CSS to use them.
+        max_wait_ms:
+          maximum: 10000
+          minimum: 500
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: 'Sets a limit on how long to wait before taking the screenshot when the page continues loading irrelevant content. Minimum: 500. Maximum: 10000 and subject to the account plan limit.'
+          format: int32
+        ms_delay:
+          maximum: 10000
+          minimum: 0
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: 'Adds extra time in milliseconds before taking the screenshot so JavaScript can execute. Minimum: 0. Maximum: 10000.'
+          format: int32
+          default: 0
+        render_when_ready:
+          type:
+          - 'null'
+          - boolean
+          description: Waits until the page signals that the screenshot is ready. The image fails if the readiness signal is never sent.
+        selector:
+          type:
+          - 'null'
+          - string
+          description: A CSS selector for an element in the HTML. We’ll crop the image to this specific element.
+        viewport_height:
+          maximum: 6000
+          minimum: 1
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: 'Sets the height of Chrome''s viewport and disables automatic cropping. Minimum: 1. Maximum: 6000. Both viewport dimensions must be supplied together.'
+          format: int32
+        viewport_width:
+          maximum: 6000
+          minimum: 1
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: 'Sets the width of Chrome''s viewport and disables automatic cropping. Minimum: 1. Maximum: 6000. Both viewport dimensions must be supplied together.'
+          format: int32
+        pdf_options:
+          oneOf:
+          - type: 'null'
+          - description: Options used when generating a PDF instead of an image. Page dimensions and margins must include supported PDF units; margins must contain either zero or four values; scale must be between 0.1 and 2.
+            $ref: '#/components/schemas/PDFOptions'
+        disable_twemoji:
+          type:
+          - 'null'
+          - boolean
+          description: Twemoji is enabled by default for images rendered from the template. Set true to disable automatic emoji replacement. Omitted, null, or false keeps Twemoji enabled.
+        color_scheme:
+          oneOf:
+          - type: 'null'
+          - description: 'Sets Chrome''s preferred color scheme. Valid values: light or dark.'
+            $ref: '#/components/schemas/ColorSchemeType'
+        timezone:
+          type:
+          - 'null'
+          - string
+          description: Sets the IANA timezone used by Chrome while rendering. Must be a recognized IANA timezone identifier.
+        viewport_mobile:
+          type:
+          - 'null'
+          - boolean
+          description: Specifies whether the page uses mobile viewport behavior, including its viewport meta tag.
+        viewport_landscape:
+          type:
+          - 'null'
+          - boolean
+          description: Specifies whether the emulated viewport is in landscape orientation.
+        viewport_touch:
+          type:
+          - 'null'
+          - boolean
+          description: Specifies whether the emulated viewport supports touch events.
+        media_type:
+          oneOf:
+          - type: 'null'
+          - description: 'Sets the CSS media type used while rendering the page. Valid values: print or screen.'
+            $ref: '#/components/schemas/MediaType'
+        proxy_id:
+          type:
+          - 'null'
+          - string
+          description: Specifies which configured organization proxy to use when rendering.
+        storage_destination_id:
+          type:
+          - 'null'
+          - string
+          description: Specifies which configured organization storage destination receives the rendered image.
+        jumbo_max_height:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: Maximum height of the rendered image in jumbo mode. Jumbo rendering consumes additional renders and requires jumbo_max_width. Supply both jumbo dimensions. Each must be greater than 0 and no more than 80000; at least one must exceed 8000; total area cannot exceed 400000000 pixels.
+          format: int32
+        jumbo_max_width:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: Maximum width of the rendered image in jumbo mode. Jumbo rendering consumes additional renders and requires jumbo_max_height. Supply both jumbo dimensions. Each must be greater than 0 and no more than 80000; at least one must exceed 8000; total area cannot exceed 400000000 pixels.
+          format: int32
+        transparent_background:
+          type:
+          - 'null'
+          - boolean
+          description: Specifies whether the image is rendered with a transparent background.
+        request_overrides:
+          type:
+          - 'null'
+          - array
+          items:
+            $ref: '#/components/schemas/RequestOverride'
+          description: Rules that override browser network requests. The block action blocks requests matching a URL wildcard pattern and/or resource types. When both matchers are supplied, both must match. A request is blocked if any block rule matches. Omitted, null, or an empty array adds no overrides. Requires a paid plan. Accepts a JSON array in JSON requests or a JSON-encoded array string in form requests. Maximum 100 rules and 512 characters per URL pattern. Each block rule requires a nonempty URL pattern or at least one resource type; supplied matchers cannot be empty.
+    ImageTemplateBaseImageTemplate_Blocks:
+      title: Blocks Image Template
+      properties:
+        template_type:
+          enum:
+          - blocks
+          type: string
+        block_counts:
           type: object
-          additionalProperties: true
-          description: Key/value substitutions for the template's named variables.
+          additionalProperties:
+            pattern: ^-?(?:0|[1-9]\d*)$
+            type:
+            - integer
+            - string
+            format: uint16
+          description: The number of each block type used in this template.
+        variables:
+          type: array
+          items:
+            $ref: '#/components/schemas/TemplateVariable'
+          description: Discovered template variables and their value requirements. Use these entries to prepare template_values for a rendering request.
+        id:
+          type: string
+          description: Unique template identifier used when rendering or updating this template.
+        version:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - integer
+          - string
+          description: Saved template version identifier. Specify it when rendering to select this exact version.
+          format: int64
+        name:
+          type:
+          - 'null'
+          - string
+          description: The name of the template, used to identify it in your account.
+        description:
+          type:
+          - 'null'
+          - string
+          description: A description of the template.
+        created_at:
+          type: string
+          description: UTC timestamp when this template version was created.
+          format: date-time
+        updated_at:
+          type: string
+          description: UTC timestamp when this template version was last updated.
+          format: date-time
+        device_scale:
+          pattern: ^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$
+          type:
+          - 'null'
+          - number
+          - string
+          description: Stored screenshot pixel ratio. For example, 2 produces two output pixels per CSS pixel in each dimension. Null uses the rendering default.
+          format: double
+        viewport_height:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: Stored browser viewport height in CSS pixels. Used with viewport_width; setting both disables automatic cropping.
+          format: int32
+        viewport_width:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: Stored browser viewport width in CSS pixels. Used with viewport_height; output pixel dimensions also depend on device_scale.
+          format: int32
+        disable_twemoji:
+          type:
+          - 'null'
+          - boolean
+          description: Whether native emoji rendering is used instead of Twemoji. Null leaves the rendering default in effect.
+        max_wait_ms:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: Stored loading-wait limit in milliseconds before capture.
+          format: int32
+        ms_delay:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: Stored additional delay in milliseconds before capture, used to allow client-side content to finish updating.
+          format: int32
+        selector:
+          type:
+          - 'null'
+          - string
+          description: CSS selector used to crop rendered images to an element. Preserve this setting when updating the template unless the intended crop changes.
+        render_when_ready:
+          type:
+          - 'null'
+          - boolean
+          description: Whether capture waits for the template's JavaScript to call ScreenshotReady(). When enabled, rendering fails if the readiness signal is never sent.
+        request_overrides:
+          type:
+          - 'null'
+          - array
+          items:
+            $ref: '#/components/schemas/RequestOverride'
+          description: Stored browser request overrides. Block rules match URL wildcard patterns and/or resource types; supplied matchers must all match. Null or an empty array adds no overrides.
+        render_count:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - integer
+          - string
+          description: Number of image creations recorded for this template version. Organization-wide image-credit usage is reported separately.
+          format: int64
+        color_scheme:
+          oneOf:
+          - type: 'null'
+          - description: Stored light or dark color-scheme preference exposed to the rendered page's CSS.
+            $ref: '#/components/schemas/ColorSchemeType'
+        timezone:
+          type:
+          - 'null'
+          - string
+          description: Stored IANA timezone identifier exposed to the rendered page, such as America/New_York or UTC.
+        viewport_mobile:
+          type:
+          - 'null'
+          - boolean
+          description: Whether mobile viewport emulation is enabled, including support for the page's meta viewport tag.
+        viewport_landscape:
+          type:
+          - 'null'
+          - boolean
+          description: Whether the emulated viewport uses landscape orientation.
+        viewport_touch:
+          type:
+          - 'null'
+          - boolean
+          description: Whether touch support is exposed to the rendered page.
+        media_type:
+          oneOf:
+          - type: 'null'
+          - description: 'Stored CSS media mode: print or screen.'
+            $ref: '#/components/schemas/MediaType'
+        proxy_id:
+          type:
+          - 'null'
+          - string
+          description: Identifier of the configured organization proxy used for rendering. Proxy connection details are available through the proxy configuration.
+        jumbo_max_height:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: Stored maximum output height in pixels for jumbo rendering. Used with jumbo_max_width; jumbo rendering consumes additional image credits.
+          format: int32
+        jumbo_max_width:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: Stored maximum output width in pixels for jumbo rendering. Used with jumbo_max_height.
+          format: int32
+        transparent_background:
+          type:
+          - 'null'
+          - boolean
+          description: Whether the browser's default background is transparent. Backgrounds explicitly painted by the template's HTML or CSS still apply.
+        storage_destination_id:
+          type:
+          - 'null'
+          - string
+          description: Identifier of the configured destination for rendered files. The destination configuration specifies its provider, enabled state, and storage behavior.
+      description: 'A template with template_type: blocks, authored in the visual template editor. Contains block counts and variable requirements for rendering. Edit the block design in the template editor.'
+    ColorSchemeType:
+      enum:
+      - light
+      - dark
+      - null
+    ImageTemplateBaseImageTemplate_HtmlCss:
+      title: HTML/CSS Image Template
+      properties:
+        template_type:
+          enum:
+          - html_css
+          type: string
+        css:
+          title: CSS
+          type:
+          - 'null'
+          - string
+          description: CSS used to style your templated images. You cannot use handlebars inside of the CSS; if you want to define variables for your CSS, it should be inlined in your HTML.
+        html:
+          title: HTML
+          type:
+          - 'null'
+          - string
+          description: HTML to render for your template. Use handlebars to place variables that will be substituted in the final rendered image.
+        google_fonts:
+          type:
+          - 'null'
+          - string
+          description: Google Font families loaded for this template, separated by |. The HTML or CSS must reference the families to use them.
+        id:
+          type: string
+          description: Unique template identifier used when rendering or updating this template.
+        version:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - integer
+          - string
+          description: Saved template version identifier. Specify it when rendering to select this exact version.
+          format: int64
+        name:
+          type:
+          - 'null'
+          - string
+          description: The name of the template, used to identify it in your account.
+        description:
+          type:
+          - 'null'
+          - string
+          description: A description of the template.
+        created_at:
+          type: string
+          description: UTC timestamp when this template version was created.
+          format: date-time
+        updated_at:
+          type: string
+          description: UTC timestamp when this template version was last updated.
+          format: date-time
+        device_scale:
+          pattern: ^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$
+          type:
+          - 'null'
+          - number
+          - string
+          description: Stored screenshot pixel ratio. For example, 2 produces two output pixels per CSS pixel in each dimension. Null uses the rendering default.
+          format: double
+        viewport_height:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: Stored browser viewport height in CSS pixels. Used with viewport_width; setting both disables automatic cropping.
+          format: int32
+        viewport_width:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: Stored browser viewport width in CSS pixels. Used with viewport_height; output pixel dimensions also depend on device_scale.
+          format: int32
+        disable_twemoji:
+          type:
+          - 'null'
+          - boolean
+          description: Whether native emoji rendering is used instead of Twemoji. Null leaves the rendering default in effect.
+        max_wait_ms:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: Stored loading-wait limit in milliseconds before capture.
+          format: int32
+        ms_delay:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: Stored additional delay in milliseconds before capture, used to allow client-side content to finish updating.
+          format: int32
+        selector:
+          type:
+          - 'null'
+          - string
+          description: CSS selector used to crop rendered images to an element. Preserve this setting when updating the template unless the intended crop changes.
+        render_when_ready:
+          type:
+          - 'null'
+          - boolean
+          description: Whether capture waits for the template's JavaScript to call ScreenshotReady(). When enabled, rendering fails if the readiness signal is never sent.
+        request_overrides:
+          type:
+          - 'null'
+          - array
+          items:
+            $ref: '#/components/schemas/RequestOverride'
+          description: Stored browser request overrides. Block rules match URL wildcard patterns and/or resource types; supplied matchers must all match. Null or an empty array adds no overrides.
+        render_count:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - integer
+          - string
+          description: Number of image creations recorded for this template version. Organization-wide image-credit usage is reported separately.
+          format: int64
+        color_scheme:
+          oneOf:
+          - type: 'null'
+          - description: Stored light or dark color-scheme preference exposed to the rendered page's CSS.
+            $ref: '#/components/schemas/ColorSchemeType'
+        timezone:
+          type:
+          - 'null'
+          - string
+          description: Stored IANA timezone identifier exposed to the rendered page, such as America/New_York or UTC.
+        viewport_mobile:
+          type:
+          - 'null'
+          - boolean
+          description: Whether mobile viewport emulation is enabled, including support for the page's meta viewport tag.
+        viewport_landscape:
+          type:
+          - 'null'
+          - boolean
+          description: Whether the emulated viewport uses landscape orientation.
+        viewport_touch:
+          type:
+          - 'null'
+          - boolean
+          description: Whether touch support is exposed to the rendered page.
+        media_type:
+          oneOf:
+          - type: 'null'
+          - description: 'Stored CSS media mode: print or screen.'
+            $ref: '#/components/schemas/MediaType'
+        proxy_id:
+          type:
+          - 'null'
+          - string
+          description: Identifier of the configured organization proxy used for rendering. Proxy connection details are available through the proxy configuration.
+        jumbo_max_height:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: Stored maximum output height in pixels for jumbo rendering. Used with jumbo_max_width; jumbo rendering consumes additional image credits.
+          format: int32
+        jumbo_max_width:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: Stored maximum output width in pixels for jumbo rendering. Used with jumbo_max_height.
+          format: int32
+        transparent_background:
+          type:
+          - 'null'
+          - boolean
+          description: Whether the browser's default background is transparent. Backgrounds explicitly painted by the template's HTML or CSS still apply.
+        storage_destination_id:
+          type:
+          - 'null'
+          - string
+          description: Identifier of the configured destination for rendered files. The destination configuration specifies its provider, enabled state, and storage behavior.
+      description: 'A template with template_type: html_css. Contains the saved HTML, CSS, and rendering settings. Supply template_values when rendering to substitute placeholder values; update the template to change the saved design.'
+    RequestOverride:
+      required:
+      - action
+      type: object
+      anyOf:
+      - $ref: '#/components/schemas/RequestOverrideRequestOverrideBlock'
+      description: A browser request override. The action discriminator selects the rule type; currently only block is supported.
+      discriminator:
+        propertyName: action
+        mapping:
+          block: '#/components/schemas/RequestOverrideRequestOverrideBlock'
+    TemplateVariable:
+      type: object
+      properties:
+        mode:
+          description: Whether the template variable is required, ignored, or has a fallback value.
+          $ref: '#/components/schemas/TemplateVariableMode'
+        key:
+          type: string
+          description: Variable name or path used in template_values, without Handlebars braces. Preserve its casing and nesting when supplying values.
+        fallback_value:
+          oneOf:
+          - type: 'null'
+          - description: Saved fallback JSON value used when the variable is missing and its mode selects fallback behavior. Preserve its JSON value type when supplying an override.
+            $ref: '#/components/schemas/JsonNode'
+        kind_hint:
+          description: Inferred value kind, such as string, boolean, integer, color, object, or collection. Use it to choose an appropriate JSON value; an unknown kind provides no type guidance.
+          $ref: '#/components/schemas/TemplateValueKind'
+        helper_kind:
+          description: Handlebars helper context used during value validation, such as if, unless, with, or each. Interpret this together with mode and kind_hint when preparing template_values.
+          $ref: '#/components/schemas/HandlebarsHelperKind'
+      description: A variable discovered in a block template, with its key, requirement mode, inferred value kind, and any fallback or helper context.
+    MediaType:
+      enum:
+      - print
+      - screen
+      - null
+    TemplateValueKind:
+      enum:
+      - UNKNOWN
+      - String
+      - Boolean
+      - Integer
+      - Float
+      - Color
+      - Size
+      - Object
+      - Collection
+    PaginationInfoOflong:
+      required:
+      - next_page_start
+      type: object
+      properties:
+        next_page_start:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          format: int64
+    ValidationError:
+      type: object
+      properties:
+        path:
+          type: string
+        message:
+          type: string
   securitySchemes:
-    basicAuth:
+    basic:
       type: http
+      description: 'Basic auth using API ID as username and API Key as password. Example: `Authorization: Basic {base64(api-id:api-key)}`'
       scheme: basic
-      description: HTTP Basic authentication using your User ID as the username and your API Key as the password, both from the HTML/CSS to Image dashboard.

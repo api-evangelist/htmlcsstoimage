@@ -1,0 +1,597 @@
+openapi: 3.2.0
+info:
+  title: HTML/CSS to Image Proxies API
+  description: Capture website screenshots, render HTML/CSS, or create templated graphics. Use MCP with AI, no-code automation, or the REST API. No browsers needed.
+  version: 1.0.0
+servers:
+- url: https://hcti.io
+security:
+- basic: []
+tags:
+- name: Proxies
+paths:
+  /v1/proxies:
+    post:
+      tags:
+      - Proxies
+      summary: Create a new Proxy
+      description: '**Rate limit:** 20 requests per minute per organization, shared across all operations in the `proxy:write` group and all API keys belonging to that organization.'
+      operationId: create-proxy
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrUpdateProxyRequest'
+        required: true
+      responses:
+        '429':
+          description: Too Many Requests
+          headers:
+            RateLimit-Policy:
+              description: 'The shared organization quota policy: policy name, request allowance (q), and sliding-window length in seconds (w).'
+              schema:
+                type: string
+              example: '"proxy:write";q=20;w=60'
+            RateLimit:
+              description: The policy name and remaining requests (r) after this rate-limit check. Concurrent requests share this allowance; it does not guarantee subsequent requests will be accepted.
+              schema:
+                type: string
+              example: '"proxy:write";r=0'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '200':
+          description: OK
+          headers:
+            RateLimit-Policy:
+              description: 'The shared organization quota policy: policy name, request allowance (q), and sliding-window length in seconds (w).'
+              schema:
+                type: string
+              example: '"proxy:write";q=20;w=60'
+            RateLimit:
+              description: The policy name and remaining requests (r) after this rate-limit check. Concurrent requests share this allowance; it does not guarantee subsequent requests will be accepted.
+              schema:
+                type: string
+              example: '"proxy:write";r=19'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Proxy'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+      x-badges:
+      - name: Requires proxies:create_update
+        position: after
+        color: '#64748b'
+      x-required-permissions:
+      - proxies:create_update
+      x-rate-limit:
+        group: proxy:write
+        limit: 20
+        window_seconds: 60
+        scope: organization
+    get:
+      tags:
+      - Proxies
+      summary: List proxies
+      description: 'Returns a page of the organization''s proxies in descending creation ID order, including disabled proxies and excluding deleted proxies. Pass pagination.next_page_start as page_start to continue; null indicates the final page.
+
+
+        **Rate limit:** 100 requests per minute per organization, shared across all operations in the `proxy:read` group and all API keys belonging to that organization.'
+      operationId: list-proxies
+      parameters:
+      - name: count
+        in: query
+        description: Maximum number of proxies to return, from 1 to 100. Defaults to 10.
+        schema:
+          maximum: 100
+          minimum: 1
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - integer
+          - string
+          format: int32
+          default: 10
+      - name: page_start
+        in: query
+        description: The opaque pagination.next_page_start string from the previous response. Omit for the first page.
+        schema:
+          type: string
+      responses:
+        '429':
+          description: Too Many Requests
+          headers:
+            RateLimit-Policy:
+              description: 'The shared organization quota policy: policy name, request allowance (q), and sliding-window length in seconds (w).'
+              schema:
+                type: string
+              example: '"proxy:read";q=100;w=60'
+            RateLimit:
+              description: The policy name and remaining requests (r) after this rate-limit check. Concurrent requests share this allowance; it does not guarantee subsequent requests will be accepted.
+              schema:
+                type: string
+              example: '"proxy:read";r=0'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '200':
+          description: OK
+          headers:
+            RateLimit-Policy:
+              description: 'The shared organization quota policy: policy name, request allowance (q), and sliding-window length in seconds (w).'
+              schema:
+                type: string
+              example: '"proxy:read";q=100;w=60'
+            RateLimit:
+              description: The policy name and remaining requests (r) after this rate-limit check. Concurrent requests share this allowance; it does not guarantee subsequent requests will be accepted.
+              schema:
+                type: string
+              example: '"proxy:read";r=99'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedListBaseOfProxyAndstring'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+      x-badges:
+      - name: Requires proxies:read
+        position: after
+        color: '#64748b'
+      x-required-permissions:
+      - proxies:read
+      x-rate-limit:
+        group: proxy:read
+        limit: 100
+        window_seconds: 60
+        scope: organization
+  /v1/proxies/{id}:
+    post:
+      tags:
+      - Proxies
+      summary: Update a proxy
+      description: 'Replaces the complete proxy configuration. Omitted optional settings are cleared or reset. Within authentication, an omitted password requires retain_password: true and an unchanged username. Omitted or null authentication removes credentials.
+
+
+        **Rate limit:** 20 requests per minute per organization, shared across all operations in the `proxy:write` group and all API keys belonging to that organization.'
+      operationId: update-proxy
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrUpdateProxyRequest'
+        required: true
+      responses:
+        '429':
+          description: Too Many Requests
+          headers:
+            RateLimit-Policy:
+              description: 'The shared organization quota policy: policy name, request allowance (q), and sliding-window length in seconds (w).'
+              schema:
+                type: string
+              example: '"proxy:write";q=20;w=60'
+            RateLimit:
+              description: The policy name and remaining requests (r) after this rate-limit check. Concurrent requests share this allowance; it does not guarantee subsequent requests will be accepted.
+              schema:
+                type: string
+              example: '"proxy:write";r=0'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '200':
+          description: OK
+          headers:
+            RateLimit-Policy:
+              description: 'The shared organization quota policy: policy name, request allowance (q), and sliding-window length in seconds (w).'
+              schema:
+                type: string
+              example: '"proxy:write";q=20;w=60'
+            RateLimit:
+              description: The policy name and remaining requests (r) after this rate-limit check. Concurrent requests share this allowance; it does not guarantee subsequent requests will be accepted.
+              schema:
+                type: string
+              example: '"proxy:write";r=19'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Proxy'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+      x-badges:
+      - name: Requires proxies:create_update
+        position: after
+        color: '#64748b'
+      x-required-permissions:
+      - proxies:create_update
+      x-rate-limit:
+        group: proxy:write
+        limit: 20
+        window_seconds: 60
+        scope: organization
+    get:
+      tags:
+      - Proxies
+      summary: Get a proxy
+      description: '**Rate limit:** 100 requests per minute per organization, shared across all operations in the `proxy:read` group and all API keys belonging to that organization.'
+      operationId: get-proxy
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '429':
+          description: Too Many Requests
+          headers:
+            RateLimit-Policy:
+              description: 'The shared organization quota policy: policy name, request allowance (q), and sliding-window length in seconds (w).'
+              schema:
+                type: string
+              example: '"proxy:read";q=100;w=60'
+            RateLimit:
+              description: The policy name and remaining requests (r) after this rate-limit check. Concurrent requests share this allowance; it does not guarantee subsequent requests will be accepted.
+              schema:
+                type: string
+              example: '"proxy:read";r=0'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '200':
+          description: OK
+          headers:
+            RateLimit-Policy:
+              description: 'The shared organization quota policy: policy name, request allowance (q), and sliding-window length in seconds (w).'
+              schema:
+                type: string
+              example: '"proxy:read";q=100;w=60'
+            RateLimit:
+              description: The policy name and remaining requests (r) after this rate-limit check. Concurrent requests share this allowance; it does not guarantee subsequent requests will be accepted.
+              schema:
+                type: string
+              example: '"proxy:read";r=99'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Proxy'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+      x-badges:
+      - name: Requires proxies:read
+        position: after
+        color: '#64748b'
+      x-required-permissions:
+      - proxies:read
+      x-rate-limit:
+        group: proxy:read
+        limit: 100
+        window_seconds: 60
+        scope: organization
+    delete:
+      tags:
+      - Proxies
+      summary: Delete a proxy
+      description: '**Rate limit:** 20 requests per minute per organization, shared across all operations in the `proxy:write` group and all API keys belonging to that organization.'
+      operationId: delete-proxy
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '429':
+          description: Too Many Requests
+          headers:
+            RateLimit-Policy:
+              description: 'The shared organization quota policy: policy name, request allowance (q), and sliding-window length in seconds (w).'
+              schema:
+                type: string
+              example: '"proxy:write";q=20;w=60'
+            RateLimit:
+              description: The policy name and remaining requests (r) after this rate-limit check. Concurrent requests share this allowance; it does not guarantee subsequent requests will be accepted.
+              schema:
+                type: string
+              example: '"proxy:write";r=0'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '204':
+          description: No Content
+          headers:
+            RateLimit-Policy:
+              description: 'The shared organization quota policy: policy name, request allowance (q), and sliding-window length in seconds (w).'
+              schema:
+                type: string
+              example: '"proxy:write";q=20;w=60'
+            RateLimit:
+              description: The policy name and remaining requests (r) after this rate-limit check. Concurrent requests share this allowance; it does not guarantee subsequent requests will be accepted.
+              schema:
+                type: string
+              example: '"proxy:write";r=19'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+      x-badges:
+      - name: Requires proxies:delete
+        position: after
+        color: '#64748b'
+      x-required-permissions:
+      - proxies:delete
+      x-rate-limit:
+        group: proxy:write
+        limit: 20
+        window_seconds: 60
+        scope: organization
+components:
+  schemas:
+    ProxyAuthentication:
+      required:
+      - username
+      type: object
+      properties:
+        username:
+          maxLength: 512
+          type: string
+          description: Proxy username, up to 512 characters. May be empty. Whitespace is preserved.
+        password:
+          maxLength: 484
+          type:
+          - 'null'
+          - string
+          description: 'Proxy password, up to 484 UTF-8 bytes. Required on create. On update, omitted or null is allowed only with retain_password: true. An empty string is a replacement password. Whitespace is preserved.'
+        retain_password:
+          type:
+          - 'null'
+          - boolean
+          description: 'Retain the existing password. Only true retains the password. Omitted, null, or false requires a supplied password, including on updates. Explicit true requires an existing password and unchanged username, and cannot be combined with a supplied password. False requires a password; use an empty string for an empty password, or authentication: null to remove authentication.'
+      description: Proxy credentials. Username is required. Supply a password or retain the existing password on update. Empty strings and whitespace are preserved exactly.
+    CreateOrUpdateProxyRequest:
+      required:
+      - name
+      - url
+      type: object
+      properties:
+        name:
+          maxLength: 500
+          minLength: 3
+          type: string
+          description: Display name for the proxy, between 3 and 500 characters. Leading and trailing whitespace is removed; the resulting name must contain at least 3 characters.
+        url:
+          maxLength: 512
+          type: string
+          description: Absolute HTTP or HTTPS proxy server URL, up to 512 characters, for example https://proxy.example.com. Supply the port and credentials in their separate fields. Paths other than /, query strings, and fragments are not allowed.
+          format: uri
+        port:
+          maximum: 65535
+          minimum: 1
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: 'Proxy server port, from 1 to 65535. Omitted or null uses the URL scheme''s default port: 80 for HTTP or 443 for HTTPS.'
+          format: uint16
+        disabled:
+          type: boolean
+          description: Whether the proxy is disabled. Defaults to false.
+          default: false
+        authentication:
+          oneOf:
+          - type: 'null'
+          - description: Proxy credentials. Supply a username and either a password or retention instructions. Omitted or null means no authentication and removes existing credentials on update.
+            $ref: '#/components/schemas/ProxyAuthentication'
+        bypass_hosts:
+          maxItems: 100
+          type:
+          - 'null'
+          - array
+          items:
+            type: string
+          description: Up to 100 hosts that should bypass the proxy. Entries may be hostnames, IP addresses, or absolute URLs; URLs are reduced to their hostnames. Hosts are normalized to lowercase and duplicates removed. Replaces the complete list; omitted, null, or [] clears it.
+      description: Complete configuration for creating or updating an organization proxy. Updates replace the configuration; omitted optional settings are cleared or reset, except a password retained through authentication.retain_password.
+    PaginatedListBaseOfProxyAndstring:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Proxy'
+        pagination:
+          $ref: '#/components/schemas/PaginationInfoOfstring'
+    PaginationInfoOfstring:
+      required:
+      - next_page_start
+      type: object
+      properties:
+        next_page_start:
+          type:
+          - 'null'
+          - string
+    ApiErrorResult:
+      required:
+      - error
+      - message
+      - statusCode
+      type: object
+      properties:
+        success:
+          type: boolean
+        error:
+          type: string
+        validationErrors:
+          type:
+          - 'null'
+          - array
+          items:
+            $ref: '#/components/schemas/ValidationError'
+        referenceId:
+          type:
+          - 'null'
+          - string
+        message:
+          type: string
+        statusCode:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - integer
+          - string
+          format: int32
+    Proxy:
+      required:
+      - id
+      - name
+      - url
+      - bypass_hosts
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        url:
+          type: string
+        port:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          format: uint16
+        bypass_hosts:
+          type: array
+          items:
+            type: string
+        username:
+          type:
+          - 'null'
+          - string
+          description: Configured proxy username, or null when authentication is not configured. An empty string is a valid username. Passwords are never returned.
+        enabled:
+          type: boolean
+          description: Whether the proxy is enabled.
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    ValidationError:
+      type: object
+      properties:
+        path:
+          type: string
+        message:
+          type: string
+  securitySchemes:
+    basic:
+      type: http
+      description: 'Basic auth using API ID as username and API Key as password. Example: `Authorization: Basic {base64(api-id:api-key)}`'
+      scheme: basic

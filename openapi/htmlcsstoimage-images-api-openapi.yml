@@ -1,0 +1,3729 @@
+openapi: 3.2.0
+info:
+  title: HTML/CSS to Image Images API
+  description: Capture website screenshots, render HTML/CSS, or create templated graphics. Use MCP with AI, no-code automation, or the REST API. No browsers needed.
+  version: 1.0.0
+servers:
+- url: https://hcti.io
+security:
+- basic: []
+tags:
+- name: Images
+paths:
+  /v1/image:
+    post:
+      tags:
+      - Images
+      summary: Create an image
+      operationId: create-image
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImageRequest'
+          multipart/form-data:
+            schema:
+              type: object
+              anyOf:
+              - $ref: '#/components/schemas/ImageRequestImageRequest_HtmlCss'
+              - title: URL Image Request
+                required:
+                - url
+                properties:
+                  url:
+                    type: string
+                    description: Public HTTP or HTTPS URL to capture. Required for URL image requests.
+                  css:
+                    type:
+                    - 'null'
+                    - string
+                    description: CSS injected into the loaded URL to override styles on the page.
+                  device_scale:
+                    maximum: 3
+                    minimum: 0.1
+                    pattern: ^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$
+                    type:
+                    - 'null'
+                    - number
+                    - string
+                    description: 'Adjusts the pixel ratio used for the screenshot. Minimum: 0.1. Maximum: 3. HTML and template renders default to 2; URL renders default to 1.'
+                    format: double
+                  full_screen:
+                    type:
+                    - 'null'
+                    - boolean
+                    description: Take a screenshot of the entire screen after scrolling down and back to the top.
+                  max_wait_ms:
+                    maximum: 10000
+                    minimum: 500
+                    pattern: ^-?(?:0|[1-9]\d*)$
+                    type:
+                    - 'null'
+                    - integer
+                    - string
+                    description: 'Sets a limit on how long to wait before taking the screenshot when the page continues loading irrelevant content. Minimum: 500. Maximum: 10000 and subject to the account plan limit.'
+                    format: int32
+                  metadata:
+                    type:
+                    - 'null'
+                    - object
+                    additionalProperties:
+                      type: string
+                    description: Custom key-value metadata stored with the image.
+                  ms_delay:
+                    maximum: 10000
+                    minimum: 0
+                    pattern: ^-?(?:0|[1-9]\d*)$
+                    type:
+                    - 'null'
+                    - integer
+                    - string
+                    description: 'Adds extra time in milliseconds before taking the screenshot so JavaScript can execute. Minimum: 0. Maximum: 10000.'
+                    format: int32
+                    default: 0
+                  render_when_ready:
+                    type:
+                    - 'null'
+                    - boolean
+                    description: Waits until the page signals that the screenshot is ready. The image fails if the readiness signal is never sent.
+                  selector:
+                    type:
+                    - 'null'
+                    - string
+                    description: A CSS selector for an element in the HTML. We’ll crop the image to this specific element.
+                  viewport_height:
+                    maximum: 6000
+                    minimum: 1
+                    pattern: ^-?(?:0|[1-9]\d*)$
+                    type:
+                    - 'null'
+                    - integer
+                    - string
+                    description: 'Sets the height of Chrome''s viewport and disables automatic cropping. Minimum: 1. Maximum: 6000. Both viewport dimensions must be supplied together.'
+                    format: int32
+                  viewport_width:
+                    maximum: 6000
+                    minimum: 1
+                    pattern: ^-?(?:0|[1-9]\d*)$
+                    type:
+                    - 'null'
+                    - integer
+                    - string
+                    description: 'Sets the width of Chrome''s viewport and disables automatic cropping. Minimum: 1. Maximum: 6000. Both viewport dimensions must be supplied together.'
+                    format: int32
+                  pdf_options:
+                    oneOf:
+                    - type: 'null'
+                    - description: Options used when generating a PDF instead of an image. Page dimensions and margins must include supported PDF units; margins must contain either zero or four values; scale must be between 0.1 and 2.
+                      $ref: '#/components/schemas/PDFOptions'
+                  disable_twemoji:
+                    type:
+                    - 'null'
+                    - boolean
+                    description: Set explicitly to false to inject Twemoji into the loaded page. Omitted, null, or true leaves the page's emoji handling unchanged and does not disable the website's own emoji scripts.
+                  dedupe_duration_s:
+                    maximum: 31536000
+                    minimum: 0
+                    pattern: ^-?(?:0|[1-9]\d*)$
+                    type:
+                    - 'null'
+                    - integer
+                    - string
+                    description: 'Reuse an existing image with identical content if it was created within this many seconds. Minimum: 0. Maximum: 31536000. Availability and maximum effective duration depend on the account plan.'
+                    format: int32
+                  max_render_once:
+                    type:
+                    - 'null'
+                    - boolean
+                    description: Ensure the image is only ever rendered and saved one time. This is an advanced option not applicable to most requests.
+                  color_scheme:
+                    oneOf:
+                    - type: 'null'
+                    - description: 'Sets Chrome''s preferred color scheme. Valid values: light or dark.'
+                      $ref: '#/components/schemas/ColorSchemeType'
+                  timezone:
+                    type:
+                    - 'null'
+                    - string
+                    description: Sets the IANA timezone used by Chrome while rendering. Must be a recognized IANA timezone identifier.
+                  block_consent_banners:
+                    type:
+                    - 'null'
+                    - boolean
+                    description: Attempt to block cookie/consent banners from displaying.
+                  identify_as_hcti:
+                    type:
+                    - 'null'
+                    - boolean
+                    description: Identify the top-level page navigation as an HCTI screenshot request using the X-HCTI-SCREENSHOT header.
+                  headers:
+                    type: array
+                    items:
+                      pattern: ^[^:]+:.*$
+                      type: string
+                      description: A header encoded as name:value. The first colon separates the name from the value.
+                    description: HTTP headers to include on top-level page navigations to the requested URL's origin and any additional_header_origins. Supports up to 20 headers with names up to 512 ASCII characters and values up to 8192 UTF-8 bytes. For GET and form-encoded requests, repeat this parameter using the format `headers=name:value`.
+                  additional_header_origins:
+                    type:
+                    - 'null'
+                    - array
+                    items:
+                      type: string
+                    description: Additional exact HTTP or HTTPS origins allowed to receive custom headers. Supports up to 20 unique origins of up to 512 UTF-8 bytes each. Origins must use the format scheme://host[:port] without a path; duplicates are ignored. For GET and form-encoded requests, repeat this parameter for each origin.
+                  include_headers_on_subrequests:
+                    type:
+                    - 'null'
+                    - boolean
+                    description: Include custom headers on subrequests to the requested URL's origin and any additional_header_origins. Defaults to false. Requires at least one header.
+                  viewport_mobile:
+                    type:
+                    - 'null'
+                    - boolean
+                    description: Specifies whether the page uses mobile viewport behavior, including its viewport meta tag.
+                  viewport_landscape:
+                    type:
+                    - 'null'
+                    - boolean
+                    description: Specifies whether the emulated viewport is in landscape orientation.
+                  viewport_touch:
+                    type:
+                    - 'null'
+                    - boolean
+                    description: Specifies whether the emulated viewport supports touch events.
+                  media_type:
+                    oneOf:
+                    - type: 'null'
+                    - description: 'Sets the CSS media type used while rendering the page. Valid values: print or screen.'
+                      $ref: '#/components/schemas/MediaType'
+                  proxy_id:
+                    type:
+                    - 'null'
+                    - string
+                    description: Specifies which configured organization proxy to use when rendering.
+                  storage_destination_id:
+                    type:
+                    - 'null'
+                    - string
+                    description: Specifies which configured organization storage destination receives the rendered image.
+                  jumbo_max_height:
+                    pattern: ^-?(?:0|[1-9]\d*)$
+                    type:
+                    - 'null'
+                    - integer
+                    - string
+                    description: Maximum height of the rendered image in jumbo mode. Jumbo rendering consumes additional renders and requires jumbo_max_width. Supply both jumbo dimensions. Each must be greater than 0 and no more than 80000; at least one must exceed 8000; total area cannot exceed 400000000 pixels.
+                    format: int32
+                  jumbo_max_width:
+                    pattern: ^-?(?:0|[1-9]\d*)$
+                    type:
+                    - 'null'
+                    - integer
+                    - string
+                    description: Maximum width of the rendered image in jumbo mode. Jumbo rendering consumes additional renders and requires jumbo_max_height. Supply both jumbo dimensions. Each must be greater than 0 and no more than 80000; at least one must exceed 8000; total area cannot exceed 400000000 pixels.
+                    format: int32
+                  transparent_background:
+                    type:
+                    - 'null'
+                    - boolean
+                    description: Specifies whether the image is rendered with a transparent background.
+                  format:
+                    oneOf:
+                    - type: 'null'
+                    - description: 'Sets the file extension on the URL returned by the image creation request. It does not change the stored source image or restrict later rendering to this format. Valid values: png, jpg, jpeg, webp, or pdf. This parameter is accepted only in POST request bodies.'
+                      $ref: '#/components/schemas/ImageFormat'
+                  request_overrides:
+                    type:
+                    - 'null'
+                    - array
+                    items:
+                      $ref: '#/components/schemas/RequestOverride'
+                    description: Rules that override browser network requests. The block action blocks requests matching a URL wildcard pattern and/or resource types. When both matchers are supplied, both must match. A request is blocked if any block rule matches. Omitted, null, or an empty array adds no overrides. Requires a paid plan. Accepts a JSON array in JSON requests or a JSON-encoded array string in form requests. Maximum 100 rules and 512 characters per URL pattern. Each block rule requires a nonempty URL pattern or at least one resource type; supplied matchers cannot be empty. Not supported in query strings.
+              - $ref: '#/components/schemas/ImageRequestImageRequest_Templated'
+              discriminator:
+                propertyName: $type
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              anyOf:
+              - $ref: '#/components/schemas/ImageRequestImageRequest_HtmlCss'
+              - title: URL Image Request
+                required:
+                - url
+                properties:
+                  url:
+                    type: string
+                    description: Public HTTP or HTTPS URL to capture. Required for URL image requests.
+                  css:
+                    type:
+                    - 'null'
+                    - string
+                    description: CSS injected into the loaded URL to override styles on the page.
+                  device_scale:
+                    maximum: 3
+                    minimum: 0.1
+                    pattern: ^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$
+                    type:
+                    - 'null'
+                    - number
+                    - string
+                    description: 'Adjusts the pixel ratio used for the screenshot. Minimum: 0.1. Maximum: 3. HTML and template renders default to 2; URL renders default to 1.'
+                    format: double
+                  full_screen:
+                    type:
+                    - 'null'
+                    - boolean
+                    description: Take a screenshot of the entire screen after scrolling down and back to the top.
+                  max_wait_ms:
+                    maximum: 10000
+                    minimum: 500
+                    pattern: ^-?(?:0|[1-9]\d*)$
+                    type:
+                    - 'null'
+                    - integer
+                    - string
+                    description: 'Sets a limit on how long to wait before taking the screenshot when the page continues loading irrelevant content. Minimum: 500. Maximum: 10000 and subject to the account plan limit.'
+                    format: int32
+                  metadata:
+                    type:
+                    - 'null'
+                    - object
+                    additionalProperties:
+                      type: string
+                    description: Custom key-value metadata stored with the image.
+                  ms_delay:
+                    maximum: 10000
+                    minimum: 0
+                    pattern: ^-?(?:0|[1-9]\d*)$
+                    type:
+                    - 'null'
+                    - integer
+                    - string
+                    description: 'Adds extra time in milliseconds before taking the screenshot so JavaScript can execute. Minimum: 0. Maximum: 10000.'
+                    format: int32
+                    default: 0
+                  render_when_ready:
+                    type:
+                    - 'null'
+                    - boolean
+                    description: Waits until the page signals that the screenshot is ready. The image fails if the readiness signal is never sent.
+                  selector:
+                    type:
+                    - 'null'
+                    - string
+                    description: A CSS selector for an element in the HTML. We’ll crop the image to this specific element.
+                  viewport_height:
+                    maximum: 6000
+                    minimum: 1
+                    pattern: ^-?(?:0|[1-9]\d*)$
+                    type:
+                    - 'null'
+                    - integer
+                    - string
+                    description: 'Sets the height of Chrome''s viewport and disables automatic cropping. Minimum: 1. Maximum: 6000. Both viewport dimensions must be supplied together.'
+                    format: int32
+                  viewport_width:
+                    maximum: 6000
+                    minimum: 1
+                    pattern: ^-?(?:0|[1-9]\d*)$
+                    type:
+                    - 'null'
+                    - integer
+                    - string
+                    description: 'Sets the width of Chrome''s viewport and disables automatic cropping. Minimum: 1. Maximum: 6000. Both viewport dimensions must be supplied together.'
+                    format: int32
+                  pdf_options:
+                    oneOf:
+                    - type: 'null'
+                    - description: Options used when generating a PDF instead of an image. Page dimensions and margins must include supported PDF units; margins must contain either zero or four values; scale must be between 0.1 and 2.
+                      $ref: '#/components/schemas/PDFOptions'
+                  disable_twemoji:
+                    type:
+                    - 'null'
+                    - boolean
+                    description: Set explicitly to false to inject Twemoji into the loaded page. Omitted, null, or true leaves the page's emoji handling unchanged and does not disable the website's own emoji scripts.
+                  dedupe_duration_s:
+                    maximum: 31536000
+                    minimum: 0
+                    pattern: ^-?(?:0|[1-9]\d*)$
+                    type:
+                    - 'null'
+                    - integer
+                    - string
+                    description: 'Reuse an existing image with identical content if it was created within this many seconds. Minimum: 0. Maximum: 31536000. Availability and maximum effective duration depend on the account plan.'
+                    format: int32
+                  max_render_once:
+                    type:
+                    - 'null'
+                    - boolean
+                    description: Ensure the image is only ever rendered and saved one time. This is an advanced option not applicable to most requests.
+                  color_scheme:
+                    oneOf:
+                    - type: 'null'
+                    - description: 'Sets Chrome''s preferred color scheme. Valid values: light or dark.'
+                      $ref: '#/components/schemas/ColorSchemeType'
+                  timezone:
+                    type:
+                    - 'null'
+                    - string
+                    description: Sets the IANA timezone used by Chrome while rendering. Must be a recognized IANA timezone identifier.
+                  block_consent_banners:
+                    type:
+                    - 'null'
+                    - boolean
+                    description: Attempt to block cookie/consent banners from displaying.
+                  identify_as_hcti:
+                    type:
+                    - 'null'
+                    - boolean
+                    description: Identify the top-level page navigation as an HCTI screenshot request using the X-HCTI-SCREENSHOT header.
+                  headers:
+                    type: array
+                    items:
+                      pattern: ^[^:]+:.*$
+                      type: string
+                      description: A header encoded as name:value. The first colon separates the name from the value.
+                    description: HTTP headers to include on top-level page navigations to the requested URL's origin and any additional_header_origins. Supports up to 20 headers with names up to 512 ASCII characters and values up to 8192 UTF-8 bytes. For GET and form-encoded requests, repeat this parameter using the format `headers=name:value`.
+                  additional_header_origins:
+                    type:
+                    - 'null'
+                    - array
+                    items:
+                      type: string
+                    description: Additional exact HTTP or HTTPS origins allowed to receive custom headers. Supports up to 20 unique origins of up to 512 UTF-8 bytes each. Origins must use the format scheme://host[:port] without a path; duplicates are ignored. For GET and form-encoded requests, repeat this parameter for each origin.
+                  include_headers_on_subrequests:
+                    type:
+                    - 'null'
+                    - boolean
+                    description: Include custom headers on subrequests to the requested URL's origin and any additional_header_origins. Defaults to false. Requires at least one header.
+                  viewport_mobile:
+                    type:
+                    - 'null'
+                    - boolean
+                    description: Specifies whether the page uses mobile viewport behavior, including its viewport meta tag.
+                  viewport_landscape:
+                    type:
+                    - 'null'
+                    - boolean
+                    description: Specifies whether the emulated viewport is in landscape orientation.
+                  viewport_touch:
+                    type:
+                    - 'null'
+                    - boolean
+                    description: Specifies whether the emulated viewport supports touch events.
+                  media_type:
+                    oneOf:
+                    - type: 'null'
+                    - description: 'Sets the CSS media type used while rendering the page. Valid values: print or screen.'
+                      $ref: '#/components/schemas/MediaType'
+                  proxy_id:
+                    type:
+                    - 'null'
+                    - string
+                    description: Specifies which configured organization proxy to use when rendering.
+                  storage_destination_id:
+                    type:
+                    - 'null'
+                    - string
+                    description: Specifies which configured organization storage destination receives the rendered image.
+                  jumbo_max_height:
+                    pattern: ^-?(?:0|[1-9]\d*)$
+                    type:
+                    - 'null'
+                    - integer
+                    - string
+                    description: Maximum height of the rendered image in jumbo mode. Jumbo rendering consumes additional renders and requires jumbo_max_width. Supply both jumbo dimensions. Each must be greater than 0 and no more than 80000; at least one must exceed 8000; total area cannot exceed 400000000 pixels.
+                    format: int32
+                  jumbo_max_width:
+                    pattern: ^-?(?:0|[1-9]\d*)$
+                    type:
+                    - 'null'
+                    - integer
+                    - string
+                    description: Maximum width of the rendered image in jumbo mode. Jumbo rendering consumes additional renders and requires jumbo_max_height. Supply both jumbo dimensions. Each must be greater than 0 and no more than 80000; at least one must exceed 8000; total area cannot exceed 400000000 pixels.
+                    format: int32
+                  transparent_background:
+                    type:
+                    - 'null'
+                    - boolean
+                    description: Specifies whether the image is rendered with a transparent background.
+                  format:
+                    oneOf:
+                    - type: 'null'
+                    - description: 'Sets the file extension on the URL returned by the image creation request. It does not change the stored source image or restrict later rendering to this format. Valid values: png, jpg, jpeg, webp, or pdf. This parameter is accepted only in POST request bodies.'
+                      $ref: '#/components/schemas/ImageFormat'
+                  request_overrides:
+                    type:
+                    - 'null'
+                    - array
+                    items:
+                      $ref: '#/components/schemas/RequestOverride'
+                    description: Rules that override browser network requests. The block action blocks requests matching a URL wildcard pattern and/or resource types. When both matchers are supplied, both must match. A request is blocked if any block rule matches. Omitted, null, or an empty array adds no overrides. Requires a paid plan. Accepts a JSON array in JSON requests or a JSON-encoded array string in form requests. Maximum 100 rules and 512 characters per URL pattern. Each block rule requires a nonempty URL pattern or at least one resource type; supplied matchers cannot be empty. Not supported in query strings.
+              - $ref: '#/components/schemas/ImageRequestImageRequest_Templated'
+              discriminator:
+                propertyName: $type
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageResultWithId'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '402':
+          description: Payment Required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+      x-badges:
+      - name: Requires images:create
+        position: after
+        color: '#64748b'
+      x-required-permissions:
+      - images:create
+  /v1/image/{id}:
+    get:
+      tags:
+      - Images
+      summary: Render an image
+      operationId: render-image
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: width
+        in: query
+        description: Width to resize the rendered image
+        schema:
+          maximum: 5000
+          minimum: 1
+          type:
+          - 'null'
+          - integer
+          format: int32
+      - name: height
+        in: query
+        description: Height to resize the rendered image
+        schema:
+          maximum: 5000
+          minimum: 1
+          type:
+          - 'null'
+          - integer
+          format: int32
+      - name: dpi
+        in: query
+        description: DPI to specify in rendered image's metadata.
+        schema:
+          maximum: 600
+          minimum: 30
+          type:
+          - 'null'
+          - integer
+          format: int32
+      - name: dl
+        in: query
+        description: Add this to cause the rendered image to be downloaded as a file instead of being displayed
+        schema:
+          enum:
+          - '1'
+          - '0'
+          type:
+          - 'null'
+          - string
+          default: '0'
+      - name: aspect_ratio
+        in: query
+        description: 'Define an aspect ratio to crop the rendered image to. Specify the value as x_y. When using aspect_ratio, you must include one of: [x_1 & x_2], [y_1 & y_2], [x_1 & crop_width], [y_1 & crop_height], [crop_width] or [crop_height].'
+        schema:
+          type:
+          - 'null'
+          - string
+      - name: x_origin
+        in: query
+        description: Define the origin for cropping along the x axis. When using aspect_ratio, you can only specify one of x_origin or y_origin.
+        schema:
+          pattern: ^-?\d+(\.\d+)?(%|px)?$
+          type:
+          - 'null'
+          - string
+        examples:
+          Numeric:
+            description: Numbers without a unit specified are assumed to be pixel measurements.
+            value: 159
+          PX:
+            description: 230 px
+            value: 230px
+          Percentage:
+            description: 71%
+            value: 71%
+          NegativeNumeric:
+            description: Negative numbers without a unit specified are assumed to be pixel measurements from the end of the axis.
+            value: -88
+          NegativePX:
+            description: 230 px from the end of the axis.
+            value: -230px
+      - name: y_origin
+        in: query
+        description: Define the origin for cropping along the y axis. When using aspect_ratio, you can only specify one of x_origin or y_origin.
+        schema:
+          pattern: ^-?\d+(\.\d+)?(%|px)?$
+          type:
+          - 'null'
+          - string
+        examples:
+          Numeric:
+            description: Numbers without a unit specified are assumed to be pixel measurements.
+            value: 72
+          PX:
+            description: 160 px
+            value: 160px
+          Percentage:
+            description: 88%
+            value: 88%
+          NegativeNumeric:
+            description: Negative numbers without a unit specified are assumed to be pixel measurements from the end of the axis.
+            value: -16
+          NegativePX:
+            description: 160 px from the end of the axis.
+            value: -160px
+      - name: x_1
+        in: query
+        description: Define the x_1 position for cropping. You can specify either x_1 & x_2 or x_1 and crop_width.
+        schema:
+          pattern: ^-?\d+(\.\d+)?(%|px)?$
+          type:
+          - 'null'
+          - string
+        examples:
+          Numeric:
+            description: Numbers without a unit specified are assumed to be pixel measurements.
+            value: 145
+          PX:
+            description: 222 px
+            value: 222px
+          Percentage:
+            description: 77%
+            value: 77%
+          NegativeNumeric:
+            description: Negative numbers without a unit specified are assumed to be pixel measurements from the end of the axis.
+            value: -68
+          NegativePX:
+            description: 222 px from the end of the axis.
+            value: -222px
+      - name: x_2
+        in: query
+        description: Define the x_2 position for cropping. Cannot be specified with crop_width, and must have an x_1 specified.
+        schema:
+          pattern: ^-?\d+(\.\d+)?(%|px)?$
+          type:
+          - 'null'
+          - string
+        examples:
+          Numeric:
+            description: Numbers without a unit specified are assumed to be pixel measurements.
+            value: 231
+          PX:
+            description: 242 px
+            value: 242px
+          Percentage:
+            description: 11%
+            value: 11%
+          NegativeNumeric:
+            description: Negative numbers without a unit specified are assumed to be pixel measurements from the end of the axis.
+            value: -220
+          NegativePX:
+            description: 242 px from the end of the axis.
+            value: -242px
+      - name: y_1
+        in: query
+        description: Define the y_1 position for cropping. You can specify either y_1 & y_2 or y_1 and crop_height.
+        schema:
+          pattern: ^-?\d+(\.\d+)?(%|px)?$
+          type:
+          - 'null'
+          - string
+        examples:
+          Numeric:
+            description: Numbers without a unit specified are assumed to be pixel measurements.
+            value: 123
+          PX:
+            description: 168 px
+            value: 168px
+          Percentage:
+            description: 45%
+            value: 45%
+          NegativeNumeric:
+            description: Negative numbers without a unit specified are assumed to be pixel measurements from the end of the axis.
+            value: -78
+          NegativePX:
+            description: 168 px from the end of the axis.
+            value: -168px
+      - name: y_2
+        in: query
+        description: Define the y_2 position for cropping. Cannot be specified with crop_height, and must have a y_1 specified.
+        schema:
+          pattern: ^-?\d+(\.\d+)?(%|px)?$
+          type:
+          - 'null'
+          - string
+        examples:
+          Numeric:
+            description: Numbers without a unit specified are assumed to be pixel measurements.
+            value: 100
+          PX:
+            description: 133 px
+            value: 133px
+          Percentage:
+            description: 33%
+            value: 33%
+          NegativeNumeric:
+            description: Negative numbers without a unit specified are assumed to be pixel measurements from the end of the axis.
+            value: -67
+          NegativePX:
+            description: 133 px from the end of the axis.
+            value: -133px
+      - name: crop_width
+        in: query
+        description: Define the width for cropping. Cannot be specified with crop_height, and must have a x_1 specified.
+        schema:
+          pattern: ^\d+(\.\d+)?(%|px)?$
+          type:
+          - 'null'
+          - string
+          description: Use either a number, a percentage like 30.5% or a px measure like 100px.
+        examples:
+          Numeric:
+            description: Numbers without a unit specified are assumed to be pixel measurements.
+            value: 19
+          PX:
+            description: 100 px wide
+            value: 100px
+          Percentage:
+            description: 81% of the image's width
+            value: 81%
+      - name: crop_height
+        in: query
+        description: Define the x_2 position for cropping. Cannot be specified with crop_width, and must have a y_1 specified.
+        schema:
+          pattern: ^\d+(\.\d+)?(%|px)?$
+          type:
+          - 'null'
+          - string
+        examples:
+          Numeric:
+            description: Numbers without a unit specified are assumed to be pixel measurements.
+            value: 44
+          PX:
+            description: 96 px high
+            value: 96px
+          Percentage:
+            description: 52% of the image's height
+            value: 52%
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '410':
+          description: Gone
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '408':
+          description: Request Timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+      security: []
+    delete:
+      tags:
+      - Images
+      summary: Delete an image
+      operationId: delete-image
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '202':
+          description: Accepted
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+      x-badges:
+      - name: Requires images:delete
+        position: after
+        color: '#64748b'
+      x-required-permissions:
+      - images:delete
+  /v1/image/{id}.{format}:
+    get:
+      tags:
+      - Images
+      summary: Render an image with a specific format
+      operationId: render-image-format
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: format
+        in: path
+        required: true
+        schema:
+          enum:
+          - png
+          - jpg
+          - jpeg
+          - webp
+          - pdf
+          type: string
+      - name: width
+        in: query
+        description: Width to resize the rendered image
+        schema:
+          maximum: 5000
+          minimum: 1
+          type:
+          - 'null'
+          - integer
+          format: int32
+      - name: height
+        in: query
+        description: Height to resize the rendered image
+        schema:
+          maximum: 5000
+          minimum: 1
+          type:
+          - 'null'
+          - integer
+          format: int32
+      - name: dpi
+        in: query
+        description: DPI to specify in rendered image's metadata.
+        schema:
+          maximum: 600
+          minimum: 30
+          type:
+          - 'null'
+          - integer
+          format: int32
+      - name: dl
+        in: query
+        description: Add this to cause the rendered image to be downloaded as a file instead of being displayed
+        schema:
+          enum:
+          - '1'
+          - '0'
+          type:
+          - 'null'
+          - string
+          default: '0'
+      - name: aspect_ratio
+        in: query
+        description: 'Define an aspect ratio to crop the rendered image to. Specify the value as x_y. When using aspect_ratio, you must include one of: [x_1 & x_2], [y_1 & y_2], [x_1 & crop_width], [y_1 & crop_height], [crop_width] or [crop_height].'
+        schema:
+          type:
+          - 'null'
+          - string
+      - name: x_origin
+        in: query
+        description: Define the origin for cropping along the x axis. When using aspect_ratio, you can only specify one of x_origin or y_origin.
+        schema:
+          pattern: ^-?\d+(\.\d+)?(%|px)?$
+          type:
+          - 'null'
+          - string
+        examples:
+          Numeric:
+            description: Numbers without a unit specified are assumed to be pixel measurements.
+            value: 159
+          PX:
+            description: 230 px
+            value: 230px
+          Percentage:
+            description: 71%
+            value: 71%
+          NegativeNumeric:
+            description: Negative numbers without a unit specified are assumed to be pixel measurements from the end of the axis.
+            value: -88
+          NegativePX:
+            description: 230 px from the end of the axis.
+            value: -230px
+      - name: y_origin
+        in: query
+        description: Define the origin for cropping along the y axis. When using aspect_ratio, you can only specify one of x_origin or y_origin.
+        schema:
+          pattern: ^-?\d+(\.\d+)?(%|px)?$
+          type:
+          - 'null'
+          - string
+        examples:
+          Numeric:
+            description: Numbers without a unit specified are assumed to be pixel measurements.
+            value: 72
+          PX:
+            description: 160 px
+            value: 160px
+          Percentage:
+            description: 88%
+            value: 88%
+          NegativeNumeric:
+            description: Negative numbers without a unit specified are assumed to be pixel measurements from the end of the axis.
+            value: -16
+          NegativePX:
+            description: 160 px from the end of the axis.
+            value: -160px
+      - name: x_1
+        in: query
+        description: Define the x_1 position for cropping. You can specify either x_1 & x_2 or x_1 and crop_width.
+        schema:
+          pattern: ^-?\d+(\.\d+)?(%|px)?$
+          type:
+          - 'null'
+          - string
+        examples:
+          Numeric:
+            description: Numbers without a unit specified are assumed to be pixel measurements.
+            value: 145
+          PX:
+            description: 222 px
+            value: 222px
+          Percentage:
+            description: 77%
+            value: 77%
+          NegativeNumeric:
+            description: Negative numbers without a unit specified are assumed to be pixel measurements from the end of the axis.
+            value: -68
+          NegativePX:
+            description: 222 px from the end of the axis.
+            value: -222px
+      - name: x_2
+        in: query
+        description: Define the x_2 position for cropping. Cannot be specified with crop_width, and must have an x_1 specified.
+        schema:
+          pattern: ^-?\d+(\.\d+)?(%|px)?$
+          type:
+          - 'null'
+          - string
+        examples:
+          Numeric:
+            description: Numbers without a unit specified are assumed to be pixel measurements.
+            value: 231
+          PX:
+            description: 242 px
+            value: 242px
+          Percentage:
+            description: 11%
+            value: 11%
+          NegativeNumeric:
+            description: Negative numbers without a unit specified are assumed to be pixel measurements from the end of the axis.
+            value: -220
+          NegativePX:
+            description: 242 px from the end of the axis.
+            value: -242px
+      - name: y_1
+        in: query
+        description: Define the y_1 position for cropping. You can specify either y_1 & y_2 or y_1 and crop_height.
+        schema:
+          pattern: ^-?\d+(\.\d+)?(%|px)?$
+          type:
+          - 'null'
+          - string
+        examples:
+          Numeric:
+            description: Numbers without a unit specified are assumed to be pixel measurements.
+            value: 123
+          PX:
+            description: 168 px
+            value: 168px
+          Percentage:
+            description: 45%
+            value: 45%
+          NegativeNumeric:
+            description: Negative numbers without a unit specified are assumed to be pixel measurements from the end of the axis.
+            value: -78
+          NegativePX:
+            description: 168 px from the end of the axis.
+            value: -168px
+      - name: y_2
+        in: query
+        description: Define the y_2 position for cropping. Cannot be specified with crop_height, and must have a y_1 specified.
+        schema:
+          pattern: ^-?\d+(\.\d+)?(%|px)?$
+          type:
+          - 'null'
+          - string
+        examples:
+          Numeric:
+            description: Numbers without a unit specified are assumed to be pixel measurements.
+            value: 100
+          PX:
+            description: 133 px
+            value: 133px
+          Percentage:
+            description: 33%
+            value: 33%
+          NegativeNumeric:
+            description: Negative numbers without a unit specified are assumed to be pixel measurements from the end of the axis.
+            value: -67
+          NegativePX:
+            description: 133 px from the end of the axis.
+            value: -133px
+      - name: crop_width
+        in: query
+        description: Define the width for cropping. Cannot be specified with crop_height, and must have a x_1 specified.
+        schema:
+          pattern: ^\d+(\.\d+)?(%|px)?$
+          type:
+          - 'null'
+          - string
+          description: Use either a number, a percentage like 30.5% or a px measure like 100px.
+        examples:
+          Numeric:
+            description: Numbers without a unit specified are assumed to be pixel measurements.
+            value: 19
+          PX:
+            description: 100 px wide
+            value: 100px
+          Percentage:
+            description: 81% of the image's width
+            value: 81%
+      - name: crop_height
+        in: query
+        description: Define the x_2 position for cropping. Cannot be specified with crop_width, and must have a y_1 specified.
+        schema:
+          pattern: ^\d+(\.\d+)?(%|px)?$
+          type:
+          - 'null'
+          - string
+        examples:
+          Numeric:
+            description: Numbers without a unit specified are assumed to be pixel measurements.
+            value: 44
+          PX:
+            description: 96 px high
+            value: 96px
+          Percentage:
+            description: 52% of the image's height
+            value: 52%
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '410':
+          description: Gone
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '408':
+          description: Request Timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+      security: []
+  /v1/image/batch:
+    post:
+      tags:
+      - Images
+      summary: Create a batch of images
+      description: Create images from shared default_options and variations. Each variation overrides corresponding defaults. Results preserve variation order.
+      operationId: create-image-batch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchImageRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchImageResult'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '402':
+          description: Payment Required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+      x-badges:
+      - name: Requires images:create
+        position: after
+        color: '#64748b'
+      x-required-permissions:
+      - images:create
+    delete:
+      tags:
+      - Images
+      summary: Delete a batch of images
+      operationId: delete-image-batch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchDeleteRequest'
+        required: true
+      responses:
+        '202':
+          description: Accepted
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+      x-badges:
+      - name: Requires images:delete
+        position: after
+        color: '#64748b'
+      x-required-permissions:
+      - images:delete
+  /v1/image/batch/templated:
+    post:
+      tags:
+      - Images
+      summary: Create a batch of templated images
+      description: Create images from one or more templates. Set template_id, optional template_version, and template_values in default_options or each variation. Supplying a template_id in a variation resets its inherited version. Object values merge recursively; variation arrays, scalars and explicit null replace defaults. Identical images reuse existing assets. Results preserve variation order.
+      operationId: create-templated-image-batch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchTemplatedImageRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchImageResult'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '402':
+          description: Payment Required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+      x-badges:
+      - name: Requires images:create
+        position: after
+        color: '#64748b'
+      x-required-permissions:
+      - images:create
+  /v1/image/create-and-render/{api_id}/{token}/{format}:
+    get:
+      tags:
+      - Images
+      summary: Create and render an image
+      operationId: create-and-render
+      parameters:
+      - name: api_id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: token
+        in: path
+        description: An HMAC encoded token of your API key and the parameters specified in your query params. See https://docs.htmlcsstoimage.com/getting-started/create-and-render/#understanding-hmac-authentication for more information.
+        required: true
+        schema:
+          title: Token
+          type: string
+      - name: format
+        in: path
+        description: The format of the image to return. If this field is omitted, it defaults to `png`.
+        schema:
+          title: Format
+          enum:
+          - png
+          - jpg
+          - webp
+          - pdf
+          type:
+          - 'null'
+          - string
+          default: png
+      - name: css
+        in: query
+        description: CSS used to style the rendered HTML.
+        schema:
+          type:
+          - 'null'
+          - string
+      - name: device_scale
+        in: query
+        description: Adjusts the pixel ratio used for the screenshot.
+        schema:
+          maximum: 3
+          minimum: 0.1
+          type:
+          - 'null'
+          - number
+          format: double
+      - name: full_screen
+        in: query
+        description: Take a screenshot of the entire screen after scrolling down and back to the top.
+        schema:
+          type:
+          - 'null'
+          - boolean
+      - name: google_fonts
+        in: query
+        description: Google fonts to load. Separate multiple fonts with a pipe, such as 'Roboto|OpenSans', and set font-family in the CSS to use them.
+        schema:
+          type:
+          - 'null'
+          - string
+      - name: html
+        in: query
+        description: HTML to render and take a screenshot of. HTML fragments are rendered in a wrapper document unless a complete HTML document is supplied.
+        schema:
+          type:
+          - 'null'
+          - string
+      - name: max_wait_ms
+        in: query
+        description: Sets a limit on how long to wait before taking the screenshot when the page continues loading irrelevant content.
+        schema:
+          maximum: 10000
+          minimum: 500
+          type:
+          - 'null'
+          - integer
+          format: int32
+      - name: ms_delay
+        in: query
+        description: Adds extra time in milliseconds before taking the screenshot so JavaScript can execute.
+        schema:
+          maximum: 10000
+          minimum: 0
+          type:
+          - 'null'
+          - integer
+          format: int32
+      - name: render_when_ready
+        in: query
+        description: Waits until the page signals that the screenshot is ready. The image fails if the readiness signal is never sent.
+        schema:
+          type:
+          - 'null'
+          - boolean
+      - name: selector
+        in: query
+        description: A CSS selector for an element in the HTML. We’ll crop the image to this specific element.
+        schema:
+          type:
+          - 'null'
+          - string
+      - name: url
+        in: query
+        description: Public HTTP or HTTPS URL to capture.
+        schema:
+          type:
+          - 'null'
+          - string
+      - name: viewport_height
+        in: query
+        description: Sets the height of Chrome's viewport and disables automatic cropping.
+        schema:
+          maximum: 6000
+          minimum: 1
+          type:
+          - 'null'
+          - integer
+          format: int32
+      - name: viewport_width
+        in: query
+        description: Sets the width of Chrome's viewport and disables automatic cropping.
+        schema:
+          maximum: 6000
+          minimum: 1
+          type:
+          - 'null'
+          - integer
+          format: int32
+      - name: disable_twemoji
+        in: query
+        description: Twemoji is enabled by default. Set true to disable automatic emoji replacement and use the supplied fonts or native emoji fonts instead. Omitted, null, or false keeps Twemoji enabled.
+        schema:
+          type:
+          - 'null'
+          - boolean
+      - name: max_render_once
+        in: query
+        description: Ensure the image is only ever rendered and saved one time. This is an advanced option not applicable to most requests.
+        schema:
+          type:
+          - 'null'
+          - boolean
+      - name: color_scheme
+        in: query
+        description: Sets Chrome's preferred color scheme.
+        schema:
+          enum:
+          - light
+          - dark
+          type:
+          - 'null'
+          - string
+      - name: timezone
+        in: query
+        description: Sets the IANA timezone used by Chrome while rendering.
+        schema:
+          type:
+          - 'null'
+          - string
+      - name: block_consent_banners
+        in: query
+        description: Attempt to block cookie/consent banners from displaying.
+        schema:
+          type:
+          - 'null'
+          - boolean
+      - name: identify_as_hcti
+        in: query
+        description: Identify the top-level page navigation as an HCTI screenshot request using the X-HCTI-SCREENSHOT header.
+        schema:
+          type:
+          - 'null'
+          - boolean
+      - name: headers
+        in: query
+        description: HTTP headers to include on top-level page navigations to the requested URL's origin and any additional_header_origins. Supports up to 20 headers with names up to 512 ASCII characters and values up to 8192 UTF-8 bytes. For GET and form-encoded requests, repeat this parameter using the format `headers=name:value`.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: additional_header_origins
+        in: query
+        description: Additional exact HTTP or HTTPS origins allowed to receive custom headers. Supports up to 20 unique origins of up to 512 UTF-8 bytes each. Origins must use the format scheme://host[:port] without a path; duplicates are ignored. For GET and form-encoded requests, repeat this parameter for each origin.
+        schema:
+          type: array
+          items:
+            type: string
+            format: uri
+      - name: include_headers_on_subrequests
+        in: query
+        description: Include custom headers on subrequests to the requested URL's origin and any additional_header_origins. Defaults to false.
+        schema:
+          type:
+          - 'null'
+          - boolean
+      - name: viewport_mobile
+        in: query
+        description: Specifies whether the page uses mobile viewport behavior, including its viewport meta tag.
+        schema:
+          type:
+          - 'null'
+          - boolean
+      - name: viewport_landscape
+        in: query
+        description: Specifies whether the emulated viewport is in landscape orientation.
+        schema:
+          type:
+          - 'null'
+          - boolean
+      - name: viewport_touch
+        in: query
+        description: Specifies whether the emulated viewport supports touch events.
+        schema:
+          type:
+          - 'null'
+          - boolean
+      - name: media_type
+        in: query
+        description: Sets the CSS media type used while rendering the page.
+        schema:
+          enum:
+          - print
+          - screen
+          type:
+          - 'null'
+          - string
+      - name: proxy_id
+        in: query
+        description: Specifies which configured organization proxy to use when rendering.
+        schema:
+          type:
+          - 'null'
+          - string
+      - name: storage_destination_id
+        in: query
+        description: Specifies which configured organization storage destination receives the rendered image.
+        schema:
+          type:
+          - 'null'
+          - string
+      - name: jumbo_max_height
+        in: query
+        description: Maximum height of the rendered image in jumbo mode. Jumbo rendering consumes additional renders and requires jumbo_max_width.
+        schema:
+          type:
+          - 'null'
+          - integer
+          format: int32
+      - name: jumbo_max_width
+        in: query
+        description: Maximum width of the rendered image in jumbo mode. Jumbo rendering consumes additional renders and requires jumbo_max_height.
+        schema:
+          type:
+          - 'null'
+          - integer
+          format: int32
+      - name: transparent_background
+        in: query
+        description: Specifies whether the image is rendered with a transparent background.
+        schema:
+          type:
+          - 'null'
+          - boolean
+      responses:
+        '301':
+          description: Moved Permanently
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '402':
+          description: Payment Required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+      security: []
+      x-badges:
+      - name: Requires images:create
+        position: after
+        color: '#64748b'
+      x-required-permissions:
+      - images:create
+  /v1/images:
+    get:
+      tags:
+      - Images
+      summary: List created images
+      operationId: list-images
+      parameters:
+      - name: page_token
+        in: query
+        description: The page token to use to get the next page of results. If this field is omitted, it defaults to the first page.
+        schema:
+          type: string
+      - name: count
+        in: query
+        schema:
+          maximum: 50
+          minimum: 1
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - integer
+          - string
+          format: int32
+          default: 50
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImagePageResult'
+        '401':
+          description: Unauthorized
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+      x-badges:
+      - name: Requires images:read
+        position: after
+        color: '#64748b'
+      x-required-permissions:
+      - images:read
+  /v1/images/{id}:
+    get:
+      tags:
+      - Images
+      summary: Retrieve metadata about a specific image
+      operationId: get-image-metadata
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageBase'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+      x-badges:
+      - name: Requires images:read
+        position: after
+        color: '#64748b'
+      x-required-permissions:
+      - images:read
+  /v1/store/{id}:
+    put:
+      tags:
+      - Images
+      summary: Render and store an image in its configured storage destination
+      operationId: store-image
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: width
+        in: query
+        description: Width to resize the rendered image
+        schema:
+          maximum: 5000
+          minimum: 1
+          type:
+          - 'null'
+          - integer
+          format: int32
+      - name: height
+        in: query
+        description: Height to resize the rendered image
+        schema:
+          maximum: 5000
+          minimum: 1
+          type:
+          - 'null'
+          - integer
+          format: int32
+      - name: dpi
+        in: query
+        description: DPI to specify in rendered image's metadata.
+        schema:
+          maximum: 600
+          minimum: 30
+          type:
+          - 'null'
+          - integer
+          format: int32
+      - name: aspect_ratio
+        in: query
+        description: 'Define an aspect ratio to crop the rendered image to. Specify the value as x_y. When using aspect_ratio, you must include one of: [x_1 & x_2], [y_1 & y_2], [x_1 & crop_width], [y_1 & crop_height], [crop_width] or [crop_height].'
+        schema:
+          type:
+          - 'null'
+          - string
+      - name: x_origin
+        in: query
+        description: Define the origin for cropping along the x axis. When using aspect_ratio, you can only specify one of x_origin or y_origin.
+        schema:
+          pattern: ^-?\d+(\.\d+)?(%|px)?$
+          type:
+          - 'null'
+          - string
+        examples:
+          Numeric:
+            description: Numbers without a unit specified are assumed to be pixel measurements.
+            value: 159
+          PX:
+            description: 230 px
+            value: 230px
+          Percentage:
+            description: 71%
+            value: 71%
+          NegativeNumeric:
+            description: Negative numbers without a unit specified are assumed to be pixel measurements from the end of the axis.
+            value: -88
+          NegativePX:
+            description: 230 px from the end of the axis.
+            value: -230px
+      - name: y_origin
+        in: query
+        description: Define the origin for cropping along the y axis. When using aspect_ratio, you can only specify one of x_origin or y_origin.
+        schema:
+          pattern: ^-?\d+(\.\d+)?(%|px)?$
+          type:
+          - 'null'
+          - string
+        examples:
+          Numeric:
+            description: Numbers without a unit specified are assumed to be pixel measurements.
+            value: 72
+          PX:
+            description: 160 px
+            value: 160px
+          Percentage:
+            description: 88%
+            value: 88%
+          NegativeNumeric:
+            description: Negative numbers without a unit specified are assumed to be pixel measurements from the end of the axis.
+            value: -16
+          NegativePX:
+            description: 160 px from the end of the axis.
+            value: -160px
+      - name: x_1
+        in: query
+        description: Define the x_1 position for cropping. You can specify either x_1 & x_2 or x_1 and crop_width.
+        schema:
+          pattern: ^-?\d+(\.\d+)?(%|px)?$
+          type:
+          - 'null'
+          - string
+        examples:
+          Numeric:
+            description: Numbers without a unit specified are assumed to be pixel measurements.
+            value: 145
+          PX:
+            description: 222 px
+            value: 222px
+          Percentage:
+            description: 77%
+            value: 77%
+          NegativeNumeric:
+            description: Negative numbers without a unit specified are assumed to be pixel measurements from the end of the axis.
+            value: -68
+          NegativePX:
+            description: 222 px from the end of the axis.
+            value: -222px
+      - name: x_2
+        in: query
+        description: Define the x_2 position for cropping. Cannot be specified with crop_width, and must have an x_1 specified.
+        schema:
+          pattern: ^-?\d+(\.\d+)?(%|px)?$
+          type:
+          - 'null'
+          - string
+        examples:
+          Numeric:
+            description: Numbers without a unit specified are assumed to be pixel measurements.
+            value: 231
+          PX:
+            description: 242 px
+            value: 242px
+          Percentage:
+            description: 11%
+            value: 11%
+          NegativeNumeric:
+            description: Negative numbers without a unit specified are assumed to be pixel measurements from the end of the axis.
+            value: -220
+          NegativePX:
+            description: 242 px from the end of the axis.
+            value: -242px
+      - name: y_1
+        in: query
+        description: Define the y_1 position for cropping. You can specify either y_1 & y_2 or y_1 and crop_height.
+        schema:
+          pattern: ^-?\d+(\.\d+)?(%|px)?$
+          type:
+          - 'null'
+          - string
+        examples:
+          Numeric:
+            description: Numbers without a unit specified are assumed to be pixel measurements.
+            value: 123
+          PX:
+            description: 168 px
+            value: 168px
+          Percentage:
+            description: 45%
+            value: 45%
+          NegativeNumeric:
+            description: Negative numbers without a unit specified are assumed to be pixel measurements from the end of the axis.
+            value: -78
+          NegativePX:
+            description: 168 px from the end of the axis.
+            value: -168px
+      - name: y_2
+        in: query
+        description: Define the y_2 position for cropping. Cannot be specified with crop_height, and must have a y_1 specified.
+        schema:
+          pattern: ^-?\d+(\.\d+)?(%|px)?$
+          type:
+          - 'null'
+          - string
+        examples:
+          Numeric:
+            description: Numbers without a unit specified are assumed to be pixel measurements.
+            value: 100
+          PX:
+            description: 133 px
+            value: 133px
+          Percentage:
+            description: 33%
+            value: 33%
+          NegativeNumeric:
+            description: Negative numbers without a unit specified are assumed to be pixel measurements from the end of the axis.
+            value: -67
+          NegativePX:
+            description: 133 px from the end of the axis.
+            value: -133px
+      - name: crop_width
+        in: query
+        description: Define the width for cropping. Cannot be specified with crop_height, and must have a x_1 specified.
+        schema:
+          pattern: ^\d+(\.\d+)?(%|px)?$
+          type:
+          - 'null'
+          - string
+          description: Use either a number, a percentage like 30.5% or a px measure like 100px.
+        examples:
+          Numeric:
+            description: Numbers without a unit specified are assumed to be pixel measurements.
+            value: 19
+          PX:
+            description: 100 px wide
+            value: 100px
+          Percentage:
+            description: 81% of the image's width
+            value: 81%
+      - name: crop_height
+        in: query
+        description: Define the x_2 position for cropping. Cannot be specified with crop_width, and must have a y_1 specified.
+        schema:
+          pattern: ^\d+(\.\d+)?(%|px)?$
+          type:
+          - 'null'
+          - string
+        examples:
+          Numeric:
+            description: Numbers without a unit specified are assumed to be pixel measurements.
+            value: 44
+          PX:
+            description: 96 px high
+            value: 96px
+          Percentage:
+            description: 52% of the image's height
+            value: 52%
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StoreImageResult'
+        '424':
+          description: Failed Dependency
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StoreImageResult'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '410':
+          description: Gone
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '408':
+          description: Request Timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+      x-badges:
+      - name: Requires images:store
+        position: after
+        color: '#64748b'
+      x-required-permissions:
+      - images:store
+  /v1/store/{id}.{format}:
+    put:
+      tags:
+      - Images
+      summary: Render and store an image with a specific format in its configured storage…
+      operationId: store-image-format
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: format
+        in: path
+        required: true
+        schema:
+          enum:
+          - png
+          - jpg
+          - jpeg
+          - webp
+          - pdf
+          type: string
+      - name: width
+        in: query
+        description: Width to resize the rendered image
+        schema:
+          maximum: 5000
+          minimum: 1
+          type:
+          - 'null'
+          - integer
+          format: int32
+      - name: height
+        in: query
+        description: Height to resize the rendered image
+        schema:
+          maximum: 5000
+          minimum: 1
+          type:
+          - 'null'
+          - integer
+          format: int32
+      - name: dpi
+        in: query
+        description: DPI to specify in rendered image's metadata.
+        schema:
+          maximum: 600
+          minimum: 30
+          type:
+          - 'null'
+          - integer
+          format: int32
+      - name: aspect_ratio
+        in: query
+        description: 'Define an aspect ratio to crop the rendered image to. Specify the value as x_y. When using aspect_ratio, you must include one of: [x_1 & x_2], [y_1 & y_2], [x_1 & crop_width], [y_1 & crop_height], [crop_width] or [crop_height].'
+        schema:
+          type:
+          - 'null'
+          - string
+      - name: x_origin
+        in: query
+        description: Define the origin for cropping along the x axis. When using aspect_ratio, you can only specify one of x_origin or y_origin.
+        schema:
+          pattern: ^-?\d+(\.\d+)?(%|px)?$
+          type:
+          - 'null'
+          - string
+        examples:
+          Numeric:
+            description: Numbers without a unit specified are assumed to be pixel measurements.
+            value: 159
+          PX:
+            description: 230 px
+            value: 230px
+          Percentage:
+            description: 71%
+            value: 71%
+          NegativeNumeric:
+            description: Negative numbers without a unit specified are assumed to be pixel measurements from the end of the axis.
+            value: -88
+          NegativePX:
+            description: 230 px from the end of the axis.
+            value: -230px
+      - name: y_origin
+        in: query
+        description: Define the origin for cropping along the y axis. When using aspect_ratio, you can only specify one of x_origin or y_origin.
+        schema:
+          pattern: ^-?\d+(\.\d+)?(%|px)?$
+          type:
+          - 'null'
+          - string
+        examples:
+          Numeric:
+            description: Numbers without a unit specified are assumed to be pixel measurements.
+            value: 72
+          PX:
+            description: 160 px
+            value: 160px
+          Percentage:
+            description: 88%
+            value: 88%
+          NegativeNumeric:
+            description: Negative numbers without a unit specified are assumed to be pixel measurements from the end of the axis.
+            value: -16
+          NegativePX:
+            description: 160 px from the end of the axis.
+            value: -160px
+      - name: x_1
+        in: query
+        description: Define the x_1 position for cropping. You can specify either x_1 & x_2 or x_1 and crop_width.
+        schema:
+          pattern: ^-?\d+(\.\d+)?(%|px)?$
+          type:
+          - 'null'
+          - string
+        examples:
+          Numeric:
+            description: Numbers without a unit specified are assumed to be pixel measurements.
+            value: 145
+          PX:
+            description: 222 px
+            value: 222px
+          Percentage:
+            description: 77%
+            value: 77%
+          NegativeNumeric:
+            description: Negative numbers without a unit specified are assumed to be pixel measurements from the end of the axis.
+            value: -68
+          NegativePX:
+            description: 222 px from the end of the axis.
+            value: -222px
+      - name: x_2
+        in: query
+        description: Define the x_2 position for cropping. Cannot be specified with crop_width, and must have an x_1 specified.
+        schema:
+          pattern: ^-?\d+(\.\d+)?(%|px)?$
+          type:
+          - 'null'
+          - string
+        examples:
+          Numeric:
+            description: Numbers without a unit specified are assumed to be pixel measurements.
+            value: 231
+          PX:
+            description: 242 px
+            value: 242px
+          Percentage:
+            description: 11%
+            value: 11%
+          NegativeNumeric:
+            description: Negative numbers without a unit specified are assumed to be pixel measurements from the end of the axis.
+            value: -220
+          NegativePX:
+            description: 242 px from the end of the axis.
+            value: -242px
+      - name: y_1
+        in: query
+        description: Define the y_1 position for cropping. You can specify either y_1 & y_2 or y_1 and crop_height.
+        schema:
+          pattern: ^-?\d+(\.\d+)?(%|px)?$
+          type:
+          - 'null'
+          - string
+        examples:
+          Numeric:
+            description: Numbers without a unit specified are assumed to be pixel measurements.
+            value: 123
+          PX:
+            description: 168 px
+            value: 168px
+          Percentage:
+            description: 45%
+            value: 45%
+          NegativeNumeric:
+            description: Negative numbers without a unit specified are assumed to be pixel measurements from the end of the axis.
+            value: -78
+          NegativePX:
+            description: 168 px from the end of the axis.
+            value: -168px
+      - name: y_2
+        in: query
+        description: Define the y_2 position for cropping. Cannot be specified with crop_height, and must have a y_1 specified.
+        schema:
+          pattern: ^-?\d+(\.\d+)?(%|px)?$
+          type:
+          - 'null'
+          - string
+        examples:
+          Numeric:
+            description: Numbers without a unit specified are assumed to be pixel measurements.
+            value: 100
+          PX:
+            description: 133 px
+            value: 133px
+          Percentage:
+            description: 33%
+            value: 33%
+          NegativeNumeric:
+            description: Negative numbers without a unit specified are assumed to be pixel measurements from the end of the axis.
+            value: -67
+          NegativePX:
+            description: 133 px from the end of the axis.
+            value: -133px
+      - name: crop_width
+        in: query
+        description: Define the width for cropping. Cannot be specified with crop_height, and must have a x_1 specified.
+        schema:
+          pattern: ^\d+(\.\d+)?(%|px)?$
+          type:
+          - 'null'
+          - string
+          description: Use either a number, a percentage like 30.5% or a px measure like 100px.
+        examples:
+          Numeric:
+            description: Numbers without a unit specified are assumed to be pixel measurements.
+            value: 19
+          PX:
+            description: 100 px wide
+            value: 100px
+          Percentage:
+            description: 81% of the image's width
+            value: 81%
+      - name: crop_height
+        in: query
+        description: Define the x_2 position for cropping. Cannot be specified with crop_width, and must have a y_1 specified.
+        schema:
+          pattern: ^\d+(\.\d+)?(%|px)?$
+          type:
+          - 'null'
+          - string
+        examples:
+          Numeric:
+            description: Numbers without a unit specified are assumed to be pixel measurements.
+            value: 44
+          PX:
+            description: 96 px high
+            value: 96px
+          Percentage:
+            description: 52% of the image's height
+            value: 52%
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StoreImageResult'
+        '424':
+          description: Failed Dependency
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StoreImageResult'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '410':
+          description: Gone
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '408':
+          description: Request Timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+      x-badges:
+      - name: Requires images:store
+        position: after
+        color: '#64748b'
+      x-required-permissions:
+      - images:store
+components:
+  schemas:
+    ImageRequest:
+      type: object
+      anyOf:
+      - $ref: '#/components/schemas/ImageRequestImageRequest_HtmlCss'
+      - $ref: '#/components/schemas/ImageRequestImageRequest_Url'
+      - $ref: '#/components/schemas/ImageRequestImageRequest_Templated'
+      discriminator:
+        propertyName: $type
+    ImageRequestImageRequest_HtmlCss:
+      title: HTML/CSS Image Request
+      required:
+      - html
+      properties:
+        html:
+          type: string
+          description: HTML to render and take a screenshot of. HTML fragments are rendered in a wrapper document unless a complete HTML document is supplied. Required for HTML image requests.
+        css:
+          type:
+          - 'null'
+          - string
+          description: CSS used to style the rendered HTML.
+        device_scale:
+          maximum: 3
+          minimum: 0.1
+          pattern: ^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$
+          type:
+          - 'null'
+          - number
+          - string
+          description: 'Adjusts the pixel ratio used for the screenshot. Minimum: 0.1. Maximum: 3. HTML and template renders default to 2; URL renders default to 1.'
+          format: double
+        google_fonts:
+          type:
+          - 'null'
+          - string
+          description: Google fonts to load. Separate multiple fonts with a pipe, such as 'Roboto|OpenSans', and set font-family in the CSS to use them.
+        max_wait_ms:
+          maximum: 10000
+          minimum: 500
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: 'Sets a limit on how long to wait before taking the screenshot when the page continues loading irrelevant content. Minimum: 500. Maximum: 10000 and subject to the account plan limit.'
+          format: int32
+        metadata:
+          type:
+          - 'null'
+          - object
+          additionalProperties:
+            type: string
+          description: Custom key-value metadata stored with the image.
+        ms_delay:
+          maximum: 10000
+          minimum: 0
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: 'Adds extra time in milliseconds before taking the screenshot so JavaScript can execute. Minimum: 0. Maximum: 10000.'
+          format: int32
+          default: 0
+        render_when_ready:
+          type:
+          - 'null'
+          - boolean
+          description: Waits until the page signals that the screenshot is ready. The image fails if the readiness signal is never sent.
+        selector:
+          type:
+          - 'null'
+          - string
+          description: A CSS selector for an element in the HTML. We’ll crop the image to this specific element.
+        viewport_height:
+          maximum: 6000
+          minimum: 1
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: 'Sets the height of Chrome''s viewport and disables automatic cropping. Minimum: 1. Maximum: 6000. Both viewport dimensions must be supplied together.'
+          format: int32
+        viewport_width:
+          maximum: 6000
+          minimum: 1
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: 'Sets the width of Chrome''s viewport and disables automatic cropping. Minimum: 1. Maximum: 6000. Both viewport dimensions must be supplied together.'
+          format: int32
+        pdf_options:
+          oneOf:
+          - type: 'null'
+          - description: Options used when generating a PDF instead of an image. Page dimensions and margins must include supported PDF units; margins must contain either zero or four values; scale must be between 0.1 and 2.
+            $ref: '#/components/schemas/PDFOptions'
+        disable_twemoji:
+          type:
+          - 'null'
+          - boolean
+          description: Twemoji is enabled by default. Set true to disable automatic emoji replacement and use the supplied fonts or native emoji fonts instead. Omitted, null, or false keeps Twemoji enabled.
+        dedupe_duration_s:
+          maximum: 31536000
+          minimum: 0
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: 'Reuse an existing image with identical content if it was created within this many seconds. Minimum: 0. Maximum: 31536000. Availability and maximum effective duration depend on the account plan.'
+          format: int32
+        max_render_once:
+          type:
+          - 'null'
+          - boolean
+          description: Ensure the image is only ever rendered and saved one time. This is an advanced option not applicable to most requests.
+        color_scheme:
+          oneOf:
+          - type: 'null'
+          - description: 'Sets Chrome''s preferred color scheme. Valid values: light or dark.'
+            $ref: '#/components/schemas/ColorSchemeType'
+        timezone:
+          type:
+          - 'null'
+          - string
+          description: Sets the IANA timezone used by Chrome while rendering. Must be a recognized IANA timezone identifier.
+        viewport_mobile:
+          type:
+          - 'null'
+          - boolean
+          description: Specifies whether the page uses mobile viewport behavior, including its viewport meta tag.
+        viewport_landscape:
+          type:
+          - 'null'
+          - boolean
+          description: Specifies whether the emulated viewport is in landscape orientation.
+        viewport_touch:
+          type:
+          - 'null'
+          - boolean
+          description: Specifies whether the emulated viewport supports touch events.
+        media_type:
+          oneOf:
+          - type: 'null'
+          - description: 'Sets the CSS media type used while rendering the page. Valid values: print or screen.'
+            $ref: '#/components/schemas/MediaType'
+        proxy_id:
+          type:
+          - 'null'
+          - string
+          description: Specifies which configured organization proxy to use when rendering.
+        storage_destination_id:
+          type:
+          - 'null'
+          - string
+          description: Specifies which configured organization storage destination receives the rendered image.
+        jumbo_max_height:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: Maximum height of the rendered image in jumbo mode. Jumbo rendering consumes additional renders and requires jumbo_max_width. Supply both jumbo dimensions. Each must be greater than 0 and no more than 80000; at least one must exceed 8000; total area cannot exceed 400000000 pixels.
+          format: int32
+        jumbo_max_width:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: Maximum width of the rendered image in jumbo mode. Jumbo rendering consumes additional renders and requires jumbo_max_height. Supply both jumbo dimensions. Each must be greater than 0 and no more than 80000; at least one must exceed 8000; total area cannot exceed 400000000 pixels.
+          format: int32
+        transparent_background:
+          type:
+          - 'null'
+          - boolean
+          description: Specifies whether the image is rendered with a transparent background.
+        format:
+          oneOf:
+          - type: 'null'
+          - description: 'Sets the file extension on the URL returned by the image creation request. It does not change the stored source image or restrict later rendering to this format. Valid values: png, jpg, jpeg, webp, or pdf. This parameter is accepted only in POST request bodies.'
+            $ref: '#/components/schemas/ImageFormat'
+        request_overrides:
+          type:
+          - 'null'
+          - array
+          items:
+            $ref: '#/components/schemas/RequestOverride'
+          description: Rules that override browser network requests. The block action blocks requests matching a URL wildcard pattern and/or resource types. When both matchers are supplied, both must match. A request is blocked if any block rule matches. Omitted, null, or an empty array adds no overrides. Requires a paid plan. Accepts a JSON array in JSON requests or a JSON-encoded array string in form requests. Maximum 100 rules and 512 characters per URL pattern. Each block rule requires a nonempty URL pattern or at least one resource type; supplied matchers cannot be empty. Not supported in query strings.
+    StoreImageStatus:
+      enum:
+      - stored
+      - already_stored
+      - failed
+      - not_attempted
+    ImagePageResult:
+      required:
+      - next_page_token
+      type: object
+      properties:
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/SimpleImage'
+          description: Image summaries returned on this page.
+        next_page_token:
+          type: string
+          description: Opaque continuation token. Pass this value as page_token to retrieve the next page when has_next_page is true.
+        has_next_page:
+          type: boolean
+          description: Whether another page of results is available.
+      description: A page of created images belonging to the authenticated organization, excluding deleted images.
+    BatchImageRequest:
+      required:
+      - variations
+      type: object
+      properties:
+        default_options:
+          oneOf:
+          - type: 'null'
+          - description: Common image options applied to every variation. Options supplied by a variation override these defaults.
+            $ref: '#/components/schemas/BaseImageRequest'
+        variations:
+          minItems: 1
+          type: array
+          items:
+            $ref: '#/components/schemas/ImageRequest'
+          description: One variation per image. Supply at least one variation, within your plan's batch limit. Each merged request must provide HTML or a URL. Results preserve this order.
+      description: Creates a batch of images from HTML or URLs. Each variation overrides the corresponding default options.
+    ImageRequest_TemplatedBatchOptions:
+      type: object
+      properties:
+        template_values:
+          oneOf:
+          - type: 'null'
+          - description: Template variable values shared through default_options or overridden by this variation. Objects merge recursively by key; variation arrays, scalar values and explicit null replace defaults. Values may be shared across different templates. Each merged object must be nonempty and satisfy its resolved template's required variables.
+            $ref: '#/components/schemas/JsonObject'
+        template_id:
+          type:
+          - 'null'
+          - string
+          description: Template ID to render for this variation. Omit to inherit default_options.template_id. Supplying a template_id resets the inherited template_version unless this variation also supplies a version. Each variation must resolve to a nonempty template ID owned by the authenticated organization.
+        template_version:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: Template version to render. Inherit default_options.template_version when using the default template ID. When supplying a template_id in this variation, omit the version to use that template's latest version.
+          format: int64
+        format:
+          oneOf:
+          - type: 'null'
+          - description: 'Output format for this variation''s returned image URL. Omit to inherit default_options.format. This does not restrict subsequent rendering to that format. Valid values: png, jpg, jpeg, webp, or pdf.'
+            $ref: '#/components/schemas/ImageFormat'
+    ImageRequestImageRequest_Url:
+      title: URL Image Request
+      required:
+      - url
+      properties:
+        url:
+          type: string
+          description: Public HTTP or HTTPS URL to capture. Required for URL image requests.
+        css:
+          type:
+          - 'null'
+          - string
+          description: CSS injected into the loaded URL to override styles on the page.
+        device_scale:
+          maximum: 3
+          minimum: 0.1
+          pattern: ^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$
+          type:
+          - 'null'
+          - number
+          - string
+          description: 'Adjusts the pixel ratio used for the screenshot. Minimum: 0.1. Maximum: 3. HTML and template renders default to 2; URL renders default to 1.'
+          format: double
+        full_screen:
+          type:
+          - 'null'
+          - boolean
+          description: Take a screenshot of the entire screen after scrolling down and back to the top.
+        max_wait_ms:
+          maximum: 10000
+          minimum: 500
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: 'Sets a limit on how long to wait before taking the screenshot when the page continues loading irrelevant content. Minimum: 500. Maximum: 10000 and subject to the account plan limit.'
+          format: int32
+        metadata:
+          type:
+          - 'null'
+          - object
+          additionalProperties:
+            type: string
+          description: Custom key-value metadata stored with the image.
+        ms_delay:
+          maximum: 10000
+          minimum: 0
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: 'Adds extra time in milliseconds before taking the screenshot so JavaScript can execute. Minimum: 0. Maximum: 10000.'
+          format: int32
+          default: 0
+        render_when_ready:
+          type:
+          - 'null'
+          - boolean
+          description: Waits until the page signals that the screenshot is ready. The image fails if the readiness signal is never sent.
+        selector:
+          type:
+          - 'null'
+          - string
+          description: A CSS selector for an element in the HTML. We’ll crop the image to this specific element.
+        viewport_height:
+          maximum: 6000
+          minimum: 1
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: 'Sets the height of Chrome''s viewport and disables automatic cropping. Minimum: 1. Maximum: 6000. Both viewport dimensions must be supplied together.'
+          format: int32
+        viewport_width:
+          maximum: 6000
+          minimum: 1
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: 'Sets the width of Chrome''s viewport and disables automatic cropping. Minimum: 1. Maximum: 6000. Both viewport dimensions must be supplied together.'
+          format: int32
+        pdf_options:
+          oneOf:
+          - type: 'null'
+          - description: Options used when generating a PDF instead of an image. Page dimensions and margins must include supported PDF units; margins must contain either zero or four values; scale must be between 0.1 and 2.
+            $ref: '#/components/schemas/PDFOptions'
+        disable_twemoji:
+          type:
+          - 'null'
+          - boolean
+          description: Set explicitly to false to inject Twemoji into the loaded page. Omitted, null, or true leaves the page's emoji handling unchanged and does not disable the website's own emoji scripts.
+        dedupe_duration_s:
+          maximum: 31536000
+          minimum: 0
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: 'Reuse an existing image with identical content if it was created within this many seconds. Minimum: 0. Maximum: 31536000. Availability and maximum effective duration depend on the account plan.'
+          format: int32
+        max_render_once:
+          type:
+          - 'null'
+          - boolean
+          description: Ensure the image is only ever rendered and saved one time. This is an advanced option not applicable to most requests.
+        color_scheme:
+          oneOf:
+          - type: 'null'
+          - description: 'Sets Chrome''s preferred color scheme. Valid values: light or dark.'
+            $ref: '#/components/schemas/ColorSchemeType'
+        timezone:
+          type:
+          - 'null'
+          - string
+          description: Sets the IANA timezone used by Chrome while rendering. Must be a recognized IANA timezone identifier.
+        block_consent_banners:
+          type:
+          - 'null'
+          - boolean
+          description: Attempt to block cookie/consent banners from displaying.
+        identify_as_hcti:
+          type:
+          - 'null'
+          - boolean
+          description: Identify the top-level page navigation as an HCTI screenshot request using the X-HCTI-SCREENSHOT header.
+        headers:
+          type:
+          - 'null'
+          - object
+          additionalProperties:
+            type: string
+          description: HTTP headers to include on top-level page navigations to the requested URL's origin and any additional_header_origins. Supports up to 20 headers with names up to 512 ASCII characters and values up to 8192 UTF-8 bytes. For GET and form-encoded requests, repeat this parameter using the format `headers=name:value`.
+        additional_header_origins:
+          type:
+          - 'null'
+          - array
+          items:
+            type: string
+          description: Additional exact HTTP or HTTPS origins allowed to receive custom headers. Supports up to 20 unique origins of up to 512 UTF-8 bytes each. Origins must use the format scheme://host[:port] without a path; duplicates are ignored. For GET and form-encoded requests, repeat this parameter for each origin.
+        include_headers_on_subrequests:
+          type:
+          - 'null'
+          - boolean
+          description: Include custom headers on subrequests to the requested URL's origin and any additional_header_origins. Defaults to false. Requires at least one header.
+        viewport_mobile:
+          type:
+          - 'null'
+          - boolean
+          description: Specifies whether the page uses mobile viewport behavior, including its viewport meta tag.
+        viewport_landscape:
+          type:
+          - 'null'
+          - boolean
+          description: Specifies whether the emulated viewport is in landscape orientation.
+        viewport_touch:
+          type:
+          - 'null'
+          - boolean
+          description: Specifies whether the emulated viewport supports touch events.
+        media_type:
+          oneOf:
+          - type: 'null'
+          - description: 'Sets the CSS media type used while rendering the page. Valid values: print or screen.'
+            $ref: '#/components/schemas/MediaType'
+        proxy_id:
+          type:
+          - 'null'
+          - string
+          description: Specifies which configured organization proxy to use when rendering.
+        storage_destination_id:
+          type:
+          - 'null'
+          - string
+          description: Specifies which configured organization storage destination receives the rendered image.
+        jumbo_max_height:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: Maximum height of the rendered image in jumbo mode. Jumbo rendering consumes additional renders and requires jumbo_max_width. Supply both jumbo dimensions. Each must be greater than 0 and no more than 80000; at least one must exceed 8000; total area cannot exceed 400000000 pixels.
+          format: int32
+        jumbo_max_width:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: Maximum width of the rendered image in jumbo mode. Jumbo rendering consumes additional renders and requires jumbo_max_height. Supply both jumbo dimensions. Each must be greater than 0 and no more than 80000; at least one must exceed 8000; total area cannot exceed 400000000 pixels.
+          format: int32
+        transparent_background:
+          type:
+          - 'null'
+          - boolean
+          description: Specifies whether the image is rendered with a transparent background.
+        format:
+          oneOf:
+          - type: 'null'
+          - description: 'Sets the file extension on the URL returned by the image creation request. It does not change the stored source image or restrict later rendering to this format. Valid values: png, jpg, jpeg, webp, or pdf. This parameter is accepted only in POST request bodies.'
+            $ref: '#/components/schemas/ImageFormat'
+        request_overrides:
+          type:
+          - 'null'
+          - array
+          items:
+            $ref: '#/components/schemas/RequestOverride'
+          description: Rules that override browser network requests. The block action blocks requests matching a URL wildcard pattern and/or resource types. When both matchers are supplied, both must match. A request is blocked if any block rule matches. Omitted, null, or an empty array adds no overrides. Requires a paid plan. Accepts a JSON array in JSON requests or a JSON-encoded array string in form requests. Maximum 100 rules and 512 characters per URL pattern. Each block rule requires a nonempty URL pattern or at least one resource type; supplied matchers cannot be empty. Not supported in query strings.
+    ImageBaseImage_HtmlCss:
+      title: HTML/CSS Image
+      properties:
+        image_type:
+          enum:
+          - html_css
+          type: string
+        css:
+          type:
+          - 'null'
+          - string
+          description: CSS used to style the rendered HTML.
+        device_scale:
+          pattern: ^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$
+          type:
+          - 'null'
+          - number
+          - string
+          description: Screenshot pixel ratio. A value of 2 produces two output pixels per CSS pixel in each dimension.
+          format: double
+        google_fonts:
+          type:
+          - 'null'
+          - string
+          description: Google Font families to load, separated by a pipe, for example Roboto|Open Sans.
+        html:
+          type: string
+          description: HTML source supplied for rendering the image.
+        max_wait_ms:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: Maximum loading wait in milliseconds before capture when the page continues loading content.
+          format: int32
+        metadata:
+          type:
+          - 'null'
+          - object
+          additionalProperties:
+            type: string
+          description: Custom key-value metadata stored with the image.
+        ms_delay:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: Additional delay in milliseconds before taking the screenshot.
+          format: int32
+        render_when_ready:
+          type:
+          - 'null'
+          - boolean
+          description: Whether capture waits for the page to call ScreenshotReady(). Rendering fails if the readiness signal is not received.
+        selector:
+          type:
+          - 'null'
+          - string
+          description: CSS selector of the element to capture. When set, the image is cropped to the matching element.
+        viewport_height:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: Browser viewport height in CSS pixels.
+          format: int32
+        viewport_width:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: Browser viewport width in CSS pixels.
+          format: int32
+        pdf_options:
+          oneOf:
+          - type: 'null'
+          - description: Page size, margins, scale, and background settings used when rendering a PDF.
+            $ref: '#/components/schemas/PDFOptions'
+        disable_twemoji:
+          type:
+          - 'null'
+          - boolean
+          description: HTML/CSS images use Twemoji by default; set true to disable it. URL images inject Twemoji only when explicitly set to false. For URLs, omitted, null, or true leaves the page's emoji handling unchanged.
+        max_render_once:
+          type:
+          - 'null'
+          - boolean
+          description: Whether the image is restricted to being rendered and saved at most once.
+        color_scheme:
+          oneOf:
+          - type: 'null'
+          - description: Sets Chrome's preferred color scheme.
+            $ref: '#/components/schemas/ColorSchemeType'
+        timezone:
+          type:
+          - 'null'
+          - string
+          description: Sets the IANA timezone used by Chrome while rendering.
+        viewport_mobile:
+          type:
+          - 'null'
+          - boolean
+          description: Whether the browser viewport emulates a mobile device.
+        viewport_landscape:
+          type:
+          - 'null'
+          - boolean
+          description: Whether the browser viewport emulates landscape orientation.
+        viewport_touch:
+          type:
+          - 'null'
+          - boolean
+          description: Whether the browser emulates support for touch input.
+        media_type:
+          oneOf:
+          - type: 'null'
+          - description: CSS media type emulated when rendering, such as screen or print.
+            $ref: '#/components/schemas/MediaType'
+        proxy_id:
+          type:
+          - 'null'
+          - string
+          description: ID of the proxy configured for browser requests, or null when no proxy is configured.
+        storage_destination_id:
+          type:
+          - 'null'
+          - string
+          description: ID of the storage destination configured for this image, or null when none is configured.
+        jumbo_max_height:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: Maximum output height in pixels for jumbo rendering. Used together with jumbo_max_width.
+          format: int32
+        jumbo_max_width:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: Maximum output width in pixels for jumbo rendering. Used together with jumbo_max_height.
+          format: int32
+        transparent_background:
+          type:
+          - 'null'
+          - boolean
+          description: Whether the default browser background is transparent. Backgrounds explicitly set by the page still apply.
+        request_overrides:
+          type:
+          - 'null'
+          - array
+          items:
+            $ref: '#/components/schemas/RequestOverride'
+          description: Browser request overrides. Block rules match URL wildcard patterns and/or resource types; supplied matchers must all match.
+        id:
+          type: string
+          description: Unique image ID. Use this value to retrieve image metadata or render the image.
+        created_at:
+          type: string
+          description: Date and time the image was created, in UTC.
+          format: date-time
+        last_render_stored_at:
+          type:
+          - 'null'
+          - string
+          description: Last recorded date and time a rendered image was stored by HCTI, in UTC. Null when no stored render timestamp is available. This value can change after rendering again or be cleared when the stored render is removed.
+          format: date-time
+        og_config_id:
+          type:
+          - 'null'
+          - string
+          description: ID of the Open Graph configuration that created this image, or null when the image is not associated with one.
+        og_config_content_version:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: Content version of the Open Graph configuration associated with this image, or null when unavailable.
+          format: int64
+        saved_to_storage_destination_at:
+          type:
+          - 'null'
+          - string
+          description: Recorded date and time the base image was saved to its configured storage destination, in UTC. Null until a save is recorded; does not describe saves of resized or reformatted variants.
+          format: date-time
+        storage_destination_hcti_storage_disabled:
+          type:
+          - 'null'
+          - boolean
+          description: Whether HCTI storage is disabled for this image, recorded from the storage destination when the image was created. When true, rendered files are saved to the configured storage destination without a public HCTI image URL or HCTI CDN caching.
+      description: An image created from HTML and CSS, including its source content and stored rendering settings. The image_type is html_css.
+    RequestOverrideRequestOverrideBlock:
+      properties:
+        action:
+          enum:
+          - block
+          type: string
+        url:
+          type:
+          - 'null'
+          - string
+          description: URL wildcard pattern to match, using * for any sequence of characters. When resource_types is also supplied, both matchers must match.
+        resource_types:
+          type:
+          - 'null'
+          - array
+          items:
+            $ref: '#/components/schemas/RequestOverrideResourceType'
+          description: Resource types to match, supplied as an array of names, such as image, script, xhr, or fetch. Any listed type may match. When url is also supplied, it must match too.
+    StoreImageTarget:
+      enum:
+      - hcti_storage
+      - storage_destination
+    ImageFormat:
+      enum:
+      - png
+      - jpg
+      - jpeg
+      - webp
+      - pdf
+      - null
+    RequestOverrideResourceType:
+      enum:
+      - beacon
+      - document
+      - stylesheet
+      - image
+      - image_set
+      - media
+      - font
+      - script
+      - text_track
+      - xhr
+      - fetch
+      - event_source
+      - manifest
+      - ping
+      - img
+      - other
+    JsonObject:
+      type: object
+    PDFOptions:
+      type: object
+      properties:
+        page_height:
+          type:
+          - 'null'
+          - string
+          description: Height of the page, with unit (px, in, cm, mm, pt)
+        page_width:
+          type:
+          - 'null'
+          - string
+          description: Width of the page, with unit (px, in, cm, mm, pt)
+        scale:
+          maximum: 2
+          minimum: 0.1
+          pattern: ^-?(?:0|[1-9]\d*)(?:\.\d+)?$
+          type:
+          - 'null'
+          - number
+          - string
+          description: Scale of the webpage rendering. Defaults to 1.
+          format: double
+        margins:
+          type:
+          - 'null'
+          - array
+          items:
+            type: string
+          description: 'Margins of the webpage rendering. Defaults to 0. 4 values must be supplied: top, right, bottom, left. Units are px, cm, in, mm, or pt.'
+        print_background:
+          type: boolean
+          description: Print background graphics.
+    ImageResultWithId:
+      type: object
+      properties:
+        url:
+          type: string
+        id:
+          type: string
+    SimpleImage:
+      required:
+      - created_at
+      - id
+      - url
+      type: object
+      properties:
+        created_at:
+          type: string
+          description: Date and time the image was created, in UTC.
+          format: date-time
+        id:
+          type: string
+          description: Unique image ID. Use this value to retrieve the image's full metadata.
+        url:
+          type: string
+          description: HCTI render URL for this image, or the authenticated store endpoint URL when HCTI storage is disabled.
+      description: Summary of a created image returned by the image listing endpoint. Retrieve the image by ID for full metadata.
+    StoreImageOutcome:
+      enum:
+      - complete
+      - partial
+      - failed
+    ImageBaseImage_Url:
+      title: URL Image
+      properties:
+        image_type:
+          enum:
+          - url
+          type: string
+        css:
+          type:
+          - 'null'
+          - string
+          description: CSS injected into the loaded URL to override styles on the page.
+        device_scale:
+          pattern: ^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$
+          type:
+          - 'null'
+          - number
+          - string
+          description: Screenshot pixel ratio. A value of 2 produces two output pixels per CSS pixel in each dimension.
+          format: double
+        full_screen:
+          type:
+          - 'null'
+          - boolean
+          description: Whether the screenshot captures the entire scrollable page after scrolling down and back to the top.
+        max_wait_ms:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: Maximum loading wait in milliseconds before capture when the page continues loading content.
+          format: int32
+        metadata:
+          type:
+          - 'null'
+          - object
+          additionalProperties:
+            type: string
+          description: Custom key-value metadata stored with the image.
+        ms_delay:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: Additional delay in milliseconds before taking the screenshot.
+          format: int32
+        render_when_ready:
+          type:
+          - 'null'
+          - boolean
+          description: Whether capture waits for the page to call ScreenshotReady(). Rendering fails if the readiness signal is not received.
+        selector:
+          type:
+          - 'null'
+          - string
+          description: CSS selector of the element to capture. When set, the image is cropped to the matching element.
+        url:
+          type: string
+          description: Source URL of the web page to capture.
+        viewport_height:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: Browser viewport height in CSS pixels.
+          format: int32
+        viewport_width:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: Browser viewport width in CSS pixels.
+          format: int32
+        pdf_options:
+          oneOf:
+          - type: 'null'
+          - description: Page size, margins, scale, and background settings used when rendering a PDF.
+            $ref: '#/components/schemas/PDFOptions'
+        disable_twemoji:
+          type:
+          - 'null'
+          - boolean
+          description: HTML/CSS images use Twemoji by default; set true to disable it. URL images inject Twemoji only when explicitly set to false. For URLs, omitted, null, or true leaves the page's emoji handling unchanged.
+        max_render_once:
+          type:
+          - 'null'
+          - boolean
+          description: Whether the image is restricted to being rendered and saved at most once.
+        color_scheme:
+          oneOf:
+          - type: 'null'
+          - description: Sets Chrome's preferred color scheme.
+            $ref: '#/components/schemas/ColorSchemeType'
+        timezone:
+          type:
+          - 'null'
+          - string
+          description: Sets the IANA timezone used by Chrome while rendering.
+        block_consent_banners:
+          type:
+          - 'null'
+          - boolean
+          description: Whether the browser attempts to block cookie and consent banners before capture.
+        identify_as_hcti:
+          type:
+          - 'null'
+          - boolean
+          description: 'Whether top-level page navigation includes the X-HCTI-SCREENSHOT: 1 header to identify the request as an HCTI screenshot.'
+        headers:
+          type:
+          - 'null'
+          - object
+          additionalProperties:
+            type: string
+          description: Custom HTTP headers sent on top-level page navigations to the source URL's origin and any additional_header_origins.
+        additional_header_origins:
+          type:
+          - 'null'
+          - array
+          items:
+            type: string
+          description: Additional exact HTTP or HTTPS origins allowed to receive custom headers, in the form scheme://host[:port] without a path.
+        include_headers_on_subrequests:
+          type:
+          - 'null'
+          - boolean
+          description: Whether custom headers are also sent on subrequests to the source URL's origin and any additional_header_origins.
+        viewport_mobile:
+          type:
+          - 'null'
+          - boolean
+          description: Whether the browser viewport emulates a mobile device.
+        viewport_landscape:
+          type:
+          - 'null'
+          - boolean
+          description: Whether the browser viewport emulates landscape orientation.
+        viewport_touch:
+          type:
+          - 'null'
+          - boolean
+          description: Whether the browser emulates support for touch input.
+        media_type:
+          oneOf:
+          - type: 'null'
+          - description: CSS media type emulated when rendering, such as screen or print.
+            $ref: '#/components/schemas/MediaType'
+        proxy_id:
+          type:
+          - 'null'
+          - string
+          description: ID of the proxy configured for browser requests, or null when no proxy is configured.
+        storage_destination_id:
+          type:
+          - 'null'
+          - string
+          description: ID of the storage destination configured for this image, or null when none is configured.
+        jumbo_max_height:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: Maximum output height in pixels for jumbo rendering. Used together with jumbo_max_width.
+          format: int32
+        jumbo_max_width:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: Maximum output width in pixels for jumbo rendering. Used together with jumbo_max_height.
+          format: int32
+        transparent_background:
+          type:
+          - 'null'
+          - boolean
+          description: Whether the default browser background is transparent. Backgrounds explicitly set by the page still apply.
+        request_overrides:
+          type:
+          - 'null'
+          - array
+          items:
+            $ref: '#/components/schemas/RequestOverride'
+          description: Browser request overrides. Block rules match URL wildcard patterns and/or resource types; supplied matchers must all match.
+        id:
+          type: string
+          description: Unique image ID. Use this value to retrieve image metadata or render the image.
+        created_at:
+          type: string
+          description: Date and time the image was created, in UTC.
+          format: date-time
+        last_render_stored_at:
+          type:
+          - 'null'
+          - string
+          description: Last recorded date and time a rendered image was stored by HCTI, in UTC. Null when no stored render timestamp is available. This value can change after rendering again or be cleared when the stored render is removed.
+          format: date-time
+        og_config_id:
+          type:
+          - 'null'
+          - string
+          description: ID of the Open Graph configuration that created this image, or null when the image is not associated with one.
+        og_config_content_version:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: Content version of the Open Graph configuration associated with this image, or null when unavailable.
+          format: int64
+        saved_to_storage_destination_at:
+          type:
+          - 'null'
+          - string
+          description: Recorded date and time the base image was saved to its configured storage destination, in UTC. Null until a save is recorded; does not describe saves of resized or reformatted variants.
+          format: date-time
+        storage_destination_hcti_storage_disabled:
+          type:
+          - 'null'
+          - boolean
+          description: Whether HCTI storage is disabled for this image, recorded from the storage destination when the image was created. When true, rendered files are saved to the configured storage destination without a public HCTI image URL or HCTI CDN caching.
+      description: An image created by capturing a web page, including its source URL and stored rendering settings. The image_type is url.
+    StoreImageResult:
+      required:
+      - outcome
+      - baseResult
+      - message
+      - statusCode
+      type: object
+      properties:
+        outcome:
+          $ref: '#/components/schemas/StoreImageOutcome'
+        baseResult:
+          description: Describes whether the base image was stored and where it was stored.
+          $ref: '#/components/schemas/StoreImageObjectResult'
+        transformationResult:
+          oneOf:
+          - type: 'null'
+          - description: Describes whether the transformed image was stored and where it was stored. Null when no transformation was requested.
+            $ref: '#/components/schemas/StoreImageObjectResult'
+        error:
+          type:
+          - 'null'
+          - string
+        referenceId:
+          type:
+          - 'null'
+          - string
+        success:
+          type: boolean
+        message:
+          type: string
+        statusCode:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - integer
+          - string
+          format: int32
+    ApiErrorResult:
+      required:
+      - error
+      - message
+      - statusCode
+      type: object
+      properties:
+        success:
+          type: boolean
+        error:
+          type: string
+        validationErrors:
+          type:
+          - 'null'
+          - array
+          items:
+            $ref: '#/components/schemas/ValidationError'
+        referenceId:
+          type:
+          - 'null'
+          - string
+        message:
+          type: string
+        statusCode:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - integer
+          - string
+          format: int32
+    BatchDeleteRequest:
+      required:
+      - ids
+      type: object
+      properties:
+        ids:
+          title: Image Ids
+          maxItems: 25
+          minItems: 1
+          type: array
+          items:
+            type: string
+          description: Up to 25 ids of images to delete.
+    ColorSchemeType:
+      enum:
+      - light
+      - dark
+      - null
+    RequestOverride:
+      required:
+      - action
+      type: object
+      anyOf:
+      - $ref: '#/components/schemas/RequestOverrideRequestOverrideBlock'
+      description: A browser request override. The action discriminator selects the rule type; currently only block is supported.
+      discriminator:
+        propertyName: action
+        mapping:
+          block: '#/components/schemas/RequestOverrideRequestOverrideBlock'
+    BatchImageResult:
+      required:
+      - images
+      type: object
+      properties:
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/ImageResultWithId'
+    MediaType:
+      enum:
+      - print
+      - screen
+      - null
+    ImageRequestImageRequest_Templated:
+      title: Templated Image Request
+      required:
+      - template_values
+      properties:
+        template_values:
+          description: Values substituted into the template for this render. Must be a non-empty JSON object. Include the values needed by the template.
+          $ref: '#/components/schemas/JsonObject'
+        format:
+          oneOf:
+          - type: 'null'
+          - description: 'Sets the file extension on the URL returned by the image creation request. It does not change the stored source image or restrict later rendering to this format. Valid values: png, jpg, jpeg, webp, or pdf. This parameter is accepted only in POST request bodies.'
+            $ref: '#/components/schemas/ImageFormat'
+    ImageBaseImage_Templated:
+      title: Templated Image
+      properties:
+        image_type:
+          enum:
+          - templated
+          type: string
+        template_id:
+          type: string
+          description: ID of the template used to create this image.
+        template_version:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - integer
+          - string
+          description: Version of the template used to create this image.
+          format: int64
+        template_values:
+          description: Resolved values supplied to the template for this image, keyed by template variable name.
+          $ref: '#/components/schemas/JsonObject'
+        id:
+          type: string
+          description: Unique image ID. Use this value to retrieve image metadata or render the image.
+        created_at:
+          type: string
+          description: Date and time the image was created, in UTC.
+          format: date-time
+        last_render_stored_at:
+          type:
+          - 'null'
+          - string
+          description: Last recorded date and time a rendered image was stored by HCTI, in UTC. Null when no stored render timestamp is available. This value can change after rendering again or be cleared when the stored render is removed.
+          format: date-time
+        og_config_id:
+          type:
+          - 'null'
+          - string
+          description: ID of the Open Graph configuration that created this image, or null when the image is not associated with one.
+        og_config_content_version:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: Content version of the Open Graph configuration associated with this image, or null when unavailable.
+          format: int64
+        saved_to_storage_destination_at:
+          type:
+          - 'null'
+          - string
+          description: Recorded date and time the base image was saved to its configured storage destination, in UTC. Null until a save is recorded; does not describe saves of resized or reformatted variants.
+          format: date-time
+        storage_destination_hcti_storage_disabled:
+          type:
+          - 'null'
+          - boolean
+          description: Whether HCTI storage is disabled for this image, recorded from the storage destination when the image was created. When true, rendered files are saved to the configured storage destination without a public HCTI image URL or HCTI CDN caching.
+      description: An image created from a specific template version and resolved template values. The image_type is templated.
+    BatchTemplatedImageRequest:
+      required:
+      - variations
+      type: object
+      properties:
+        default_options:
+          oneOf:
+          - type: 'null'
+          - description: Common template image options. Template values merge recursively by object key with each variation. Variation arrays, scalar values and explicit null values replace defaults.
+            $ref: '#/components/schemas/ImageRequest_TemplatedBatchOptions'
+        variations:
+          minItems: 1
+          type: array
+          items:
+            $ref: '#/components/schemas/ImageRequest_TemplatedBatchOptions'
+          description: One variation per image. Supply at least one variation, within your plan's batch limit. Each variation must resolve to a template_id. Each merged template_values object must be nonempty and satisfy the template's required variables. Results preserve this order.
+      description: Creates a batch from one or more templates. Set template_id, template_version and template_values in shared default_options or individual variations.
+    ImageBase:
+      required:
+      - image_type
+      type: object
+      anyOf:
+      - $ref: '#/components/schemas/ImageBaseImage_HtmlCss'
+      - $ref: '#/components/schemas/ImageBaseImage_Url'
+      - $ref: '#/components/schemas/ImageBaseImage_Templated'
+      description: Metadata shared by all images. The image_type discriminator identifies the response as html_css, url, or templated.
+      discriminator:
+        propertyName: image_type
+        mapping:
+          html_css: '#/components/schemas/ImageBaseImage_HtmlCss'
+          url: '#/components/schemas/ImageBaseImage_Url'
+          templated: '#/components/schemas/ImageBaseImage_Templated'
+    BaseImageRequest:
+      title: Base Image Request
+      type: object
+      properties:
+        css:
+          type:
+          - 'null'
+          - string
+          description: Optional CSS for either image source. With `html`, it styles the supplied markup; with `url`, it is injected after the page loads to override page styles.
+        device_scale:
+          maximum: 3
+          minimum: 0.1
+          pattern: ^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$
+          type:
+          - 'null'
+          - number
+          - string
+          description: 'Adjusts the pixel ratio used for the screenshot. Minimum: 0.1. Maximum: 3. HTML and template renders default to 2; URL renders default to 1.'
+          format: double
+        full_screen:
+          type:
+          - 'null'
+          - boolean
+          description: Take a screenshot of the entire screen after scrolling down and back to the top.
+        google_fonts:
+          type:
+          - 'null'
+          - string
+          description: Google fonts to load. Separate multiple fonts with a pipe, such as 'Roboto|OpenSans', and set font-family in the CSS to use them.
+        html:
+          type:
+          - 'null'
+          - string
+          description: HTML to render and take a screenshot of. HTML fragments are rendered in a wrapper document unless a complete HTML document is supplied. Required for HTML image requests.
+        max_wait_ms:
+          maximum: 10000
+          minimum: 500
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: 'Sets a limit on how long to wait before taking the screenshot when the page continues loading irrelevant content. Minimum: 500. Maximum: 10000 and subject to the account plan limit.'
+          format: int32
+        metadata:
+          type:
+          - 'null'
+          - object
+          additionalProperties:
+            type: string
+          description: Custom key-value metadata stored with the image.
+        ms_delay:
+          maximum: 10000
+          minimum: 0
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: 'Adds extra time in milliseconds before taking the screenshot so JavaScript can execute. Minimum: 0. Maximum: 10000.'
+          format: int32
+          default: 0
+        render_when_ready:
+          type:
+          - 'null'
+          - boolean
+          description: Waits until the page signals that the screenshot is ready. The image fails if the readiness signal is never sent.
+        selector:
+          type:
+          - 'null'
+          - string
+          description: A CSS selector for an element in the HTML. We’ll crop the image to this specific element.
+        template_values:
+          oneOf:
+          - type: 'null'
+          - description: Values substituted into the template for this render. Must be a non-empty JSON object. Include the values needed by the template.
+            $ref: '#/components/schemas/JsonObject'
+        url:
+          type:
+          - 'null'
+          - string
+          description: URL to capture for this batch item. After default options and a variation are merged, a non-empty `url` takes precedence over `html`; omit it to render the merged `html` instead.
+        viewport_height:
+          maximum: 6000
+          minimum: 1
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: 'Sets the height of Chrome''s viewport and disables automatic cropping. Minimum: 1. Maximum: 6000. Both viewport dimensions must be supplied together.'
+          format: int32
+        viewport_width:
+          maximum: 6000
+          minimum: 1
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: 'Sets the width of Chrome''s viewport and disables automatic cropping. Minimum: 1. Maximum: 6000. Both viewport dimensions must be supplied together.'
+          format: int32
+        pdf_options:
+          oneOf:
+          - type: 'null'
+          - description: Options used when generating a PDF instead of an image. Page dimensions and margins must include supported PDF units; margins must contain either zero or four values; scale must be between 0.1 and 2.
+            $ref: '#/components/schemas/PDFOptions'
+        disable_twemoji:
+          type:
+          - 'null'
+          - boolean
+          description: 'HTML/CSS images use Twemoji by default; set `disable_twemoji: true` to disable it. URL images inject Twemoji only with explicit `disable_twemoji: false`; omitted, null, or true leaves the page''s emoji handling unchanged.'
+        dedupe_duration_s:
+          maximum: 31536000
+          minimum: 0
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: 'Reuse an existing image with identical content if it was created within this many seconds. Minimum: 0. Maximum: 31536000. Availability and maximum effective duration depend on the account plan.'
+          format: int32
+        max_render_once:
+          type:
+          - 'null'
+          - boolean
+          description: Ensure the image is only ever rendered and saved one time. This is an advanced option not applicable to most requests.
+        color_scheme:
+          oneOf:
+          - type: 'null'
+          - description: 'Sets Chrome''s preferred color scheme. Valid values: light or dark.'
+            $ref: '#/components/schemas/ColorSchemeType'
+        timezone:
+          type:
+          - 'null'
+          - string
+          description: Sets the IANA timezone used by Chrome while rendering. Must be a recognized IANA timezone identifier.
+        block_consent_banners:
+          type:
+          - 'null'
+          - boolean
+          description: Attempt to block cookie/consent banners from displaying.
+        identify_as_hcti:
+          type:
+          - 'null'
+          - boolean
+          description: Identify the top-level page navigation as an HCTI screenshot request using the X-HCTI-SCREENSHOT header.
+        headers:
+          type:
+          - 'null'
+          - object
+          additionalProperties:
+            type: string
+          description: HTTP headers to include on top-level page navigations to the requested URL's origin and any additional_header_origins. Supports up to 20 headers with names up to 512 ASCII characters and values up to 8192 UTF-8 bytes. For GET and form-encoded requests, repeat this parameter using the format `headers=name:value`.
+        additional_header_origins:
+          type:
+          - 'null'
+          - array
+          items:
+            type: string
+          description: Additional exact HTTP or HTTPS origins allowed to receive custom headers. Supports up to 20 unique origins of up to 512 UTF-8 bytes each. Origins must use the format scheme://host[:port] without a path; duplicates are ignored. For GET and form-encoded requests, repeat this parameter for each origin.
+        include_headers_on_subrequests:
+          type:
+          - 'null'
+          - boolean
+          description: Include custom headers on subrequests to the requested URL's origin and any additional_header_origins. Defaults to false. Requires at least one header.
+        viewport_mobile:
+          type:
+          - 'null'
+          - boolean
+          description: Specifies whether the page uses mobile viewport behavior, including its viewport meta tag.
+        viewport_landscape:
+          type:
+          - 'null'
+          - boolean
+          description: Specifies whether the emulated viewport is in landscape orientation.
+        viewport_touch:
+          type:
+          - 'null'
+          - boolean
+          description: Specifies whether the emulated viewport supports touch events.
+        media_type:
+          oneOf:
+          - type: 'null'
+          - description: 'Sets the CSS media type used while rendering the page. Valid values: print or screen.'
+            $ref: '#/components/schemas/MediaType'
+        proxy_id:
+          type:
+          - 'null'
+          - string
+          description: Specifies which configured organization proxy to use when rendering.
+        storage_destination_id:
+          type:
+          - 'null'
+          - string
+          description: Specifies which configured organization storage destination receives the rendered image.
+        jumbo_max_height:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: Maximum height of the rendered image in jumbo mode. Jumbo rendering consumes additional renders and requires jumbo_max_width. Supply both jumbo dimensions. Each must be greater than 0 and no more than 80000; at least one must exceed 8000; total area cannot exceed 400000000 pixels.
+          format: int32
+        jumbo_max_width:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - 'null'
+          - integer
+          - string
+          description: Maximum width of the rendered image in jumbo mode. Jumbo rendering consumes additional renders and requires jumbo_max_height. Supply both jumbo dimensions. Each must be greater than 0 and no more than 80000; at least one must exceed 8000; total area cannot exceed 400000000 pixels.
+          format: int32
+        transparent_background:
+          type:
+          - 'null'
+          - boolean
+          description: Specifies whether the image is rendered with a transparent background.
+        format:
+          oneOf:
+          - type: 'null'
+          - description: 'Sets the file extension on the URL returned by the image creation request. It does not change the stored source image or restrict later rendering to this format. Valid values: png, jpg, jpeg, webp, or pdf. This parameter is accepted only in POST request bodies.'
+            $ref: '#/components/schemas/ImageFormat'
+        request_overrides:
+          type:
+          - 'null'
+          - array
+          items:
+            $ref: '#/components/schemas/RequestOverride'
+          description: Rules that override browser network requests. The block action blocks requests matching a URL wildcard pattern and/or resource types. When both matchers are supplied, both must match. A request is blocked if any block rule matches. Omitted, null, or an empty array adds no overrides. Requires a paid plan. Accepts a JSON array in JSON requests or a JSON-encoded array string in form requests. Maximum 100 rules and 512 characters per URL pattern. Each block rule requires a nonempty URL pattern or at least one resource type; supplied matchers cannot be empty. Not supported in query strings.
+      description: Image request containing all available properties. Batch variations override matching values supplied here.
+    StoreImageObjectResult:
+      required:
+      - status
+      - target
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/StoreImageStatus'
+        target:
+          $ref: '#/components/schemas/StoreImageTarget'
+        bucket:
+          type:
+          - 'null'
+          - string
+        key:
+          type:
+          - 'null'
+          - string
+    ValidationError:
+      type: object
+      properties:
+        path:
+          type: string
+        message:
+          type: string
+  securitySchemes:
+    basic:
+      type: http
+      description: 'Basic auth using API ID as username and API Key as password. Example: `Authorization: Basic {base64(api-id:api-key)}`'
+      scheme: basic

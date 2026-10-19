@@ -1,27 +1,25 @@
 {
   "provider": "htmlcsstoimage",
   "sources": [
-    "_original/htmlcsstoimage-openapi.yml"
+    "_original/htmlcsstoimage-openapi.json"
   ],
   "outputs": [
-    "htmlcsstoimage-image-generation-api-openapi.yml",
-    "htmlcsstoimage-signed-urls-api-openapi.yml",
-    "htmlcsstoimage-templates-api-openapi.yml"
+    "htmlcsstoimage-api-keys-api-openapi.yml",
+    "htmlcsstoimage-images-api-openapi.yml",
+    "htmlcsstoimage-og-configs-api-openapi.yml",
+    "htmlcsstoimage-proxies-api-openapi.yml",
+    "htmlcsstoimage-storage-destinations-api-openapi.yml",
+    "htmlcsstoimage-templates-api-openapi.yml",
+    "htmlcsstoimage-usage-api-openapi.yml",
+    "htmlcsstoimage-feedback-api-openapi.yml"
   ],
   "archived": [],
   "errors": [],
   "warnings": [],
   "notes": [
     "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
-    "htmlcsstoimage-openapi.yml: upgraded openapi 3.0.1 -> OpenAPI 3.2.0",
-    "htmlcsstoimage-openapi.yml: declared missing tag: Image Generation",
-    "htmlcsstoimage-openapi.yml: declared missing tag: Signed URLs",
-    "htmlcsstoimage-openapi.yml: declared missing tag: Templates",
-    "apis.yml register: already-registered"
+    "htmlcsstoimage-openapi.json: upgraded openapi 3.1.1 -> OpenAPI 3.2.0",
+    "apis.yml register: written (+7 apis, 8 total)"
   ],
-  "skipped": [
-    "htmlcsstoimage-image-generation-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "htmlcsstoimage-signed-urls-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "htmlcsstoimage-templates-api-openapi.yml: previously refined output, superseded by openapi/_original/"
-  ]
+  "skipped": []
 }

@@ -1,0 +1,132 @@
+openapi: 3.2.0
+info:
+  title: HTML/CSS to Image Feedback API
+  description: Capture website screenshots, render HTML/CSS, or create templated graphics. Use MCP with AI, no-code automation, or the REST API. No browsers needed.
+  version: 1.0.0
+servers:
+- url: https://hcti.io
+security:
+- basic: []
+tags:
+- name: Feedback
+paths:
+  /v1/feedback:
+    post:
+      tags:
+      - Feedback
+      summary: Submit feedback
+      description: Send feedback to the HCTI team about HTML/CSS to Image, its API, or its MCP tools. Report bugs or unexpected rendering results, request features, describe confusing behavior or documentation, and suggest improvements. Include what you tried, what you expected, and what happened. Do not include API keys, credentials, or personal or confidential data. Authentication is optional; authenticated feedback is associated with your organization. Returns a confirmation message and feedback ID.
+      operationId: submit-feedback
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeedbackRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeedbackResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+      security:
+      - {}
+      - basic: []
+components:
+  schemas:
+    FeedbackRequest:
+      required:
+      - message
+      type: object
+      properties:
+        subject:
+          maxLength: 255
+          type:
+          - 'null'
+          - string
+          description: Optional short summary of the bug, feature request, or suggestion.
+        message:
+          maxLength: 10000
+          minLength: 20
+          type: string
+          description: Describe the bug, feature request, or suggestion in at least 20 characters after trimming whitespace. More detail helps us investigate and understand your feedback. For problems, include what you tried, what you expected, what happened, relevant steps to reproduce the issue, and any related request_ids, image_ids, or template_ids.
+        callback_url:
+          maxLength: 2048
+          type:
+          - 'null'
+          - string
+          description: Optional public HTTP or HTTPS callback URL for a response. No SLA or guarantee is provided on callback responses.
+      description: A bug report, feature request, or suggestion for improving HTML/CSS to Image, its API, or its MCP tools.
+    ApiErrorResult:
+      required:
+      - error
+      - message
+      - statusCode
+      type: object
+      properties:
+        success:
+          type: boolean
+        error:
+          type: string
+        validationErrors:
+          type:
+          - 'null'
+          - array
+          items:
+            $ref: '#/components/schemas/ValidationError'
+        referenceId:
+          type:
+          - 'null'
+          - string
+        message:
+          type: string
+        statusCode:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - integer
+          - string
+          format: int32
+    FeedbackResponse:
+      required:
+      - message
+      - id
+      type: object
+      properties:
+        message:
+          type: string
+          description: Confirmation message for the feedback submission.
+        id:
+          type: string
+          description: ID for referencing the submitted feedback.
+      description: Confirmation that HCTI received your bug report, feature request, or suggestion.
+    ValidationError:
+      type: object
+      properties:
+        path:
+          type: string
+        message:
+          type: string
+  securitySchemes:
+    basic:
+      type: http
+      description: 'Basic auth using API ID as username and API Key as password. Example: `Authorization: Basic {base64(api-id:api-key)}`'
+      scheme: basic

@@ -1,0 +1,153 @@
+openapi: 3.2.0
+info:
+  title: HTML/CSS to Image Usage API
+  description: Capture website screenshots, render HTML/CSS, or create templated graphics. Use MCP with AI, no-code automation, or the REST API. No browsers needed.
+  version: 1.0.0
+servers:
+- url: https://hcti.io
+security:
+- basic: []
+tags:
+- name: Usage
+paths:
+  /v1/usage:
+    get:
+      tags:
+      - Usage
+      summary: Get organization usage
+      description: Returns usage information for the authenticated organization, including image totals by billing period.
+      operationId: get-usage
+      parameters:
+      - name: skipCache
+        in: query
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsageDataReturn'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+      x-badges:
+      - name: Requires usage:read
+        position: after
+        color: '#64748b'
+      x-required-permissions:
+      - usage:read
+components:
+  schemas:
+    UsageDataReturn:
+      type: object
+      properties:
+        data:
+          description: Recent image counts grouped by hour, day, and month. These are different views of the same usage and should not be added together.
+          $ref: '#/components/schemas/UsageTimeSeries'
+        per_billing_period:
+          type: array
+          items:
+            $ref: '#/components/schemas/PerBillingPeriodCounter'
+          description: Image totals for available billing periods, ordered by period start from oldest to newest. Billing periods follow the organization's billing schedule rather than calendar months.
+      description: Image usage for the authenticated organization, grouped by calendar intervals and billing periods.
+    PerBillingPeriodCounter:
+      type: object
+      properties:
+        total_images:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - integer
+          - string
+          description: Number of images counted in this billing period. For a period still in progress, this is the usage recorded so far.
+          format: int32
+        start:
+          type: string
+          description: Start of the billing period, as an ISO 8601 UTC timestamp.
+          format: date-time
+        end:
+          type:
+          - 'null'
+          - string
+          description: End of the billing period, as an ISO 8601 UTC timestamp, when available. A future timestamp indicates a period that has not yet ended.
+          format: date-time
+      description: Image usage within a single billing period.
+    ApiErrorResult:
+      required:
+      - error
+      - message
+      - statusCode
+      type: object
+      properties:
+        success:
+          type: boolean
+        error:
+          type: string
+        validationErrors:
+          type:
+          - 'null'
+          - array
+          items:
+            $ref: '#/components/schemas/ValidationError'
+        referenceId:
+          type:
+          - 'null'
+          - string
+        message:
+          type: string
+        statusCode:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - integer
+          - string
+          format: int32
+    ValidationError:
+      type: object
+      properties:
+        path:
+          type: string
+        message:
+          type: string
+    UsageTimeSeries:
+      type: object
+      properties:
+        hour:
+          type: object
+          additionalProperties:
+            pattern: ^-?(?:0|[1-9]\d*)$
+            type:
+            - integer
+            - string
+            format: int32
+          description: Hourly image counts, with up to 72 recent entries. Keys are ISO 8601 timestamps identifying the start of each hour; values are image counts for that hour.
+        day:
+          type: object
+          additionalProperties:
+            pattern: ^-?(?:0|[1-9]\d*)$
+            type:
+            - integer
+            - string
+            format: int32
+          description: Daily image counts, with up to 60 recent entries. Keys are ISO 8601 timestamps identifying the start of each calendar day; values are image counts for that day.
+        month:
+          type: object
+          additionalProperties:
+            pattern: ^-?(?:0|[1-9]\d*)$
+            type:
+            - integer
+            - string
+            format: int32
+          description: Monthly image counts, with up to 12 recent entries. Keys are ISO 8601 timestamps identifying the start of each calendar month; values are image counts for that month. Calendar months are separate from billing periods.
+      description: Image counts grouped by hour, calendar day, and calendar month. Each object maps an interval's start timestamp to its image count. Intervals without recorded data may be omitted.
+  securitySchemes:
+    basic:
+      type: http
+      description: 'Basic auth using API ID as username and API Key as password. Example: `Authorization: Basic {base64(api-id:api-key)}`'
+      scheme: basic

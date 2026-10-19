@@ -51,45 +51,6 @@ created: '2026-06-20'
 modified: '2026-10-06'
 specificationVersion: '0.23'
 apis:
-- aid: htmlcsstoimage:htmlcsstoimage-image-generation-api
-  name: HTML/CSS to Image Generation API
-  description: The Image Generation API from HTML/CSS to Image — 5 operation(s) for image generation.
-  humanURL: https://docs.htmlcsstoimage.com/getting-started/using-the-api/
-  baseURL: https://hcti.io/v1
-  tags:
-  - Image Generation
-  tags_raw:
-  - Image Generation
-  - Image-Generation
-  properties:
-  - type: OpenAPI
-    url: openapi/htmlcsstoimage-image-generation-api-openapi.yml
-  - type: Documentation
-    url: https://docs.htmlcsstoimage.com/getting-started/using-the-api/
-  - type: APIReference
-    url: https://docs.htmlcsstoimage.com/getting-started/create-and-render/
-  - type: PostmanCollection
-    url: collections/htmlcsstoimage.postman_collection.json
-  - type: Documentation
-    url: https://docs.htmlcsstoimage.com/getting-started/templates/
-- aid: htmlcsstoimage:htmlcsstoimage-signed-urls-api
-  name: HTML/CSS to Image Signed URLs API
-  description: The Signed URLs API from HTML/CSS to Image — 1 operation(s) for signed urls.
-  humanURL: https://docs.htmlcsstoimage.com/getting-started/using-the-api/
-  baseURL: https://hcti.io/v1
-  tags:
-  - Signed URLs
-  properties:
-  - type: OpenAPI
-    url: openapi/htmlcsstoimage-signed-urls-api-openapi.yml
-  - type: Documentation
-    url: https://docs.htmlcsstoimage.com/getting-started/using-the-api/
-  - type: APIReference
-    url: https://docs.htmlcsstoimage.com/getting-started/create-and-render/
-  - type: PostmanCollection
-    url: collections/htmlcsstoimage.postman_collection.json
-  - type: Documentation
-    url: https://docs.htmlcsstoimage.com/getting-started/templates/
 - aid: htmlcsstoimage:htmlcsstoimage-templates-api
   name: HTML/CSS to Image Templates API
   description: The Templates API from HTML/CSS to Image — 4 operation(s) for templates.
@@ -100,6 +61,133 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/htmlcsstoimage-templates-api-openapi.yml
+  - type: Documentation
+    url: https://docs.htmlcsstoimage.com/getting-started/using-the-api/
+  - type: APIReference
+    url: https://docs.htmlcsstoimage.com/getting-started/create-and-render/
+  - type: PostmanCollection
+    url: collections/htmlcsstoimage.postman_collection.json
+  - type: Documentation
+    url: https://docs.htmlcsstoimage.com/getting-started/templates/
+- aid: htmlcsstoimage:htmlcsstoimage-api-keys-api
+  name: HTML/CSS to Image API Keys API
+  description: The API Keys API from HTML/CSS to Image — 2 operation(s) for api keys.
+  humanURL: https://docs.htmlcsstoimage.com/getting-started/using-the-api/
+  baseURL: https://hcti.io/v1
+  tags:
+  - API Keys
+  properties:
+  - type: OpenAPI
+    url: openapi/htmlcsstoimage-api-keys-api-openapi.yml
+  - type: Documentation
+    url: https://docs.htmlcsstoimage.com/getting-started/using-the-api/
+  - type: APIReference
+    url: https://docs.htmlcsstoimage.com/getting-started/create-and-render/
+  - type: PostmanCollection
+    url: collections/htmlcsstoimage.postman_collection.json
+  - type: Documentation
+    url: https://docs.htmlcsstoimage.com/getting-started/templates/
+- aid: htmlcsstoimage:htmlcsstoimage-feedback-api
+  name: HTML/CSS to Image Feedback API
+  description: The feedback API from HTML/CSS to Image — 1 operation(s) for feedback.
+  humanURL: https://docs.htmlcsstoimage.com/getting-started/using-the-api/
+  baseURL: https://hcti.io/v1
+  tags:
+  - feedback
+  properties:
+  - type: OpenAPI
+    url: openapi/htmlcsstoimage-feedback-api-openapi.yml
+  - type: Documentation
+    url: https://docs.htmlcsstoimage.com/getting-started/using-the-api/
+  - type: APIReference
+    url: https://docs.htmlcsstoimage.com/getting-started/create-and-render/
+  - type: PostmanCollection
+    url: collections/htmlcsstoimage.postman_collection.json
+  - type: Documentation
+    url: https://docs.htmlcsstoimage.com/getting-started/templates/
+- aid: htmlcsstoimage:htmlcsstoimage-images-api
+  name: HTML/CSS to Image Images API
+  description: The Images API from HTML/CSS to Image — 10 operation(s) for images.
+  humanURL: https://docs.htmlcsstoimage.com/getting-started/using-the-api/
+  baseURL: https://hcti.io/v1
+  tags:
+  - Images
+  properties:
+  - type: OpenAPI
+    url: openapi/htmlcsstoimage-images-api-openapi.yml
+  - type: Documentation
+    url: https://docs.htmlcsstoimage.com/getting-started/using-the-api/
+  - type: APIReference
+    url: https://docs.htmlcsstoimage.com/getting-started/create-and-render/
+  - type: PostmanCollection
+    url: collections/htmlcsstoimage.postman_collection.json
+  - type: Documentation
+    url: https://docs.htmlcsstoimage.com/getting-started/templates/
+- aid: htmlcsstoimage:htmlcsstoimage-og-configs-api
+  name: HTML/CSS to Image OG Configs API
+  description: The OG Configs API from HTML/CSS to Image — 2 operation(s) for og configs.
+  humanURL: https://docs.htmlcsstoimage.com/getting-started/using-the-api/
+  baseURL: https://hcti.io/v1
+  tags:
+  - OG Configs
+  properties:
+  - type: OpenAPI
+    url: openapi/htmlcsstoimage-og-configs-api-openapi.yml
+  - type: Documentation
+    url: https://docs.htmlcsstoimage.com/getting-started/using-the-api/
+  - type: APIReference
+    url: https://docs.htmlcsstoimage.com/getting-started/create-and-render/
+  - type: PostmanCollection
+    url: collections/htmlcsstoimage.postman_collection.json
+  - type: Documentation
+    url: https://docs.htmlcsstoimage.com/getting-started/templates/
+- aid: htmlcsstoimage:htmlcsstoimage-proxies-api
+  name: HTML/CSS to Image Proxies API
+  description: The Proxies API from HTML/CSS to Image — 2 operation(s) for proxies.
+  humanURL: https://docs.htmlcsstoimage.com/getting-started/using-the-api/
+  baseURL: https://hcti.io/v1
+  tags:
+  - Proxies
+  properties:
+  - type: OpenAPI
+    url: openapi/htmlcsstoimage-proxies-api-openapi.yml
+  - type: Documentation
+    url: https://docs.htmlcsstoimage.com/getting-started/using-the-api/
+  - type: APIReference
+    url: https://docs.htmlcsstoimage.com/getting-started/create-and-render/
+  - type: PostmanCollection
+    url: collections/htmlcsstoimage.postman_collection.json
+  - type: Documentation
+    url: https://docs.htmlcsstoimage.com/getting-started/templates/
+- aid: htmlcsstoimage:htmlcsstoimage-storage-destinations-api
+  name: HTML/CSS to Image Storage Destinations API
+  description: >-
+    The Storage Destinations API from HTML/CSS to Image — 3 operation(s) for storage destinations.
+  humanURL: https://docs.htmlcsstoimage.com/getting-started/using-the-api/
+  baseURL: https://hcti.io/v1
+  tags:
+  - Storage Destinations
+  properties:
+  - type: OpenAPI
+    url: openapi/htmlcsstoimage-storage-destinations-api-openapi.yml
+  - type: Documentation
+    url: https://docs.htmlcsstoimage.com/getting-started/using-the-api/
+  - type: APIReference
+    url: https://docs.htmlcsstoimage.com/getting-started/create-and-render/
+  - type: PostmanCollection
+    url: collections/htmlcsstoimage.postman_collection.json
+  - type: Documentation
+    url: https://docs.htmlcsstoimage.com/getting-started/templates/
+- aid: htmlcsstoimage:htmlcsstoimage-usage-api
+  name: HTML/CSS to Image Usage API
+  description: The Usage API from HTML/CSS to Image — 1 operation(s) for usage.
+  humanURL: https://docs.htmlcsstoimage.com/getting-started/using-the-api/
+  baseURL: https://hcti.io/v1
+  tags:
+  - Usage
+  properties:
+  - type: OpenAPI
+    url: openapi/htmlcsstoimage-usage-api-openapi.yml
   - type: Documentation
     url: https://docs.htmlcsstoimage.com/getting-started/using-the-api/
   - type: APIReference

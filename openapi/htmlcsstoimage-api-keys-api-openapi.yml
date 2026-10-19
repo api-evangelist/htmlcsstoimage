@@ -1,0 +1,724 @@
+openapi: 3.2.0
+info:
+  title: HTML/CSS to Image API Keys API
+  description: Capture website screenshots, render HTML/CSS, or create templated graphics. Use MCP with AI, no-code automation, or the REST API. No browsers needed.
+  version: 1.0.0
+servers:
+- url: https://hcti.io
+security:
+- basic: []
+tags:
+- name: API Keys
+paths:
+  /v1/api-keys:
+    post:
+      tags:
+      - API Keys
+      summary: Create an API key
+      description: 'Creates a key with explicit permissions no broader than the calling key''s current grants. Save api_key securely: only this response includes the secret.
+
+
+        **Rate limit:** 20 requests per minute per organization, shared across all operations in the `api-key:write` group and all API keys belonging to that organization.'
+      operationId: create-api-key
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrUpdateApiKeyRequest'
+        required: true
+      responses:
+        '429':
+          description: Too Many Requests
+          headers:
+            RateLimit-Policy:
+              description: 'The shared organization quota policy: policy name, request allowance (q), and sliding-window length in seconds (w).'
+              schema:
+                type: string
+              example: '"api-key:write";q=20;w=60'
+            RateLimit:
+              description: The policy name and remaining requests (r) after this rate-limit check. Concurrent requests share this allowance; it does not guarantee subsequent requests will be accepted.
+              schema:
+                type: string
+              example: '"api-key:write";r=0'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '200':
+          description: OK
+          headers:
+            RateLimit-Policy:
+              description: 'The shared organization quota policy: policy name, request allowance (q), and sliding-window length in seconds (w).'
+              schema:
+                type: string
+              example: '"api-key:write";q=20;w=60'
+            RateLimit:
+              description: The policy name and remaining requests (r) after this rate-limit check. Concurrent requests share this allowance; it does not guarantee subsequent requests will be accepted.
+              schema:
+                type: string
+              example: '"api-key:write";r=19'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiKeyWithSecret'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+      x-badges:
+      - name: Requires api_keys:create_update
+        position: after
+        color: '#64748b'
+      x-required-permissions:
+      - api_keys:create_update
+      x-rate-limit:
+        group: api-key:write
+        limit: 20
+        window_seconds: 60
+        scope: organization
+    get:
+      tags:
+      - API Keys
+      summary: List API keys
+      description: 'Returns keys in descending creation order. Disabled keys are excluded unless include_disabled=true. with_permission filters use all-of matching. Follow pagination.next_page_start until null. Secrets are never returned.
+
+
+        **Rate limit:** 100 requests per minute per organization, shared across all operations in the `api-key:read` group and all API keys belonging to that organization.'
+      operationId: list-api-keys
+      parameters:
+      - name: count
+        in: query
+        description: Maximum number of keys to return, from 1 to 100. Defaults to 10.
+        schema:
+          maximum: 100
+          minimum: 1
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - integer
+          - string
+          format: int32
+          default: 10
+      - name: page_start
+        in: query
+        description: pagination.next_page_start from the previous response. Omit for the first page.
+        schema:
+          type: string
+      - name: include_disabled
+        in: query
+        description: Include disabled keys. Defaults to false.
+        schema:
+          type: boolean
+          default: false
+      - name: with_permission
+        in: query
+        description: Return keys allowing every specified permission, including wildcard grants. Repeat this query parameter for multiple permissions; do not separate names with spaces or commas.
+        schema:
+          type: array
+          items:
+            enum:
+            - api_keys:create_update
+            - api_keys:delete
+            - api_keys:read
+            - debugs:create
+            - debugs:read
+            - images:create
+            - images:delete
+            - images:read
+            - images:store
+            - og_configs:create_update
+            - og_configs:delete
+            - og_configs:read
+            - proxies:create_update
+            - proxies:delete
+            - proxies:read
+            - storage_destinations:create_update
+            - storage_destinations:delete
+            - storage_destinations:read
+            - templates:create_update
+            - templates:delete
+            - templates:read
+            - usage:read
+            type: string
+      responses:
+        '429':
+          description: Too Many Requests
+          headers:
+            RateLimit-Policy:
+              description: 'The shared organization quota policy: policy name, request allowance (q), and sliding-window length in seconds (w).'
+              schema:
+                type: string
+              example: '"api-key:read";q=100;w=60'
+            RateLimit:
+              description: The policy name and remaining requests (r) after this rate-limit check. Concurrent requests share this allowance; it does not guarantee subsequent requests will be accepted.
+              schema:
+                type: string
+              example: '"api-key:read";r=0'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '200':
+          description: OK
+          headers:
+            RateLimit-Policy:
+              description: 'The shared organization quota policy: policy name, request allowance (q), and sliding-window length in seconds (w).'
+              schema:
+                type: string
+              example: '"api-key:read";q=100;w=60'
+            RateLimit:
+              description: The policy name and remaining requests (r) after this rate-limit check. Concurrent requests share this allowance; it does not guarantee subsequent requests will be accepted.
+              schema:
+                type: string
+              example: '"api-key:read";r=99'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedListBaseOfApiKeyAndstring'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+      x-badges:
+      - name: Requires api_keys:read
+        position: after
+        color: '#64748b'
+      x-required-permissions:
+      - api_keys:read
+      x-rate-limit:
+        group: api-key:read
+        limit: 100
+        window_seconds: 60
+        scope: organization
+  /v1/api-keys/{id}:
+    post:
+      tags:
+      - API Keys
+      summary: Update an API key
+      description: 'Replaces the key''s name, description, disabled state, and permissions. The caller must be able to grant both the existing and requested permissions. This also applies when disabling or re-enabling a key. Does not rotate or return the secret. Use id, not api_id.
+
+
+        **Rate limit:** 20 requests per minute per organization, shared across all operations in the `api-key:write` group and all API keys belonging to that organization.'
+      operationId: update-api-key
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrUpdateApiKeyRequest'
+        required: true
+      responses:
+        '429':
+          description: Too Many Requests
+          headers:
+            RateLimit-Policy:
+              description: 'The shared organization quota policy: policy name, request allowance (q), and sliding-window length in seconds (w).'
+              schema:
+                type: string
+              example: '"api-key:write";q=20;w=60'
+            RateLimit:
+              description: The policy name and remaining requests (r) after this rate-limit check. Concurrent requests share this allowance; it does not guarantee subsequent requests will be accepted.
+              schema:
+                type: string
+              example: '"api-key:write";r=0'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '200':
+          description: OK
+          headers:
+            RateLimit-Policy:
+              description: 'The shared organization quota policy: policy name, request allowance (q), and sliding-window length in seconds (w).'
+              schema:
+                type: string
+              example: '"api-key:write";q=20;w=60'
+            RateLimit:
+              description: The policy name and remaining requests (r) after this rate-limit check. Concurrent requests share this allowance; it does not guarantee subsequent requests will be accepted.
+              schema:
+                type: string
+              example: '"api-key:write";r=19'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiKey'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+      x-badges:
+      - name: Requires api_keys:create_update
+        position: after
+        color: '#64748b'
+      x-required-permissions:
+      - api_keys:create_update
+      x-rate-limit:
+        group: api-key:write
+        limit: 20
+        window_seconds: 60
+        scope: organization
+    get:
+      tags:
+      - API Keys
+      summary: Get an API key
+      description: 'Returns the key''s metadata and permissions, including for disabled keys. Does not return the secret. Use id, not api_id.
+
+
+        **Rate limit:** 100 requests per minute per organization, shared across all operations in the `api-key:read` group and all API keys belonging to that organization.'
+      operationId: get-api-key
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '429':
+          description: Too Many Requests
+          headers:
+            RateLimit-Policy:
+              description: 'The shared organization quota policy: policy name, request allowance (q), and sliding-window length in seconds (w).'
+              schema:
+                type: string
+              example: '"api-key:read";q=100;w=60'
+            RateLimit:
+              description: The policy name and remaining requests (r) after this rate-limit check. Concurrent requests share this allowance; it does not guarantee subsequent requests will be accepted.
+              schema:
+                type: string
+              example: '"api-key:read";r=0'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '200':
+          description: OK
+          headers:
+            RateLimit-Policy:
+              description: 'The shared organization quota policy: policy name, request allowance (q), and sliding-window length in seconds (w).'
+              schema:
+                type: string
+              example: '"api-key:read";q=100;w=60'
+            RateLimit:
+              description: The policy name and remaining requests (r) after this rate-limit check. Concurrent requests share this allowance; it does not guarantee subsequent requests will be accepted.
+              schema:
+                type: string
+              example: '"api-key:read";r=99'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiKey'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+      x-badges:
+      - name: Requires api_keys:read
+        position: after
+        color: '#64748b'
+      x-required-permissions:
+      - api_keys:read
+      x-rate-limit:
+        group: api-key:read
+        limit: 100
+        window_seconds: 60
+        scope: organization
+    delete:
+      tags:
+      - API Keys
+      summary: Delete an API key
+      description: 'Disables the API key; it is not permanently deleted. The caller must be able to grant all of the key''s existing permissions. The key remains retrievable and appears in list results with include_disabled=true. It can be re-enabled through update, subject to permission checks. Deleting an already disabled key succeeds when authorized. Use id, not api_id.
+
+
+        **Rate limit:** 20 requests per minute per organization, shared across all operations in the `api-key:write` group and all API keys belonging to that organization.'
+      operationId: delete-api-key
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '429':
+          description: Too Many Requests
+          headers:
+            RateLimit-Policy:
+              description: 'The shared organization quota policy: policy name, request allowance (q), and sliding-window length in seconds (w).'
+              schema:
+                type: string
+              example: '"api-key:write";q=20;w=60'
+            RateLimit:
+              description: The policy name and remaining requests (r) after this rate-limit check. Concurrent requests share this allowance; it does not guarantee subsequent requests will be accepted.
+              schema:
+                type: string
+              example: '"api-key:write";r=0'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '204':
+          description: No Content
+          headers:
+            RateLimit-Policy:
+              description: 'The shared organization quota policy: policy name, request allowance (q), and sliding-window length in seconds (w).'
+              schema:
+                type: string
+              example: '"api-key:write";q=20;w=60'
+            RateLimit:
+              description: The policy name and remaining requests (r) after this rate-limit check. Concurrent requests share this allowance; it does not guarantee subsequent requests will be accepted.
+              schema:
+                type: string
+              example: '"api-key:write";r=19'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResult'
+      x-badges:
+      - name: Requires api_keys:delete
+        position: after
+        color: '#64748b'
+      x-required-permissions:
+      - api_keys:delete
+      x-rate-limit:
+        group: api-key:write
+        limit: 20
+        window_seconds: 60
+        scope: organization
+components:
+  schemas:
+    PaginatedListBaseOfApiKeyAndstring:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApiKey'
+        pagination:
+          $ref: '#/components/schemas/PaginationInfoOfstring'
+    PaginationInfoOfstring:
+      required:
+      - next_page_start
+      type: object
+      properties:
+        next_page_start:
+          type:
+          - 'null'
+          - string
+    ApiKeyWithSecret:
+      required:
+      - api_key
+      - id
+      - api_id
+      - name
+      - permissions
+      type: object
+      properties:
+        api_key:
+          type: string
+          description: Secret API key used as the password when authenticating API requests. Store it securely; subsequent API responses do not include it.
+        id:
+          type: string
+          description: ID used to retrieve, update, or delete this API key.
+        api_id:
+          type: string
+          description: API ID used as the username when authenticating API requests.
+        name:
+          type: string
+          description: Display name for the key.
+        description:
+          type:
+          - 'null'
+          - string
+          description: Description of the key's purpose, if provided.
+        enabled:
+          type: boolean
+          description: Whether the key is enabled.
+        all_future_permissions:
+          type: boolean
+          description: Whether the key automatically receives all current and future permissions.
+        permissions:
+          type: array
+          items:
+            enum:
+            - api_keys:create_update
+            - api_keys:delete
+            - api_keys:read
+            - debugs:create
+            - debugs:read
+            - images:create
+            - images:delete
+            - images:read
+            - images:store
+            - og_configs:create_update
+            - og_configs:delete
+            - og_configs:read
+            - proxies:create_update
+            - proxies:delete
+            - proxies:read
+            - storage_destinations:create_update
+            - storage_destinations:delete
+            - storage_destinations:read
+            - templates:create_update
+            - templates:delete
+            - templates:read
+            - usage:read
+            type: string
+        created_at:
+          type: string
+          description: When the key was created, in UTC.
+          format: date-time
+        updated_at:
+          type: string
+          description: When the key was last updated, in UTC.
+          format: date-time
+      description: A newly created API key, including its secret. The secret is returned only when creating a key; store it securely.
+    ApiKey:
+      required:
+      - id
+      - api_id
+      - name
+      - permissions
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID used to retrieve, update, or delete this API key.
+        api_id:
+          type: string
+          description: API ID used as the username when authenticating API requests.
+        name:
+          type: string
+          description: Display name for the key.
+        description:
+          type:
+          - 'null'
+          - string
+          description: Description of the key's purpose, if provided.
+        enabled:
+          type: boolean
+          description: Whether the key is enabled.
+        all_future_permissions:
+          type: boolean
+          description: Whether the key automatically receives all current and future permissions.
+        permissions:
+          type: array
+          items:
+            enum:
+            - api_keys:create_update
+            - api_keys:delete
+            - api_keys:read
+            - debugs:create
+            - debugs:read
+            - images:create
+            - images:delete
+            - images:read
+            - images:store
+            - og_configs:create_update
+            - og_configs:delete
+            - og_configs:read
+            - proxies:create_update
+            - proxies:delete
+            - proxies:read
+            - storage_destinations:create_update
+            - storage_destinations:delete
+            - storage_destinations:read
+            - templates:create_update
+            - templates:delete
+            - templates:read
+            - usage:read
+            type: string
+        created_at:
+          type: string
+          description: When the key was created, in UTC.
+          format: date-time
+        updated_at:
+          type: string
+          description: When the key was last updated, in UTC.
+          format: date-time
+      description: An API key's identifiers, metadata, and permissions. Does not include the secret key.
+    ApiErrorResult:
+      required:
+      - error
+      - message
+      - statusCode
+      type: object
+      properties:
+        success:
+          type: boolean
+        error:
+          type: string
+        validationErrors:
+          type:
+          - 'null'
+          - array
+          items:
+            $ref: '#/components/schemas/ValidationError'
+        referenceId:
+          type:
+          - 'null'
+          - string
+        message:
+          type: string
+        statusCode:
+          pattern: ^-?(?:0|[1-9]\d*)$
+          type:
+          - integer
+          - string
+          format: int32
+    CreateOrUpdateApiKeyRequest:
+      required:
+      - permissions
+      type: object
+      properties:
+        name:
+          maxLength: 255
+          type:
+          - 'null'
+          - string
+          description: Display name for the key, up to 255 characters. Omitted, null, or blank names use Key created YYYY-MM-DD HH:mm:ss, based on the key's original creation time in UTC.
+        description:
+          maxLength: 2000
+          type:
+          - 'null'
+          - string
+          description: Optional description of the key's purpose, up to 2000 characters. Omitted, null, or blank clears the description.
+        disabled:
+          type: boolean
+          description: Whether the key is disabled. Disabled keys cannot authenticate requests. Defaults to false.
+          default: false
+        all_future_permissions:
+          type: boolean
+          description: Grant all current and future permissions. Only callers with this authority can enable it. Defaults to false.
+          default: false
+        permissions:
+          type: array
+          items:
+            enum:
+            - api_keys:create_update
+            - api_keys:delete
+            - api_keys:read
+            - debugs:create
+            - debugs:read
+            - images:create
+            - images:delete
+            - images:read
+            - images:store
+            - og_configs:create_update
+            - og_configs:delete
+            - og_configs:read
+            - proxies:create_update
+            - proxies:delete
+            - proxies:read
+            - storage_destinations:create_update
+            - storage_destinations:delete
+            - storage_destinations:read
+            - templates:create_update
+            - templates:delete
+            - templates:read
+            - usage:read
+            type: string
+          description: Complete list of current permissions to grant, for example images:create or templates:read. Ignored when all_future_permissions is true; supply an empty array in that case. Otherwise, an empty array grants no product permissions. Permissions cannot exceed the caller's authority.
+      description: Configuration for creating or updating an API key. Updates replace the configuration; omitted optional settings are cleared or reset to their defaults.
+    ValidationError:
+      type: object
+      properties:
+        path:
+          type: string
+        message:
+          type: string
+  securitySchemes:
+    basic:
+      type: http
+      description: 'Basic auth using API ID as username and API Key as password. Example: `Authorization: Basic {base64(api-id:api-key)}`'
+      scheme: basic
