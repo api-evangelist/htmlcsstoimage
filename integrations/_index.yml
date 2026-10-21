@@ -66,3 +66,29 @@
     builder: Pipedream repo (component)
   status: not-a-workflow
   arazzo: null
+- slug: htmlcsstoimage-pulumi-pulumi-registry
+  label: Pulumi (pulumi-registry)
+  partner: pulumi
+  partner_name: Pulumi (pulumi-registry)
+  category: infrastructure-as-code provider registry listing
+  type: marketplace
+  marketplace: pulumi-registry
+  channel: partner-built
+  evidence: https://www.pulumi.com/registry/packages/html-css-to-image/
+  source: edge
+  relationship: platform-app
+  status: not-a-workflow
+  arazzo: null
+- slug: htmlcsstoimage-terraform-terraform-registry
+  label: Terraform (terraform-registry)
+  partner: terraform
+  partner_name: Terraform (terraform-registry)
+  category: infrastructure-as-code provider registry listing
+  type: marketplace
+  marketplace: terraform-registry
+  channel: partner-built
+  evidence: https://registry.terraform.io/providers/htmlcsstoimage/html-css-to-image
+  source: edge
+  relationship: platform-app
+  status: not-a-workflow
+  arazzo: null
