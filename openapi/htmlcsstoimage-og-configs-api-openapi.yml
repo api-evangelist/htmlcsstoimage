@@ -1031,3 +1031,9 @@ components:
       type: http
       description: 'Basic auth using API ID as username and API Key as password. Example: `Authorization: Basic {base64(api-id:api-key)}`'
       scheme: basic
+x-provenance:
+  method: harvested
+  publisher: HTML/CSS to Image
+  source: https://htmlcsstoimage.com/openapi/v1.json
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)
