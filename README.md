@@ -1,4 +1,4 @@
-# HTML/CSS to Image (htmlcsstoimage)
+# HTML/CSS to Image
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -66,96 +66,120 @@
 
 HTML/CSS to Image (HCTI) is a REST API that renders HTML, CSS, and JavaScript into high quality images (PNG, JPG, WebP, PDF). Send markup or a URL to the API and receive a permanent, hosted image URL. It supports reusable templates with variable substitution and HMAC-signed URLs for generating images from a simple GET request.
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/htmlcsstoimage/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/htmlcsstoimage/refs/heads/main/apis.yml)
+**Areas:** Image Generation · HTML to Image · CSS to Image · Rendering · Screenshots · Templates
 
-## Tags
+## HTML/CSS to Image on APIs.io
 
-- Image Generation
-- HTML to Image
-- CSS to Image
-- Rendering
-- Screenshots
-- Templates
+Everything profiled for HTML/CSS to Image is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/htmlcsstoimage/](https://apis.io/providers/htmlcsstoimage/)** — or go straight to one of the APIs or properties below.
 
-## Timestamps
+### APIs (3)
 
-- **Created:** 2026-06-20
-- **Modified:** 2026-06-20
+- [HTML/CSS to Image Generation API](https://apis.io/apis/htmlcsstoimage/htmlcsstoimage-image-generation-api/) — The Image Generation API from HTML/CSS to Image — 5 operation(s) for image generation.
+- [HTML/CSS to Image Signed URLs API](https://apis.io/apis/htmlcsstoimage/htmlcsstoimage-signed-urls-api/) — The Signed URLs API from HTML/CSS to Image — 1 operation(s) for signed urls.
+- [HTML/CSS to Image Templates API](https://apis.io/apis/htmlcsstoimage/htmlcsstoimage-templates-api/) — The Templates API from HTML/CSS to Image — 4 operation(s) for templates.
 
-## APIs
+### Published properties
 
-### HTML/CSS to Image Generation API
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-Render HTML, CSS, and JavaScript (or a URL) into a hosted image and receive a permanent URL. Create single or batch images, retrieve them in PNG, JPG, WebP, or PDF with resize and crop options, list images, delete images, and check account usage.
+#### Agentic access (1)
 
-- **Human URL:** [https://docs.htmlcsstoimage.com/getting-started/using-the-api/](https://docs.htmlcsstoimage.com/getting-started/using-the-api/)
-- **Base URL:** `https://hcti.io/v1`
+Which operations an agent can call, which act, and which need a human in the loop.
 
-#### Tags
+- [Htmlcsstoimage Agentic Access](https://apis.io/agentic-access/htmlcsstoimage/htmlcsstoimage-agentic-access/)
 
-- Image Generation
-- Rendering
-- Screenshots
+#### Collections (4)
 
-#### Properties
+Postman and Open Collection request collections.
 
-- [Documentation](https://docs.htmlcsstoimage.com/getting-started/using-the-api/)
-- [API Reference](https://docs.htmlcsstoimage.com/getting-started/create-and-render/)
-- [OpenAPI](openapi/htmlcsstoimage-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/htmlcsstoimage.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/htmlcsstoimage.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+- [HTML/CSS to Image API](https://apis.io/collections/htmlcsstoimage/open-htmlcsstoimage/)
+- [HTML/CSS to Image Image Generation API](https://apis.io/collections/htmlcsstoimage/open-htmlcsstoimage-image-generation-api/)
+- [HTML/CSS to Image Image Generation Signed URLs API](https://apis.io/collections/htmlcsstoimage/open-htmlcsstoimage-signed-urls-api/)
+- [HTML/CSS to Image Image Generation Templates API](https://apis.io/collections/htmlcsstoimage/open-htmlcsstoimage-templates-api/)
 
-### HTML/CSS to Image Templates API
+#### Security (2)
 
-Create and edit reusable HTML/CSS templates with named variables, list templates and their versions, and generate images from a template by passing template_values, optionally pinning a specific template version.
+Authentication, trust centre, and vulnerability disclosure.
 
-- **Human URL:** [https://docs.htmlcsstoimage.com/getting-started/templates/](https://docs.htmlcsstoimage.com/getting-started/templates/)
-- **Base URL:** `https://hcti.io/v1`
+- [Htmlcsstoimage Authentication](https://apis.io/security/htmlcsstoimage/htmlcsstoimage-authentication/)
+- [Htmlcsstoimage Domain Security](https://apis.io/security/htmlcsstoimage/htmlcsstoimage-domain-security/)
 
-#### Tags
+#### Plans and pricing (1)
 
-- Templates
-- Variable Substitution
-- Image Generation
+Published plans, tiers and prices.
 
-#### Properties
+- [Htmlcsstoimage Plans Pricing](https://apis.io/plans/htmlcsstoimage/htmlcsstoimage-plans-pricing/)
 
-- [Documentation](https://docs.htmlcsstoimage.com/getting-started/templates/)
-- [OpenAPI](openapi/htmlcsstoimage-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/htmlcsstoimage.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/htmlcsstoimage.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+#### Rate limits (1)
 
-### HTML/CSS to Image Signed URLs API
+Published request limits.
 
-Generate a templated image with a simple GET request using an HMAC-signed URL that encodes the template_values, so values cannot be altered without the API key and no POST or stored image URL is required.
+- [Htmlcsstoimage Rate Limits](https://apis.io/rate-limits/htmlcsstoimage/htmlcsstoimage-rate-limits/)
 
-- **Human URL:** [https://docs.htmlcsstoimage.com/getting-started/templates/](https://docs.htmlcsstoimage.com/getting-started/templates/)
-- **Base URL:** `https://hcti.io/v1`
+#### FinOps (1)
 
-#### Tags
+What the API costs to run, by operation.
 
-- Signed URLs
-- HMAC
-- Templates
+- [Htmlcsstoimage Finops](https://apis.io/finops/htmlcsstoimage/htmlcsstoimage-finops/)
 
-#### Properties
+## Where to find this API
 
-- [Documentation](https://docs.htmlcsstoimage.com/getting-started/templates/)
-- [OpenAPI](openapi/htmlcsstoimage-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/htmlcsstoimage.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/htmlcsstoimage.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
 
-## Common Properties
-
-- [GitHub Organization](https://github.com/htmlcsstoimage)
-- [LinkedIn](https://www.linkedin.com/company/htmlcsstoimage)
 - [Website](https://htmlcsstoimage.com)
 - [Documentation](https://docs.htmlcsstoimage.com)
-- [Plans](plans/htmlcsstoimage-plans-pricing.yml)
-- [Rate Limits](rate-limits/htmlcsstoimage-rate-limits.yml)
-- [Fin Ops](finops/htmlcsstoimage-finops.yml)
+- [Blog](https://htmlcsstoimage.com/blog)
+- [GitHub](https://github.com/htmlcsstoimage)
 
-## Maintainers
+## API Evangelist rating
 
-**FN:** Kin Lane
-**Email:** kin@apievangelist.com
+**Kin Score 27.3** — thin · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
+|---|---|
+| Discoverability | 66.1 |
+| Contract quality | 51.8 |
+| Contract governance | 0.0 |
+| Operational transparency | 10.5 |
+| Developer ergonomics | 32.1 |
+| Access clarity | 7.9 |
+
+**Agent readiness 17.9** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | — |
+| OpenAPI Examples | — |
+| Rate Limit Signal | derived (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 11.8** — AI & Biometrics
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/htmlcsstoimage/](https://apis.io/providers/htmlcsstoimage/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for HTML/CSS to Image: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/htmlcsstoimage/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
